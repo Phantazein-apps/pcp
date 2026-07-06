@@ -23,10 +23,14 @@ A person should not have to type their profile into a form. The natural flow:
 1. **Observe, don't invent.** Every derived field must trace to something the
    agent actually saw. If uncertain, leave the field empty and report it as a
    gap — a wrong profile is worse than an empty one.
-2. **Style lives in memory.** The full writing-style analysis goes to the
-   memory page **`style/writing-profile`** (this path is the convention;
-   clients and servers should expect it there). Only the distilled preferences
-   (tone, verbosity, formatting) go into `profile.communication`.
+2. **Style lives in memory, marked sensitive.** The full writing-style
+   analysis goes to the memory page **`style/writing-profile`** (this path is
+   the convention; clients and servers should expect it there), written with
+   frontmatter **`sensitivity: sensitive`**. The ability to write in someone's
+   voice is impersonation-adjacent: gating style pages behind
+   `memory.sensitive:read` keeps them out of the §7.2 default grant, so voice
+   access is an explicit, per-client consent decision. Only the distilled
+   preferences (tone, verbosity, formatting) go into `profile.communication`.
 3. **Core stays core.** Nothing sensitive goes into `profile.core` during
    bootstrap — health, legal, family, residency observations belong in their
    extension namespaces (which require their own write scopes) or nowhere.

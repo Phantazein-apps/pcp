@@ -118,6 +118,7 @@ Extension schemas are versioned independently and registered in [`extensions/`](
 - The server maintains a **semantic index** (implementation-defined: sqlite-vec, LanceDB, HNSW, …) over pages; the index is derived data and is NOT part of export conformance (it can be rebuilt).
 - Frontmatter REQUIRED keys: `title`, `updated`; RECOMMENDED: `tags`, `sensitivity` (`normal` | `sensitive`), `source`.
 - Pages marked `sensitivity: sensitive` MUST only be returned under the `memory.sensitive:read` scope.
+- The **`style/`** page namespace is reserved for writing-style profiles; pages under it SHOULD default to `sensitivity: sensitive`. Addressing grammar and authoring conventions: [`docs/style-profiles.md`](docs/style-profiles.md) (informative).
 
 ## 6. Standard tool surface
 
