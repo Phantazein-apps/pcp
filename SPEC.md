@@ -52,6 +52,17 @@ GET /.well-known/hcs.json
 - `mcp_endpoint` (Streamable HTTP) is REQUIRED; `sse_endpoint` is OPTIONAL (legacy clients).
 - `profile_extensions` and `connections` advertise what this context contains, so clients can request the right scopes up front.
 
+### 2.1 Multi-context hosts
+
+A single origin MAY host many contexts under distinct base paths
+(`https://host.example/<handle>`). Such a host MUST serve a per-context
+discovery document at `<context-base>/.well-known/hcs.json`
+(e.g. `https://host.example/dk/.well-known/hcs.json`) whose `mcp_endpoint`
+points at that context's endpoint. The origin-root `/.well-known/hcs.json`
+then describes the host itself — same fields, no tenant specifics — and
+SHOULD include `"multi_context": true`. Everything else in this spec applies
+per context, not per origin.
+
 ## 3. Transport & authorization
 
 - Transport: **MCP Streamable HTTP** (REQUIRED), SSE (OPTIONAL).
