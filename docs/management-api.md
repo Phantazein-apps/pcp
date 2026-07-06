@@ -34,7 +34,7 @@ authenticated by the host's owner session. JSON in, JSON out.
 
 | Method & path | Behavior |
 |---|---|
-| `GET /api/me` | Owner identity + profile document + connections + summary counts. The panel's boot call. |
+| `GET /api/me` | Owner identity + profile document + connections + summary counts. The panel's boot call. SHOULD include `profile_gaps` (recommended-but-empty fields) and `profile_provenance` (per-field: which actor last set it, when) per [profile-bootstrap.md](profile-bootstrap.md). |
 | `PUT /api/profile` | Replace the `profile.core` document. Server MUST validate against `profile.core.schema.json` and reject non-conforming documents (400 with a list of violations). Server MUST append a change-log entry (§6 `profile.update` semantics). |
 | `GET /api/profile/changes` | The profile change log, newest first. |
 | `GET /api/connections` | List connection configs: `{ id, type, label, enabled, created }`. |
