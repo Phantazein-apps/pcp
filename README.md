@@ -1,8 +1,21 @@
-# PCP — Portable Context Protocol
+<div align="center">
+
+<img src="assets/banner.svg" alt="PCP — Portable Context Protocol: portable personal AI context behind one URL you control" width="100%">
+
+<p>
+  <img src="https://img.shields.io/badge/spec-v0.1--draft-ff0018?style=flat-square&labelColor=000000" alt="Spec v0.1-draft">
+  <img src="https://img.shields.io/badge/status-request%20for%20comments-f4f2ee?style=flat-square&labelColor=000000" alt="Request for comments">
+  <img src="https://img.shields.io/badge/built%20on-MCP%20·%20OAuth%202.1-ff0018?style=flat-square&labelColor=000000" alt="MCP · OAuth 2.1">
+  <img src="https://img.shields.io/badge/license-Apache%202.0-a8a5a0?style=flat-square&labelColor=000000" alt="Apache 2.0">
+</p>
 
 **An open protocol for portable personal AI context.**
 
-> Your memory, your profile, your connections — behind one URL that *you* control, pluggable into any MCP-enabled LLM on any device.
+<sub>Your memory, your profile, your connections — behind one URL that *you* control, pluggable into any MCP-enabled LLM on any device<br>Part of the <a href="https://phantazein.com">Phantazein</a> toolkit</sub>
+
+</div>
+
+---
 
 PCP defines two things:
 
@@ -49,3 +62,9 @@ PCP inverts that ownership:
 ## License
 
 Specification text and schemas: Apache 2.0. "PCP" may be used to claim conformance, not endorsement. The protocol is stewarded by [Phantazein S.L.](https://phantazein.com); **MultiPass** is Phantazein S.L.'s hosted PCP provider and a separate trademark — implementations must not use the MultiPass name.
+
+---
+
+<div align="center">
+<sub>Stewarded by <a href="https://phantazein.com">Phantazein</a> · <a href="https://github.com/Phantazein-apps">more tools →</a></sub>
+</div>
