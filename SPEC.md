@@ -1,8 +1,17 @@
-# PCP Specification — v0.1-draft
+# PCP Specification — v0.2-draft
 
 **Portable Context Protocol — format & server behavior**
 
-Status: DRAFT · License: Apache 2.0 · Last updated: 2026-07-06
+Status: DRAFT · License: Apache 2.0 · Last updated: 2026-07-07
+
+> **v0.2 (draft) — what changed.** §5 Memory gains a richer, still-plain-text
+> frontmatter model: memory `type`, `lifecycle`, `confidence`, temporal
+> validity, provenance, and typed `relations`. This aligns PCP's memory layer
+> with the emerging cross-tool conventions (OMP's episodic/semantic/procedural
+> typing, Remnic's lifecycle + provenance) so memory imports near-losslessly —
+> while PCP keeps the layer those memory specs *don't* cover: discovery,
+> profile, per-category consent, and connections. Mapping tables:
+> [`docs/interop.md`](docs/interop.md).
 
 The key words MUST, SHOULD, MAY are to be interpreted as in RFC 2119.
 
@@ -15,7 +24,7 @@ A **PCP context** is one person's portable AI context. It has three parts:
 | Part | What it holds | Section |
 |---|---|---|
 | **Profile** | Structured facts about the person: identity, preferences, plus consent-gated sensitive categories (health, legal, family, residency, …) | §4 |
-| **Memory** | Long-term unstructured memory: markdown pages + a semantic index (PACK-compatible) | §5 |
+| **Memory** | Long-term memory: markdown pages (with lifecycle, validity & provenance) + a semantic index (PACK-compatible) | §5 |
 | **Connections** | Live bridges to external sources (Notion, email, messaging, tasks) exposed as namespaced MCP tools | §6 |
 
 A **PCP server** is any server that stores a PCP context and serves it over MCP per §3. A PCP server MAY be self-hosted (localhost, home server), run by a hosting provider, or run as managed SaaS — the wire behavior is identical.
@@ -114,11 +123,40 @@ Extension schemas are versioned independently and registered in [`extensions/`](
 
 ## 5. Memory
 
-- Memory is a set of **markdown pages** with YAML frontmatter, PACK-compatible: an `_index` page, directory-like naming, one topic per page.
-- The server maintains a **semantic index** (implementation-defined: sqlite-vec, LanceDB, HNSW, …) over pages; the index is derived data and is NOT part of export conformance (it can be rebuilt).
-- Frontmatter REQUIRED keys: `title`, `updated`; RECOMMENDED: `tags`, `sensitivity` (`normal` | `sensitive`), `source`.
-- Pages marked `sensitivity: sensitive` MUST only be returned under the `memory.sensitive:read` scope.
+Memory is long-term recall as **markdown pages** with YAML frontmatter,
+PACK-compatible: an `_index` page, directory-like naming, one topic per page.
+The body is plain markdown; the frontmatter carries lifecycle, temporal
+validity, confidence, and provenance so a page can age, expire, and cite its
+origin without leaving plain text (and so memory from other tools imports
+cleanly — §interop).
+
+### 5.1 Page frontmatter
+
+REQUIRED: `title`, `updated`.
+
+RECOMMENDED:
+
+| Key | Values | Meaning |
+|---|---|---|
+| `type` | `episodic` \| `semantic` \| `procedural` | Something that happened / a durable fact or preference / how the person does a thing. Mirrors the cross-tool taxonomy so imports map 1:1. |
+| `tags` | array | Free labels. |
+| `sensitivity` | `normal` \| `sensitive` (default `normal`) | `sensitive` pages MUST only be returned under `memory.sensitive:read`. |
+| `lifecycle` | `active` \| `validated` \| `stale` \| `archived` (default `active`) | Servers SHOULD down-rank `stale` and exclude `archived` from default retrieval; both remain exportable. |
+| `confidence` | number 0.0–1.0 | How sure the context is of this. Absent = unspecified. |
+| `valid_from` / `valid_until` | ISO-8601 date | When the fact is/was true (a job, an address, a plan). A page whose `valid_until` is in the past is `stale` by definition and MUST NOT be presented as current without its dates. |
+| `source` | `{ origin, client?, session?, at? }` where `origin` ∈ `chat` \| `connector` \| `import` \| `user` | Where the page came from. |
+| `derived_from` | array of page paths | Provenance: pages this one was distilled from or supersedes. |
+| `relations` | `[{ rel, target, confidence? }]`, `rel` ∈ `supersedes` \| `contradicts` \| `refines` \| `about` | Typed edges to other pages. Lets a client resolve conflicts (prefer the page that `supersedes`) without the server imposing a graph engine. |
+
+### 5.2 Index & retrieval
+
+- The server maintains a **semantic index** (implementation-defined: sqlite-vec, LanceDB, HNSW, …) over pages. The index is derived data and is NOT part of export conformance — it can be rebuilt.
+- `memory.search` MUST honor lifecycle and validity: by default return `active`/`validated` and current-or-undated pages first; surface `stale` or expired pages only when explicitly requested or when nothing else matches. It MAY accept filters (`type`, `include_stale`).
 - The **`style/`** page namespace is reserved for writing-style profiles; pages under it SHOULD default to `sensitivity: sensitive`. Addressing grammar and authoring conventions: [`docs/style-profiles.md`](docs/style-profiles.md) (informative).
+
+### 5.3 Consolidation (informative)
+
+A server MAY run an extraction/consolidation pass that distills raw conversation into durable pages and records `derived_from`. This is out of the wire contract: PCP only requires that whatever pages exist conform to §5.1. *The trace is disposable; the page is the artifact.*
 
 ## 6. Standard tool surface
 
@@ -174,7 +212,7 @@ The RECOMMENDED default grant for a new chat client is: `profile.core:read`, `me
 
 A server may claim **"PCP v0.1 conformant"** if it implements: discovery (§2), transport + OAuth (§3), `profile.core` (§4.1), memory tools (§5, §6), scope enforcement (§7), and export (§8). Extensions and connections are optional; if present they MUST follow §4.2–4.3 and §6.
 
-## 11. Open questions for v0.2
+## 11. Open questions for v0.3
 
 - E2E encryption tier (client-side keys; how does search work — searchable encryption vs client-side index?)
 - Multi-profile (work persona vs personal persona) under one tenant
@@ -182,3 +220,5 @@ A server may claim **"PCP v0.1 conformant"** if it implements: discovery (§2), 
 - Formal export manifest schema + conformance test suite
 - Federation: can two PCP instances share scoped context (family plans)?
 - Standardizing the management surface — see the informative draft in [`docs/management-api.md`](docs/management-api.md)
+- Memory conflict policy: is client-side resolution via `relations` (§5.1) enough, or does a server need a normative merge/supersession rule?
+- Alignment target: if an MCP memory/profile **extension** or a live-serving portability standard (e.g. DTI) is ratified, map PCP's memory + export onto it rather than maintaining a parallel shape.
