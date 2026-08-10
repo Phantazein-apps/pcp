@@ -197,8 +197,10 @@ The RECOMMENDED default grant for a new chat client is: `profile.core:read`, `me
 
 ## 8. Portability: export & import
 
-- `export:read` scope grants a full export: a tar/zip of all markdown memory pages, the profile core + extension JSON documents, connection *configuration* (never third-party credentials/tokens), and the audit log. Format: [`schemas/export.manifest.schema.json`] (v0.2).
+- `export:read` scope grants a full export: a tar/zip of all markdown memory pages, the profile core + extension JSON documents, connection *configuration* (never third-party credentials/tokens), and the audit log. Format: [`schemas/export.manifest.schema.json`](schemas/export.manifest.schema.json) (v0.2).
 - A conforming server MUST be able to **import** its own export format. Migrating hosts = export → import → re-grant connections.
+- The archive root MUST contain `manifest.json` conforming to the export manifest schema. Every file in the archive except the manifest MUST be listed in its `files[]` with a SHA-256 checksum, and every listed file MUST be present.
+- Anything the server could not export MUST be declared in the manifest's `omitted[]`. A server that drops data silently produces an archive indistinguishable from a complete one, which defeats §1.1.1 more thoroughly than refusing to export at all.
 - Third-party credentials (Gmail OAuth tokens, etc.) MUST NOT be included in exports.
 
 ## 9. Security baseline (normative summary — see SECURITY.md)
@@ -212,12 +214,14 @@ The RECOMMENDED default grant for a new chat client is: `profile.core:read`, `me
 
 A server may claim **"PCP v0.1 conformant"** if it implements: discovery (§2), transport + OAuth (§3), `profile.core` (§4.1), memory tools (§5, §6), scope enforcement (§7), and export (§8). Extensions and connections are optional; if present they MUST follow §4.2–4.3 and §6.
 
+Every MUST in this specification is restated as a checkable assertion in [`docs/conformance.md`](docs/conformance.md). Note that only its box **E11** — importing an archive written by a *different* implementation — tests portability; the rest test that one implementation is self-consistent with itself.
+
 ## 11. Open questions for v0.3
 
 - E2E encryption tier (client-side keys; how does search work — searchable encryption vs client-side index?)
 - Multi-profile (work persona vs personal persona) under one tenant
 - Push vs pull ingestion contract for connections
-- Formal export manifest schema + conformance test suite
+- Conformance **test suite** (the export manifest schema landed in v0.2 — [`schemas/export.manifest.schema.json`](schemas/export.manifest.schema.json); the checklist in [`docs/conformance.md`](docs/conformance.md) is still manual)
 - Federation: can two PCP instances share scoped context (family plans)?
 - Standardizing the management surface — see the informative draft in [`docs/management-api.md`](docs/management-api.md)
 - Memory conflict policy: is client-side resolution via `relations` (§5.1) enough, or does a server need a normative merge/supersession rule?

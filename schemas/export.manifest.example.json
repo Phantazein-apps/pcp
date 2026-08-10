@@ -1,0 +1,67 @@
+{
+  "pcp_version": "0.2",
+  "manifest_version": "1",
+  "exported_at": "2026-08-10T12:00:00Z",
+
+  "exporter": {
+    "name": "multipass",
+    "version": "0.4.1",
+    "url": "https://multipass.host"
+  },
+
+  "context": {
+    "handle": "dk",
+    "created_at": "2026-01-04T09:00:00Z"
+  },
+
+  "profile": {
+    "core": "profile/core.json",
+    "extensions": [
+      {
+        "namespace": "pcp.health",
+        "path": "profile/pcp.health.json.age",
+        "schema": "https://pcp.dev/schemas/0.1/pcp.health.schema.json",
+        "special_category": true,
+        "encrypted": { "algorithm": "age", "key_source": "user_passphrase" }
+      }
+    ]
+  },
+
+  "memory": {
+    "path": "memory/",
+    "page_count": 128,
+    "sensitive_page_count": 4,
+    "index_included": false
+  },
+
+  "connections": [
+    { "id": "notion", "path": "connections/notion.json", "credentials_included": false },
+    { "id": "email", "path": "connections/email.json", "credentials_included": false }
+  ],
+
+  "audit": {
+    "path": "audit/log.jsonl",
+    "entries": 4210,
+    "from": "2026-01-04T09:11:00Z",
+    "to": "2026-08-10T11:58:00Z",
+    "truncated": false
+  },
+
+  "files": [
+    { "path": "profile/core.json", "sha256": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", "bytes": 812 },
+    { "path": "profile/pcp.health.json.age", "sha256": "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9", "bytes": 2044 },
+    { "path": "memory/_index.md", "sha256": "18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4", "bytes": 3311 },
+    { "path": "memory/style/voice.md", "sha256": "3f79bb7b435b05321651daefd374cdc681dc06faa65e374e38337b88ca046dea", "bytes": 1580 },
+    { "path": "connections/notion.json", "sha256": "252f10c83610ebca1a059c0bae8255eba2f95be4d1d7bcfa89d7248a82d9f111", "bytes": 240 },
+    { "path": "connections/email.json", "sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683", "bytes": 198 },
+    { "path": "audit/log.jsonl", "sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451", "bytes": 891233 }
+  ],
+
+  "omitted": [
+    {
+      "what": "profile.pcp_finance",
+      "reason": "unsupported",
+      "detail": "This server does not implement the pcp.finance namespace. No finance data was stored, so nothing was lost — but the field is declared so an importer does not have to infer that."
+    }
+  ]
+}
