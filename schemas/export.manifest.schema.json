@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcp.dev/schemas/0.2/export.manifest.schema.json",
+  "title": "PCP Export Manifest",
+  "description": "The manifest at the root of a PCP export archive (§8). SPEC §1.1.1 makes export the first design principle — a server that cannot fully export a context is non-conforming — but a guarantee is only real if it is checkable. This manifest is what makes it checkable: it states what the archive is supposed to contain, so an importer can verify it received all of it rather than silently importing a partial context. Two rules carry most of the weight: every file is listed with a checksum, and anything the exporter could NOT produce must be declared in `omitted` rather than quietly left out.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pcp_version", "manifest_version", "exported_at", "exporter", "memory", "profile", "files"],
+  "properties": {
+    "pcp_version": {
+      "enum": ["0.1", "0.2"],
+      "description": "The spec version this context conforms to — NOT the version of the server that wrote it."
+    },
+    "manifest_version": {
+      "const": "1",
+      "description": "Version of this manifest format. Bumped independently of the spec so the archive layout can change without a spec revision."
+    },
+    "exported_at": { "type": "string", "format": "date-time" },
+
+    "exporter": {
+      "type": "object",
+      "description": "Who produced this archive. Recorded because import bugs are nearly always specific to the pair of implementations involved, and 'which server wrote this?' is otherwise unanswerable from the archive alone.",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "description": "Implementation name, e.g. 'multipass'" },
+        "version": { "type": "string" },
+        "url": { "type": "string", "format": "uri", "description": "Homepage or repository of the implementation" }
+      }
+    },
+
+    "context": {
+      "type": "object",
+      "description": "Which context this is. Deliberately thin: a handle and dates. No account identifiers, no billing references — an export is the user's data, not the host's record of them.",
+      "additionalProperties": false,
+      "properties": {
+        "handle": { "type": "string", "description": "The context's handle on the exporting host, if it had one (§2.1)." },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "profile": {
+      "type": "object",
+      "description": "The profile documents in the archive (§4).",
+      "additionalProperties": false,
+      "required": ["core"],
+      "properties": {
+        "core": {
+          "type": "string",
+          "description": "Path to the profile.core document. REQUIRED — every conforming server supports profile.core (§4.1), so an export without one is an export of nothing.",
+          "default": "profile/core.json"
+        },
+        "extensions": {
+          "type": "array",
+          "description": "One entry per extension namespace present. An extension the context does not use is simply absent; an extension it DOES use but which could not be exported belongs in `omitted`.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace", "path"],
+            "properties": {
+              "namespace": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+                "description": "e.g. 'pcp.health', or a third-party namespace such as 'org.example.pets' (§4.2)."
+              },
+              "path": { "type": "string" },
+              "schema": {
+                "type": "string",
+                "format": "uri",
+                "description": "The $id of the schema this document claims to conform to. Without it an importer must guess, and a guess about a health record is not a guess worth making."
+              },
+              "special_category": {
+                "type": "boolean",
+                "description": "True for namespaces the registry marks special-category (health, residency). Carried in the manifest so an importer can apply the separate-key storage rule of §4.3.4 without having to know the registry."
+              },
+              "encrypted": {
+                "$ref": "#/$defs/encryption",
+                "description": "Present when the document in the archive is itself encrypted rather than plaintext."
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "memory": {
+      "type": "object",
+      "description": "The memory pages (§5). Pages are markdown with YAML frontmatter and travel verbatim — an export that rewrites frontmatter is lossy in exactly the fields (lifecycle, provenance, relations) that make a page worth keeping.",
+      "additionalProperties": false,
+      "required": ["path", "page_count"],
+      "properties": {
+        "path": { "type": "string", "default": "memory/", "description": "Directory prefix, relative to the archive root." },
+        "page_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many pages the exporter believes it wrote. The single most useful field here: an importer that finds a different number knows the archive is short BEFORE it starts writing, rather than discovering it when a memory turns out to be missing months later."
+        },
+        "sensitive_page_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many of those are `sensitivity: sensitive` (§5.1). Lets an importer confirm it has somewhere to put them before accepting the archive."
+        },
+        "index_included": {
+          "const": false,
+          "description": "Always false. §5.2 makes the semantic index derived data, explicitly outside export conformance — it is rebuilt on import. Fixed to false rather than omitted so an archive can never imply its index is authoritative."
+        }
+      }
+    },
+
+    "connections": {
+      "type": "array",
+      "description": "Connection CONFIGURATION only (§8). Migrating a host means export → import → re-grant: the new host talks to Notion and Gmail as itself, with its own OAuth client, and must obtain its own consent.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "credentials_included"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$", "description": "The connection id used to namespace its tools, e.g. 'notion' → notion.search (§6)." },
+          "path": { "type": "string", "description": "Path to the configuration document, if any was exportable." },
+          "credentials_included": {
+            "const": false,
+            "description": "Always false, and REQUIRED so that it is asserted rather than assumed. §8 forbids third-party credentials in an export; fixing this to a constant turns that prohibition into something a validator catches in one line instead of a rule everyone hopes was followed. An archive claiming true is non-conforming on its face."
+          }
+        }
+      }
+    },
+
+    "audit": {
+      "type": "object",
+      "description": "The per-tenant access log (§7.3): which client read which category, when. Part of the export because it is the user's evidence about who saw their data, and evidence that cannot leave with them is not evidence they own.",
+      "additionalProperties": false,
+      "required": ["path", "entries"],
+      "properties": {
+        "path": { "type": "string", "default": "audit/log.jsonl" },
+        "entries": { "type": "integer", "minimum": 0 },
+        "from": { "type": "string", "format": "date-time", "description": "Timestamp of the oldest entry included." },
+        "to": { "type": "string", "format": "date-time" },
+        "truncated": {
+          "type": "boolean",
+          "default": false,
+          "description": "True when retention or size limits meant the log was cut. A truncated audit log is acceptable; a truncated audit log that does not say so is not."
+        }
+      }
+    },
+
+    "files": {
+      "type": "array",
+      "description": "Every file in the archive except this manifest, with a checksum. This is what makes an import verifiable rather than hopeful: a truncated download, a half-written tar, or a file that silently failed to serialise all look identical without it.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "type": "string", "description": "Relative to the archive root. MUST NOT be absolute and MUST NOT contain '..' — an importer unpacking an untrusted archive is otherwise one crafted path away from writing outside its own directory." },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+
+    "omitted": {
+      "type": "array",
+      "description": "Anything the exporter could not include, and why. This field is the honest half of §1.1.1: a server that silently drops what it cannot export produces an archive indistinguishable from a complete one, and the user discovers the gap only when something they needed is gone. Declaring it here keeps the export non-conforming AND legible, which is strictly better than non-conforming and silent. An empty or absent array asserts a complete export.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["what", "reason"],
+        "properties": {
+          "what": { "type": "string", "description": "What is missing, e.g. 'profile.pcp_finance' or 'memory pages older than 2024-01-01'." },
+          "reason": {
+            "enum": ["unsupported", "encrypted_key_unavailable", "retention_expired", "size_limit", "error"],
+            "description": "`encrypted_key_unavailable` is the legitimate one: under a client-side key the host genuinely cannot produce plaintext. The rest describe a server that is not fully conforming."
+          },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "encryption": {
+      "type": "object",
+      "description": "How a file in the archive is encrypted. Present only when the archive itself carries ciphertext — the ordinary case is an archive of plaintext protected by wherever the user puts it.",
+      "additionalProperties": false,
+      "required": ["algorithm"],
+      "properties": {
+        "algorithm": { "type": "string", "description": "e.g. 'age', 'AES-256-GCM'" },
+        "key_source": {
+          "enum": ["user_passphrase", "client_key", "recipient_public_key"],
+          "description": "Where the decryption key comes from. Never the key itself, and never a reference the exporting host could resolve — an export encrypted with a key only the exporter holds is not portable."
+        },
+        "recipient": { "type": "string", "description": "Public key or recipient identifier, when key_source is recipient_public_key." }
+      }
+    }
+  }
+}

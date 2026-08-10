@@ -860,6 +860,13 @@ it lives.
   also carries partitions, principals and review state, and adds erasure.
 - A conforming server MUST be able to **import** its own export format.
   Migrating hosts means export, import, then re-grant connections.
+- The archive root MUST contain `manifest.json` conforming to the export
+  manifest schema ([`schemas/export.manifest.schema.json`](schemas/export.manifest.schema.json)).
+  Every file in the archive except the manifest MUST be listed in its
+  `files[]` with a SHA-256 checksum, and every listed file MUST be present.
+- Anything the server could not export MUST be declared in the manifest's
+  `omitted[]`. A server that drops data silently produces an archive
+  indistinguishable from a complete one.
 - Third-party credentials (Gmail OAuth tokens and so on) MUST NOT be included
   in exports.
 
