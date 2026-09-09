@@ -1,0 +1,7 @@
+.venv/
+data/*.sqlite
+data/*.npy
+logs/raw/
+__pycache__/
+*.pyc
+.hf-cache/

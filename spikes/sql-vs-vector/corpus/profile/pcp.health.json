@@ -1,0 +1,77 @@
+{
+  "conditions": [
+    {
+      "label": "psoriatic arthritis",
+      "since": "2021-11-04",
+      "clinician": "Dr. Selma Ferreira"
+    },
+    {
+      "label": "methotrexate",
+      "since": "2022-01-10",
+      "clinician": "Dr. Selma Ferreira"
+    },
+    {
+      "label": "folic acid",
+      "since": "2022-01-10",
+      "clinician": "Dr. Selma Ferreira"
+    },
+    {
+      "label": "hypothyroidism",
+      "since": "2019-03-22",
+      "clinician": "Dr. Ada Okonkwo"
+    },
+    {
+      "label": "borderline blood pressure",
+      "since": "2025-05-09",
+      "clinician": "Dr. Anders Lindholm"
+    },
+    {
+      "label": "physiotherapy",
+      "since": "2024-09-03",
+      "clinician": "Dr. Selma Ferreira"
+    },
+    {
+      "label": "vitamin D",
+      "since": "2023-10-01",
+      "clinician": "Dr. Anders Lindholm"
+    },
+    {
+      "label": "knee MRI",
+      "since": "2025-02-11",
+      "clinician": "Dr. Selma Ferreira"
+    },
+    {
+      "label": "annual flu vaccination",
+      "since": "2022-10-05",
+      "clinician": "Dr. Anders Lindholm"
+    }
+  ],
+  "allergies": [
+    {
+      "substance": "penicillin",
+      "reaction": "rash",
+      "documented": "1994-06-01"
+    },
+    {
+      "substance": "shellfish",
+      "reaction": "intolerance, not anaphylactic"
+    }
+  ],
+  "providers": [
+    {
+      "name": "Dr. Selma Ferreira",
+      "speciality": "rheumatology",
+      "clinic": "Sahlberg Clinic"
+    },
+    {
+      "name": "Dr. Anders Lindholm",
+      "speciality": "general practice",
+      "clinic": "Vastkust Vardcentral"
+    },
+    {
+      "name": "Dr. Ada Okonkwo",
+      "speciality": "endocrinology",
+      "clinic": "Sahlberg Clinic"
+    }
+  ]
+}

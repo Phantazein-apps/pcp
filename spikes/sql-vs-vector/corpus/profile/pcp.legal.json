@@ -1,0 +1,25 @@
+{
+  "solicitor": {
+    "name": "Cecilia Bratt",
+    "firm": "Bratt & Soner",
+    "since": "2019"
+  },
+  "matters": [
+    {
+      "label": "cabin title",
+      "status": "held jointly with Sofie Lindqvist"
+    },
+    {
+      "label": "boundary question at Smogen",
+      "opened": "2026-02",
+      "status": "open"
+    }
+  ],
+  "instruments": [
+    {
+      "kind": "mirror wills",
+      "executed": "2022",
+      "held_by": "Bratt & Soner"
+    }
+  ]
+}
