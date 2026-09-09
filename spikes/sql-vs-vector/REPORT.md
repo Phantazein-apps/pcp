@@ -474,10 +474,12 @@ the answer is split, and the split is the finding:**
   Haiku 1.05× is a tie. A 1.3× difference does not carry an architectural
   recommendation; a 3.8× one does. **§4's efficiency argument is overturned
   as stated.**
-- **Accuracy: `sql_document` does not match `vector_only` — it beats it**,
-  91% (90-93) vs 87% (86-88) on corpus-b. So the argument for SQL survives,
-  but it is now an *accuracy* argument, not an efficiency one. That is a
-  different claim from the one §4 and §6 actually made.
+- **Accuracy: `sql_document` is nominally ahead of `vector_only`** — 91%
+  (90-93) vs 87% (86-88) on corpus-b — but 4 pp is inside this benchmark's
+  ±5 pp seed noise (§8.5), so it is a lead, not a result. What is left of the
+  case for SQL is therefore an *accuracy* argument this experiment cannot
+  yet resolve, in place of an efficiency argument it has just lost. That is
+  a materially weaker position than the one §4 and §6 stated.
 
 ### 8.3.1 The counterintuitive part: `sql_narrow` is the expensive arm
 
@@ -556,6 +558,11 @@ should be quoted without naming a model and a statistic.
 | **reconcile** | `sql_document` | 40% | 70% (60-80) | **+30 pp** |
 | **reconcile** | `vector_only` | 53% (50-60) | 57% (50-60) | +3 pp |
 | **reconcile** | `both` | 43% (40-50) | 63% (60-70) | +20 pp |
+
+The `scope_restricted` 75% is not a leak and not a wrong answer: all eight
+failures are one question (SR05) on which the agent exhausted its 14-turn
+budget and emitted no answer at all. §8.5.1 explains why that happens only to
+the search-based conditions.
 
 Five of seven strata still sit at 100%. Scaling to 2,000 pages, adding
 partial paraphrase overlap and running Haiku **did not break the ceiling**.
