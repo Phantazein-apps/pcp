@@ -1,1 +1,0 @@
-{"ts": 1788954932.8206284, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Krakow%' OR body LIKE '%Kraków%' OR title LIKE '%Krakow%'"}, "ok": true, "error": null, "bytes": 368, "ms": 5.4}

@@ -1,1 +1,0 @@
-{"ts": 1788954896.9144814, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Windrow%' OR path LIKE '%windrow%'"}, "ok": true, "error": null, "bytes": 947, "ms": 0.7}

@@ -1,5 +1,0 @@
-{"ts": 1788954912.4770448, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%in-house%' OR body LIKE '%maintain%program%'"}, "ok": true, "error": null, "bytes": 31, "ms": 0.7}
-{"ts": 1788954913.9276261, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='work' AND (body LIKE '%maintain%' OR body LIKE '%internal tool%' OR body LIKE '%program%')"}, "ok": true, "error": null, "bytes": 31, "ms": 0.6}
-{"ts": 1788954915.2539256, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title FROM memory WHERE domain='work'"}, "ok": true, "error": null, "bytes": 962, "ms": 0.6}
-{"ts": 1788954915.5185466, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title FROM memory WHERE domain='projects'"}, "ok": true, "error": null, "bytes": 2337, "ms": 0.7}
-{"ts": 1788954917.055501, "cmd": "query", "scope": "default", "args": {"sql": "SELECT body FROM memory WHERE path='work/internal-utility'"}, "ok": true, "error": null, "bytes": 125, "ms": 0.5}

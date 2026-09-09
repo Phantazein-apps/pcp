@@ -1,1 +1,0 @@
-{"ts": 1788954945.7183897, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, valid_from, valid_until, lifecycle, body FROM memory_all WHERE body LIKE '%pool%' OR body LIKE '%swim%'"}, "ok": true, "error": null, "bytes": 1281, "ms": 0.9}

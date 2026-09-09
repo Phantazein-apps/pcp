@@ -1,1 +1,0 @@
-{"ts": 1788954896.3984077, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Kia Soul%' OR title LIKE '%Kia Soul%'"}, "ok": true, "error": null, "bytes": 194, "ms": 0.7}

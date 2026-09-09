@@ -1,2 +1,0 @@
-{"ts": 1788954934.063865, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Thornwood%' OR path LIKE '%thornwood%'"}, "ok": true, "error": null, "bytes": 853, "ms": 0.8}
-{"ts": 1788954935.8964896, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Halvorsen Marine%' OR body LIKE '%data lead%'"}, "ok": true, "error": null, "bytes": 1547, "ms": 7.1}

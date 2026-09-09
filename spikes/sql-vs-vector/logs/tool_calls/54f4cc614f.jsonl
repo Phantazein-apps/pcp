@@ -1,1 +1,0 @@
-{"ts": 1788954943.6187313, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body, valid_from, valid_until, lifecycle FROM memory_all WHERE body LIKE '%mobile%' OR body LIKE '%operator%' OR body LIKE '%carrier%' OR body LIKE '%SIM%'"}, "ok": true, "error": null, "bytes": 349, "ms": 1.3}

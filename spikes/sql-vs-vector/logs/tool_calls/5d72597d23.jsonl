@@ -1,4 +1,0 @@
-{"ts": 1788954915.893453, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='work' AND (body LIKE '%AWS%' OR body LIKE '%Azure%' OR body LIKE '%GCP%' OR body LIKE '%cloud%')"}, "ok": true, "error": null, "bytes": 31, "ms": 0.6}
-{"ts": 1788954917.329155, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%cloud%' OR body LIKE '%AWS%' OR body LIKE '%Azure%' OR body LIKE '%GCP%'"}, "ok": true, "error": null, "bytes": 31, "ms": 0.8}
-{"ts": 1788954919.0925202, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title FROM memory WHERE domain='work'"}, "ok": true, "error": null, "bytes": 962, "ms": 0.6}
-{"ts": 1788954920.5221834, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE path='work/platform-footprint'"}, "ok": true, "error": null, "bytes": 166, "ms": 0.6}

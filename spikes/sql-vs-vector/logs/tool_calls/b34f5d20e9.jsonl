@@ -1,2 +1,0 @@
-{"ts": 1788954914.89962, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%bread%'"}, "ok": true, "error": null, "bytes": 139, "ms": 0.9}
-{"ts": 1788954916.5493805, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%bakery%' OR body LIKE '%baker%'"}, "ok": true, "error": null, "bytes": 145, "ms": 1.5}

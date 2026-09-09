@@ -1,1 +1,0 @@
-{"ts": 1788954903.6585598, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%standup%' OR title LIKE '%standup%'"}, "ok": true, "error": null, "bytes": 3765, "ms": 19.1}

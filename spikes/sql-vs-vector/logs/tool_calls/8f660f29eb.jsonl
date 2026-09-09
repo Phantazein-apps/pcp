@@ -1,1 +1,0 @@
-{"ts": 1788954934.258881, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Tallinn%'"}, "ok": true, "error": null, "bytes": 646, "ms": 0.7}
