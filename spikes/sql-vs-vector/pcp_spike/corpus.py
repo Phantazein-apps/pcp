@@ -37,7 +37,11 @@ def _slug(s: str) -> str:
 
 
 class Builder:
-    def __init__(self, seed: int = SEED):
+    def __init__(self, seed: int = SEED, flat_supersession: bool = False):
+        # flat_supersession: give both pages of a supersession pair the SAME
+        # `updated` and `confidence`, so recency and confidence carry no
+        # signal and the `supersedes` EDGE is the only discriminator left.
+        self.flat_supersession = flat_supersession
         self.rng = random.Random(seed)
         self.pages: list[Page] = []
         self.facts: list[Fact] = []
@@ -400,17 +404,20 @@ class Builder:
 
     def build_designed(self) -> None:
         # --- T-a supersession pairs
+        flat = self.flat_supersession
+        old_upd, new_upd = ("2026-08-02", "2026-08-02") if flat else ("2025-06-14", "2026-08-02")
+        old_conf, new_conf = (0.95, 0.95) if flat else (0.9, 0.95)
         for spec in self.SUPERSESSION:
             self.add(Page(
-                path=spec["old_path"], title=spec["old_title"], updated="2025-06-14",
+                path=spec["old_path"], title=spec["old_title"], updated=old_upd,
                 type="semantic", domain=spec["domain"], body=spec["old_body"],
-                tags=spec["tags"], lifecycle="active", confidence=0.9,
+                tags=spec["tags"], lifecycle="active", confidence=old_conf,
                 source={"origin": "chat"},
             ))
             self.add(Page(
-                path=spec["new_path"], title=spec["new_title"], updated="2026-08-02",
+                path=spec["new_path"], title=spec["new_title"], updated=new_upd,
                 type="semantic", domain=spec["domain"], body=spec["new_body"],
-                tags=spec["tags"], lifecycle="active", confidence=0.95,
+                tags=spec["tags"], lifecycle="active", confidence=new_conf,
                 source={"origin": "chat"},
                 derived_from=[spec["old_path"]],
                 relations=[{"rel": "supersedes", "target": spec["old_path"], "confidence": 0.95}],
@@ -1000,8 +1007,9 @@ class Builder:
         return manifest
 
 
-def main(root: str = "corpus", seed: int = SEED) -> dict:
-    b = Builder(seed)
+def main(root: str = "corpus", seed: int = SEED,
+         flat_supersession: bool = False) -> dict:
+    b = Builder(seed, flat_supersession)
     b.build_all()
     errs = b.validate()
     if errs:

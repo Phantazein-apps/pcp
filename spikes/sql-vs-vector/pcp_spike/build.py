@@ -14,13 +14,16 @@ ROOT = Path(__file__).resolve().parent.parent
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="pcp_spike.build")
     ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument("--flat-supersession", action="store_true",
+                    help="ABLATION: give both pages of a supersession pair the same "
+                         "`updated` and `confidence`, so only the edge discriminates")
     ap.add_argument("--embeddings", choices=["local", "none"], default="local",
                     help="'local' uses sentence-transformers on CPU; 'none' skips "
                          "the embeddings table and leaves only the BM25 backend")
     a = ap.parse_args(argv)
 
     print("[1/3] corpus")
-    corpus.main(str(ROOT / "corpus"), a.seed)
+    corpus.main(str(ROOT / "corpus"), a.seed, a.flat_supersession)
 
     print("[2/3] storage")
     store.main(str(ROOT / "corpus"), str(ROOT / "data"))
