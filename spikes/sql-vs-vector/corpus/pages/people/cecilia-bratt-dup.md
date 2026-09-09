@@ -1,6 +1,6 @@
 ---
 title: Cecilia Bratt (duplicate note)
-updated: '2025-02-23'
+updated: '2025-01-23'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - bratt-soner
 - duplicate
 lifecycle: stale
-confidence: 0.64
+confidence: 0.59
 source:
   origin: chat
 derived_from:

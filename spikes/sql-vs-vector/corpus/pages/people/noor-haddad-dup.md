@@ -1,6 +1,6 @@
 ---
 title: Noor Haddad (duplicate note)
-updated: '2025-07-30'
+updated: '2025-12-03'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - klarvatten-ab
 - duplicate
 lifecycle: stale
-confidence: 0.62
+confidence: 0.8
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/noor-haddad
 ---
 
-Same detail, recorded separately:
+Restated during a clear-out of old notes:
 
 Noor Haddad — friend. Hydrologist at Klarvatten AB, based in Gothenburg.
 

@@ -1,13 +1,13 @@
 ---
 title: Handelsbanken — joint account (duplicate note)
-updated: '2025-05-03'
+updated: '2024-03-25'
 type: semantic
 tags:
 - finances
 - handelsbanken
 - joint-account
 - duplicate
-lifecycle: active
+lifecycle: stale
 confidence: 0.67
 source:
   origin: chat

@@ -635,12 +635,19 @@ class Builder:
                 "Restated during a clear-out of old notes:",
                 "Same detail, recorded separately:",
             ])
+            # A duplicate must never be MORE visible than what it duplicates,
+            # or it resurrects an expired fact into the default view.
+            if src.default_visible():
+                lc = self.rng.choice(["active", "stale"])
+            else:
+                lc = src.lifecycle
             self.add(Page(
                 path=f"{src.path}-dup", title=f"{src.title} (duplicate note)",
                 updated=self._date(), type=src.type, domain=src.domain,
                 body=f"{lead}\n\n{src.body}", tags=list(src.tags) + ["duplicate"],
                 sensitivity=src.sensitivity, namespace=src.namespace,
-                lifecycle=self.rng.choice(["active", "stale"]),
+                valid_from=src.valid_from, valid_until=src.valid_until,
+                lifecycle=lc,
                 confidence=round(self.rng.uniform(0.55, 0.8), 2),
                 source={"origin": "chat"},
                 derived_from=[src.path],
@@ -857,6 +864,14 @@ class Builder:
             errs.append(f"page count {len(self.pages)} outside the required 500-800")
 
         by_path = {p.path: p for p in self.pages}
+
+        # a near-duplicate must not be more visible than its source
+        for p in self.pages:
+            if p.path.endswith("-dup"):
+                src = by_path.get(p.path[:-4])
+                if src is not None and p.default_visible() and not src.default_visible():
+                    errs.append(f"{p.path}: duplicate is default-visible but its "
+                                f"source {src.path} is not -- it resurrects a hidden fact")
 
         # relations must point at pages that exist
         for p in self.pages:

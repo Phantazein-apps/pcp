@@ -1,6 +1,6 @@
 ---
 title: Project Passerine (duplicate note)
-updated: '2025-01-16'
+updated: '2026-03-29'
 type: semantic
 tags:
 - projects
@@ -9,7 +9,8 @@ tags:
 - playwright
 - duplicate
 lifecycle: active
-confidence: 0.56
+confidence: 0.67
+valid_from: '2026-02-02'
 source:
   origin: chat
 derived_from:
@@ -19,7 +20,7 @@ relations:
   target: projects/passerine
 ---
 
-Noted again, from a later conversation:
+Repeated in passing:
 
 # Passerine
 

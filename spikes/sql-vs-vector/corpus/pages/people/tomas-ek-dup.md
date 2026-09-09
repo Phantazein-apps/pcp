@@ -1,6 +1,6 @@
 ---
 title: Tomas Ek (duplicate note)
-updated: '2026-05-09'
+updated: '2025-01-16'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - nordvik-analytics
 - duplicate
 lifecycle: active
-confidence: 0.7
+confidence: 0.57
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/tomas-ek
 ---
 
-Same detail, recorded separately:
+Restated during a clear-out of old notes:
 
 Tomas Ek — colleague. Staff engineer at Nordvik Analytics, based in Gothenburg.
 

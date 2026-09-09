@@ -1,6 +1,6 @@
 ---
 title: Project Windrow (duplicate note)
-updated: '2024-01-05'
+updated: '2024-08-24'
 type: semantic
 tags:
 - projects
@@ -10,6 +10,7 @@ tags:
 - duplicate
 lifecycle: active
 confidence: 0.58
+valid_from: '2026-03-02'
 source:
   origin: chat
 derived_from:

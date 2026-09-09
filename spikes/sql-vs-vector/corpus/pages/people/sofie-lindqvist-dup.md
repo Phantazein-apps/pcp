@@ -1,14 +1,14 @@
 ---
 title: Sofie Lindqvist (duplicate note)
-updated: '2026-04-08'
+updated: '2024-06-20'
 type: semantic
 tags:
 - people
 - sister
 - renhold-ab
 - duplicate
-lifecycle: active
-confidence: 0.75
+lifecycle: stale
+confidence: 0.64
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/sofie-lindqvist
 ---
 
-Same detail, recorded separately:
+Noted again, from a later conversation:
 
 Sofie Lindqvist — sister. Logistics manager at Renhold AB, based in Malmo.
 

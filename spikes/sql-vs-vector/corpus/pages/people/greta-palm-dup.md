@@ -1,6 +1,6 @@
 ---
 title: Greta Palm (duplicate note)
-updated: '2024-02-06'
+updated: '2025-03-30'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - palm-veterinar
 - duplicate
 lifecycle: stale
-confidence: 0.66
+confidence: 0.76
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/greta-palm
 ---
 
-Same detail, recorded separately:
+Noted again, from a later conversation:
 
 Greta Palm — friend. Veterinarian at Palm Veterinar, based in Gothenburg.
 

@@ -1,6 +1,6 @@
 ---
 title: Project Sentinel (duplicate note)
-updated: '2025-01-22'
+updated: '2026-04-04'
 type: semantic
 tags:
 - projects
@@ -9,7 +9,8 @@ tags:
 - rust
 - duplicate
 lifecycle: active
-confidence: 0.8
+confidence: 0.72
+valid_from: '2026-04-06'
 source:
   origin: chat
 derived_from:

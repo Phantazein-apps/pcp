@@ -1,14 +1,14 @@
 ---
 title: Astrid Lindqvist (duplicate note)
-updated: '2024-03-13'
+updated: '2024-05-17'
 type: semantic
 tags:
 - people
 - mother
 - retired
 - duplicate
-lifecycle: stale
-confidence: 0.61
+lifecycle: active
+confidence: 0.74
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/astrid-lindqvist
 ---
 
-Repeated in passing:
+Noted again, from a later conversation:
 
 Astrid Lindqvist — mother. Retired archivist at retired, based in Uppsala.
 

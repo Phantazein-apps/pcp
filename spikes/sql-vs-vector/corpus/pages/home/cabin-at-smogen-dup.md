@@ -1,6 +1,6 @@
 ---
 title: Cabin at smogen (duplicate note)
-updated: '2025-02-06'
+updated: '2026-09-05'
 type: semantic
 tags:
 - home
@@ -8,7 +8,7 @@ tags:
 - duplicate
 sensitivity: sensitive
 lifecycle: active
-confidence: 0.79
+confidence: 0.63
 source:
   origin: chat
 derived_from:
@@ -18,6 +18,6 @@ relations:
   target: home/cabin-at-smogen
 ---
 
-Restated during a clear-out of old notes:
+Same detail, recorded separately:
 
 Cabin at smogen: inherited from Astrid's side, wood heated.

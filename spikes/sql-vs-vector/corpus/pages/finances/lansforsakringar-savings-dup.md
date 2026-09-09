@@ -1,6 +1,6 @@
 ---
 title: Lansforsakringar — savings (duplicate note)
-updated: '2024-03-23'
+updated: '2025-11-26'
 type: semantic
 tags:
 - finances
@@ -8,8 +8,8 @@ tags:
 - savings
 - duplicate
 sensitivity: sensitive
-lifecycle: stale
-confidence: 0.76
+lifecycle: active
+confidence: 0.62
 source:
   origin: chat
 derived_from:
@@ -19,7 +19,7 @@ relations:
   target: finances/lansforsakringar-savings
 ---
 
-Restated during a clear-out of old notes:
+Same detail, recorded separately:
 
 Savings with Lansforsakringar. Reference LF-2290.
 

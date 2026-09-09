@@ -7,7 +7,7 @@ tags:
 - language
 - duplicate
 lifecycle: active
-confidence: 0.72
+confidence: 0.61
 source:
   origin: chat
 derived_from:
@@ -17,7 +17,7 @@ relations:
   target: preferences/lang_fam
 ---
 
-Repeated in passing:
+Same detail, recorded separately:
 
 Twi with kwame on calls.
 

@@ -1,13 +1,13 @@
 ---
 title: Preference — health (duplicate note)
-updated: '2026-07-03'
+updated: '2026-02-23'
 type: semantic
 tags:
 - preferences
 - health
 - duplicate
 lifecycle: stale
-confidence: 0.74
+confidence: 0.59
 source:
   origin: chat
 derived_from:

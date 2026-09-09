@@ -1,13 +1,13 @@
 ---
 title: Preference — leisure (duplicate note)
-updated: '2024-11-24'
+updated: '2026-04-05'
 type: semantic
 tags:
 - preferences
 - leisure
 - duplicate
 lifecycle: stale
-confidence: 0.78
+confidence: 0.72
 source:
   origin: chat
 derived_from:

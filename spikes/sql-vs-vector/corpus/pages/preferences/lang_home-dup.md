@@ -1,13 +1,13 @@
 ---
 title: Preference — language (duplicate note)
-updated: '2026-05-17'
+updated: '2026-05-26'
 type: semantic
 tags:
 - preferences
 - language
 - duplicate
-lifecycle: stale
-confidence: 0.72
+lifecycle: active
+confidence: 0.62
 source:
   origin: chat
 derived_from:
@@ -17,7 +17,7 @@ relations:
   target: preferences/lang_home
 ---
 
-Repeated in passing:
+Restated during a clear-out of old notes:
 
 Swedish at home with the children, english at work.
 

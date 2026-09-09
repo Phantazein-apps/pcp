@@ -1,14 +1,14 @@
 ---
 title: Aisha Rahman (duplicate note)
-updated: '2024-04-28'
+updated: '2026-05-17'
 type: semantic
 tags:
 - people
 - colleague
 - nordvik-analytics
 - duplicate
-lifecycle: stale
-confidence: 0.7
+lifecycle: active
+confidence: 0.78
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/aisha-rahman
 ---
 
-Noted again, from a later conversation:
+Same detail, recorded separately:
 
 Aisha Rahman — colleague. Security engineer at Nordvik Analytics, based in Gothenburg.
 

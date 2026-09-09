@@ -1,6 +1,6 @@
 ---
 title: Ingrid Saarinen (duplicate note)
-updated: '2026-04-08'
+updated: '2026-05-05'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - nordvik-analytics
 - duplicate
 lifecycle: active
-confidence: 0.76
+confidence: 0.58
 source:
   origin: chat
 derived_from:

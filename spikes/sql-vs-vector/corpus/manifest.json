@@ -27,12 +27,12 @@
       "work": 27
     },
     "by_lifecycle": {
-      "active": 356,
-      "archived": 36,
-      "stale": 103,
+      "active": 347,
+      "archived": 41,
+      "stale": 107,
       "validated": 52
     },
-    "default_visible": 408,
+    "default_visible": 399,
     "sensitive": 37
   },
   "pages": [
@@ -7975,7 +7975,7 @@
       "title": "Preference — food (duplicate note)",
       "domain": "preferences",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
@@ -7995,8 +7995,8 @@
       "derived_from": [
         "preferences/coffee"
       ],
-      "updated": "2025-02-12",
-      "default_visible": true,
+      "updated": "2024-08-09",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8014,7 +8014,7 @@
       "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2026-03-02",
       "valid_until": null,
       "confidence": 0.58,
       "tags": [
@@ -8033,7 +8033,7 @@
       "derived_from": [
         "projects/windrow"
       ],
-      "updated": "2024-01-05",
+      "updated": "2024-08-24",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8054,7 +8054,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.74,
+      "confidence": 0.59,
       "tags": [
         "preferences",
         "health",
@@ -8069,7 +8069,7 @@
       "derived_from": [
         "preferences/exercise"
       ],
-      "updated": "2026-07-03",
+      "updated": "2026-02-23",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8090,7 +8090,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.64,
+      "confidence": 0.59,
       "tags": [
         "people",
         "professional",
@@ -8106,7 +8106,7 @@
       "derived_from": [
         "people/cecilia-bratt"
       ],
-      "updated": "2025-02-23",
+      "updated": "2025-01-23",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8127,7 +8127,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.66,
+      "confidence": 0.76,
       "tags": [
         "people",
         "friend",
@@ -8143,7 +8143,7 @@
       "derived_from": [
         "people/greta-palm"
       ],
-      "updated": "2024-02-06",
+      "updated": "2025-03-30",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8152,7 +8152,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nGreta Palm — friend. Veterinarian at Palm Veterinar, based in Gothenburg.\n\nMara sees Greta mostly through friend contexts. Contact details are in the address book."
+      "body": "Noted again, from a later conversation:\n\nGreta Palm — friend. Veterinarian at Palm Veterinar, based in Gothenburg.\n\nMara sees Greta mostly through friend contexts. Contact details are in the address book."
     },
     {
       "path": "people/noor-haddad-dup",
@@ -8164,7 +8164,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.62,
+      "confidence": 0.8,
       "tags": [
         "people",
         "friend",
@@ -8180,7 +8180,7 @@
       "derived_from": [
         "people/noor-haddad"
       ],
-      "updated": "2025-07-30",
+      "updated": "2025-12-03",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8189,7 +8189,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nNoor Haddad — friend. Hydrologist at Klarvatten AB, based in Gothenburg.\n\nMara sees Noor mostly through friend contexts. Contact details are in the address book."
+      "body": "Restated during a clear-out of old notes:\n\nNoor Haddad — friend. Hydrologist at Klarvatten AB, based in Gothenburg.\n\nMara sees Noor mostly through friend contexts. Contact details are in the address book."
     },
     {
       "path": "people/ingrid-saarinen-dup",
@@ -8201,7 +8201,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.76,
+      "confidence": 0.58,
       "tags": [
         "people",
         "colleague",
@@ -8217,7 +8217,7 @@
       "derived_from": [
         "people/ingrid-saarinen"
       ],
-      "updated": "2026-04-08",
+      "updated": "2026-05-05",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8238,7 +8238,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.78,
+      "confidence": 0.72,
       "tags": [
         "preferences",
         "leisure",
@@ -8253,7 +8253,7 @@
       "derived_from": [
         "preferences/news"
       ],
-      "updated": "2024-11-24",
+      "updated": "2026-04-05",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8269,12 +8269,12 @@
       "title": "Bicycles (duplicate note)",
       "domain": "home",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.63,
+      "confidence": 0.62,
       "tags": [
         "home",
         "bicycles",
@@ -8289,8 +8289,8 @@
       "derived_from": [
         "home/bicycles"
       ],
-      "updated": "2024-10-19",
-      "default_visible": true,
+      "updated": "2024-04-07",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8298,19 +8298,19 @@
         "home",
         "full"
       ],
-      "body": "Noted again, from a later conversation:\n\nBicycles: four, two cargo, stored in the basement cage."
+      "body": "Same detail, recorded separately:\n\nBicycles: four, two cargo, stored in the basement cage."
     },
     {
       "path": "people/stig-ohman-dup",
       "title": "Stig Ohman (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.8,
+      "confidence": 0.67,
       "tags": [
         "people",
         "neighbour",
@@ -8326,8 +8326,8 @@
       "derived_from": [
         "people/stig-ohman"
       ],
-      "updated": "2025-05-26",
-      "default_visible": true,
+      "updated": "2026-07-19",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8335,19 +8335,19 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nStig Ohman — neighbour. Retired teacher at -, based in Gothenburg.\n\nMara sees Stig mostly through neighbour contexts. Contact details are in the address book."
+      "body": "Noted again, from a later conversation:\n\nStig Ohman — neighbour. Retired teacher at -, based in Gothenburg.\n\nMara sees Stig mostly through neighbour contexts. Contact details are in the address book."
     },
     {
       "path": "health/sulfasalazine-dup",
       "title": "Sulfasalazine (duplicate note)",
       "domain": "health",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "archived",
       "sensitivity": "sensitive",
       "namespace": "pcp.health",
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.58,
+      "valid_from": "2021-12-01",
+      "valid_until": "2022-01-09",
+      "confidence": 0.6,
       "tags": [
         "health",
         "sulfasalazine",
@@ -8362,8 +8362,8 @@
       "derived_from": [
         "health/sulfasalazine"
       ],
-      "updated": "2025-03-15",
-      "default_visible": true,
+      "updated": "2025-09-12",
+      "default_visible": false,
       "visible_in": [
         "health",
         "full"
@@ -8375,12 +8375,12 @@
       "title": "Astrid Lindqvist (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.61,
+      "confidence": 0.74,
       "tags": [
         "people",
         "mother",
@@ -8396,8 +8396,8 @@
       "derived_from": [
         "people/astrid-lindqvist"
       ],
-      "updated": "2024-03-13",
-      "default_visible": false,
+      "updated": "2024-05-17",
+      "default_visible": true,
       "visible_in": [
         "default",
         "health",
@@ -8405,7 +8405,7 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nAstrid Lindqvist — mother. Retired archivist at retired, based in Uppsala.\n\nMara sees Astrid mostly through mother contexts. Contact details are in the address book."
+      "body": "Noted again, from a later conversation:\n\nAstrid Lindqvist — mother. Retired archivist at retired, based in Uppsala.\n\nMara sees Astrid mostly through mother contexts. Contact details are in the address book."
     },
     {
       "path": "projects/passerine-dup",
@@ -8415,9 +8415,9 @@
       "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2026-02-02",
       "valid_until": null,
-      "confidence": 0.56,
+      "confidence": 0.67,
       "tags": [
         "projects",
         "nordvik-analytics",
@@ -8434,7 +8434,7 @@
       "derived_from": [
         "projects/passerine"
       ],
-      "updated": "2025-01-16",
+      "updated": "2026-03-29",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8443,7 +8443,7 @@
         "home",
         "full"
       ],
-      "body": "Noted again, from a later conversation:\n\n# Passerine\n\nClient: Nordvik Analytics. Engineering lead: Dmitri Sokolov. Design lead: Frida Lund.\nBudget 650 kSEK. Repository `nordvik/passerine`. Built on Playwright.\n\nStatus: paused. Started 2026-02-02."
+      "body": "Repeated in passing:\n\n# Passerine\n\nClient: Nordvik Analytics. Engineering lead: Dmitri Sokolov. Design lead: Frida Lund.\nBudget 650 kSEK. Repository `nordvik/passerine`. Built on Playwright.\n\nStatus: paused. Started 2026-02-02."
     },
     {
       "path": "people/tomas-ek-dup",
@@ -8455,7 +8455,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.7,
+      "confidence": 0.57,
       "tags": [
         "people",
         "colleague",
@@ -8471,7 +8471,7 @@
       "derived_from": [
         "people/tomas-ek"
       ],
-      "updated": "2026-05-09",
+      "updated": "2025-01-16",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8480,7 +8480,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nTomas Ek — colleague. Staff engineer at Nordvik Analytics, based in Gothenburg.\n\nMara sees Tomas mostly through work contexts. Reachable on the internal directory."
+      "body": "Restated during a clear-out of old notes:\n\nTomas Ek — colleague. Staff engineer at Nordvik Analytics, based in Gothenburg.\n\nMara sees Tomas mostly through work contexts. Reachable on the internal directory."
     },
     {
       "path": "people/dmitri-sokolov-dup",
@@ -8492,7 +8492,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.62,
+      "confidence": 0.6,
       "tags": [
         "people",
         "colleague",
@@ -8508,7 +8508,7 @@
       "derived_from": [
         "people/dmitri-sokolov"
       ],
-      "updated": "2026-06-20",
+      "updated": "2025-09-09",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8517,7 +8517,7 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nDmitri Sokolov — colleague. Qa lead at Nordvik Analytics, based in Tallinn.\n\nMara sees Dmitri mostly through work contexts. Reachable on the internal directory."
+      "body": "Same detail, recorded separately:\n\nDmitri Sokolov — colleague. Qa lead at Nordvik Analytics, based in Tallinn.\n\nMara sees Dmitri mostly through work contexts. Reachable on the internal directory."
     },
     {
       "path": "preferences/music-dup",
@@ -8529,7 +8529,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.58,
+      "confidence": 0.78,
       "tags": [
         "preferences",
         "leisure",
@@ -8544,7 +8544,7 @@
       "derived_from": [
         "preferences/music"
       ],
-      "updated": "2024-06-05",
+      "updated": "2025-07-12",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -8553,19 +8553,19 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nListens to highlife and nordic jazz while working.\n\nHeld mediumly; applies across contexts."
+      "body": "Noted again, from a later conversation:\n\nListens to highlife and nordic jazz while working.\n\nHeld mediumly; applies across contexts."
     },
     {
       "path": "people/petra-hallgren-dup",
       "title": "Petra Hallgren (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.68,
+      "confidence": 0.66,
       "tags": [
         "people",
         "manager",
@@ -8581,8 +8581,8 @@
       "derived_from": [
         "people/petra-hallgren"
       ],
-      "updated": "2026-04-06",
-      "default_visible": false,
+      "updated": "2026-01-24",
+      "default_visible": true,
       "visible_in": [
         "default",
         "health",
@@ -8590,19 +8590,19 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nPetra Hallgren — manager. Vp engineering at Nordvik Analytics, based in Gothenburg.\n\nMara sees Petra mostly through work contexts. Reachable on the internal directory."
+      "body": "Same detail, recorded separately:\n\nPetra Hallgren — manager. Vp engineering at Nordvik Analytics, based in Gothenburg.\n\nMara sees Petra mostly through work contexts. Reachable on the internal directory."
     },
     {
       "path": "people/theo-osei-lindqvist-dup",
       "title": "Theo Osei-Lindqvist (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.59,
+      "confidence": 0.66,
       "tags": [
         "people",
         "child",
@@ -8618,8 +8618,8 @@
       "derived_from": [
         "people/theo-osei-lindqvist"
       ],
-      "updated": "2026-01-29",
-      "default_visible": true,
+      "updated": "2025-07-04",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8639,7 +8639,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.8,
+      "confidence": 0.72,
       "tags": [
         "preferences",
         "family",
@@ -8654,7 +8654,7 @@
       "derived_from": [
         "preferences/weekend"
       ],
-      "updated": "2025-01-28",
+      "updated": "2024-06-10",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8663,19 +8663,19 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nSaturdays are family time, no work calls.\n\nHeld strongly; applies across contexts."
+      "body": "Repeated in passing:\n\nSaturdays are family time, no work calls.\n\nHeld strongly; applies across contexts."
     },
     {
       "path": "finances/lansforsakringar-savings-dup",
       "title": "Lansforsakringar — savings (duplicate note)",
       "domain": "finances",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "sensitive",
       "namespace": "pcp.finance",
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.76,
+      "confidence": 0.62,
       "tags": [
         "finances",
         "lansforsakringar",
@@ -8691,13 +8691,13 @@
       "derived_from": [
         "finances/lansforsakringar-savings"
       ],
-      "updated": "2024-03-23",
-      "default_visible": false,
+      "updated": "2025-11-26",
+      "default_visible": true,
       "visible_in": [
         "finance",
         "full"
       ],
-      "body": "Restated during a clear-out of old notes:\n\nSavings with Lansforsakringar. Reference LF-2290.\n\nEmergency buffer, 6 months outgoings."
+      "body": "Same detail, recorded separately:\n\nSavings with Lansforsakringar. Reference LF-2290.\n\nEmergency buffer, 6 months outgoings."
     },
     {
       "path": "finances/trygg-hansa-home-insurance-dup",
@@ -8709,7 +8709,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.7,
+      "confidence": 0.68,
       "tags": [
         "finances",
         "trygg-hansa",
@@ -8725,7 +8725,7 @@
       "derived_from": [
         "finances/trygg-hansa-home-insurance"
       ],
-      "updated": "2025-06-11",
+      "updated": "2024-03-30",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -8734,19 +8734,19 @@
         "home",
         "full"
       ],
-      "body": "Noted again, from a later conversation:\n\nHome insurance with Trygg-Hansa. Reference TH-4102.\n\nFlat and cabin on one policy."
+      "body": "Restated during a clear-out of old notes:\n\nHome insurance with Trygg-Hansa. Reference TH-4102.\n\nFlat and cabin on one policy."
     },
     {
       "path": "preferences/dentist-dup",
       "title": "Preference — health (duplicate note)",
       "domain": "preferences",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.77,
+      "confidence": 0.72,
       "tags": [
         "preferences",
         "health",
@@ -8762,7 +8762,7 @@
         "preferences/dentist"
       ],
       "updated": "2025-09-11",
-      "default_visible": true,
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8770,7 +8770,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nBooks dental checkups in january and july.\n\nHeld mediumly; applies across contexts."
+      "body": "Repeated in passing:\n\nBooks dental checkups in january and july.\n\nHeld mediumly; applies across contexts."
     },
     {
       "path": "vehicles/volvo-v60-dup",
@@ -8780,9 +8780,9 @@
       "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2023-04-11",
       "valid_until": null,
-      "confidence": 0.79,
+      "confidence": 0.76,
       "tags": [
         "vehicles",
         "volvo",
@@ -8819,7 +8819,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.72,
+      "confidence": 0.61,
       "tags": [
         "preferences",
         "language",
@@ -8843,19 +8843,19 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nTwi with kwame on calls.\n\nHeld mediumly; applies across contexts."
+      "body": "Same detail, recorded separately:\n\nTwi with kwame on calls.\n\nHeld mediumly; applies across contexts."
     },
     {
       "path": "home/home-network-dup",
       "title": "Home network (duplicate note)",
       "domain": "home",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.61,
+      "confidence": 0.58,
       "tags": [
         "home",
         "home-network",
@@ -8871,7 +8871,7 @@
         "home/home-network"
       ],
       "updated": "2024-12-26",
-      "default_visible": true,
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -8889,9 +8889,9 @@
       "lifecycle": "active",
       "sensitivity": "sensitive",
       "namespace": "pcp.health",
-      "valid_from": null,
+      "valid_from": "2022-01-10",
       "valid_until": null,
-      "confidence": 0.75,
+      "confidence": 0.59,
       "tags": [
         "health",
         "folic-acid",
@@ -8906,7 +8906,7 @@
       "derived_from": [
         "health/folic-acid"
       ],
-      "updated": "2024-08-14",
+      "updated": "2026-04-20",
       "default_visible": true,
       "visible_in": [
         "health",
@@ -8919,7 +8919,7 @@
       "title": "Preference — food (duplicate note)",
       "domain": "preferences",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
@@ -8939,8 +8939,8 @@
       "derived_from": [
         "preferences/food_diet"
       ],
-      "updated": "2024-03-17",
-      "default_visible": false,
+      "updated": "2025-04-21",
+      "default_visible": true,
       "visible_in": [
         "default",
         "health",
@@ -8955,7 +8955,7 @@
       "title": "Handelsbanken — joint account (duplicate note)",
       "domain": "finances",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
@@ -8976,8 +8976,8 @@
       "derived_from": [
         "finances/handelsbanken-joint-account"
       ],
-      "updated": "2025-05-03",
-      "default_visible": true,
+      "updated": "2024-03-25",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -9013,7 +9013,7 @@
       "derived_from": [
         "finances/avanza-private-pension"
       ],
-      "updated": "2024-01-27",
+      "updated": "2024-06-17",
       "default_visible": true,
       "visible_in": [
         "finance",
@@ -9026,12 +9026,12 @@
       "title": "Project Greenfell (duplicate note)",
       "domain": "projects",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "archived",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.73,
+      "valid_from": "2025-08-04",
+      "valid_until": "2026-01-09",
+      "confidence": 0.7,
       "tags": [
         "projects",
         "tallhojd-energi",
@@ -9064,12 +9064,12 @@
       "title": "Dr. Selma Ferreira (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.77,
+      "confidence": 0.71,
       "tags": [
         "people",
         "clinician",
@@ -9086,7 +9086,7 @@
         "people/dr-selma-ferreira"
       ],
       "updated": "2024-10-10",
-      "default_visible": true,
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -9094,7 +9094,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nDr. Selma Ferreira — clinician. Rheumatologist at Sahlberg Clinic, based in Gothenburg.\n\nMara sees Dr. mostly through clinician contexts. Contact details are in the address book."
+      "body": "Restated during a clear-out of old notes:\n\nDr. Selma Ferreira — clinician. Rheumatologist at Sahlberg Clinic, based in Gothenburg.\n\nMara sees Dr. mostly through clinician contexts. Contact details are in the address book."
     },
     {
       "path": "projects/sentinel-dup",
@@ -9104,9 +9104,9 @@
       "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2026-04-06",
       "valid_until": null,
-      "confidence": 0.8,
+      "confidence": 0.72,
       "tags": [
         "projects",
         "stellarcrest-bank",
@@ -9123,7 +9123,7 @@
       "derived_from": [
         "projects/sentinel"
       ],
-      "updated": "2025-01-22",
+      "updated": "2026-04-04",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9144,7 +9144,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.78,
+      "confidence": 0.74,
       "tags": [
         "people",
         "client",
@@ -9160,7 +9160,7 @@
       "derived_from": [
         "people/nils-bergqvist"
       ],
-      "updated": "2026-02-15",
+      "updated": "2026-06-01",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -9169,7 +9169,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nNils Bergqvist — client. Operations director at Tallhojd Energi, based in Vasteras.\n\nMara sees Nils mostly through work contexts. Contact details are in the address book."
+      "body": "Noted again, from a later conversation:\n\nNils Bergqvist — client. Operations director at Tallhojd Energi, based in Vasteras.\n\nMara sees Nils mostly through work contexts. Contact details are in the address book."
     },
     {
       "path": "health/methotrexate-dup",
@@ -9179,9 +9179,9 @@
       "lifecycle": "stale",
       "sensitivity": "sensitive",
       "namespace": "pcp.health",
-      "valid_from": null,
+      "valid_from": "2022-01-10",
       "valid_until": null,
-      "confidence": 0.59,
+      "confidence": 0.65,
       "tags": [
         "health",
         "methotrexate",
@@ -9196,25 +9196,25 @@
       "derived_from": [
         "health/methotrexate"
       ],
-      "updated": "2026-01-16",
+      "updated": "2026-02-15",
       "default_visible": false,
       "visible_in": [
         "health",
         "full"
       ],
-      "body": "Noted again, from a later conversation:\n\nMethotrexate. 15 mg weekly, thursday evenings.\n\nUnder Dr. Selma Ferreira."
+      "body": "Same detail, recorded separately:\n\nMethotrexate. 15 mg weekly, thursday evenings.\n\nUnder Dr. Selma Ferreira."
     },
     {
       "path": "people/sofie-lindqvist-dup",
       "title": "Sofie Lindqvist (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.75,
+      "confidence": 0.64,
       "tags": [
         "people",
         "sister",
@@ -9230,8 +9230,8 @@
       "derived_from": [
         "people/sofie-lindqvist"
       ],
-      "updated": "2026-04-08",
-      "default_visible": true,
+      "updated": "2024-06-20",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -9239,7 +9239,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\nSofie Lindqvist — sister. Logistics manager at Renhold AB, based in Malmo.\n\nMara sees Sofie mostly through sister contexts. Contact details are in the address book."
+      "body": "Noted again, from a later conversation:\n\nSofie Lindqvist — sister. Logistics manager at Renhold AB, based in Malmo.\n\nMara sees Sofie mostly through sister contexts. Contact details are in the address book."
     },
     {
       "path": "projects/moraine-dup",
@@ -9249,9 +9249,9 @@
       "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2026-05-18",
       "valid_until": null,
-      "confidence": 0.61,
+      "confidence": 0.68,
       "tags": [
         "projects",
         "nordvik-analytics",
@@ -9268,7 +9268,7 @@
       "derived_from": [
         "projects/moraine"
       ],
-      "updated": "2024-01-21",
+      "updated": "2026-03-16",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9277,7 +9277,7 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\n# Moraine\n\nClient: Nordvik Analytics. Engineering lead: Bengt Ahlgren. Design lead: Hanna Brozek.\nBudget 900 kSEK. Repository `nordvik/moraine`. Built on Terraform.\n\nStatus: active. Started 2026-05-18."
+      "body": "Same detail, recorded separately:\n\n# Moraine\n\nClient: Nordvik Analytics. Engineering lead: Bengt Ahlgren. Design lead: Hanna Brozek.\nBudget 900 kSEK. Repository `nordvik/moraine`. Built on Terraform.\n\nStatus: active. Started 2026-05-18."
     },
     {
       "path": "people/priya-venkatesan-dup",
@@ -9289,7 +9289,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.7,
+      "confidence": 0.65,
       "tags": [
         "people",
         "client",
@@ -9305,7 +9305,7 @@
       "derived_from": [
         "people/priya-venkatesan"
       ],
-      "updated": "2024-06-22",
+      "updated": "2024-09-14",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9326,7 +9326,7 @@
       "namespace": "pcp.finance",
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.69,
+      "confidence": 0.7,
       "tags": [
         "finances",
         "handelsbanken",
@@ -9342,13 +9342,13 @@
       "derived_from": [
         "finances/handelsbanken-mortgage"
       ],
-      "updated": "2026-03-18",
+      "updated": "2024-09-11",
       "default_visible": true,
       "visible_in": [
         "finance",
         "full"
       ],
-      "body": "Repeated in passing:\n\nMortgage with Handelsbanken. Reference HB-1153.\n\nFlat in majorna."
+      "body": "Noted again, from a later conversation:\n\nMortgage with Handelsbanken. Reference HB-1153.\n\nFlat in majorna."
     },
     {
       "path": "projects/thornwood-dup",
@@ -9358,9 +9358,9 @@
       "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2026-07-20",
       "valid_until": null,
-      "confidence": 0.79,
+      "confidence": 0.61,
       "tags": [
         "projects",
         "halvorsen-marine",
@@ -9377,7 +9377,7 @@
       "derived_from": [
         "projects/thornwood"
       ],
-      "updated": "2025-01-26",
+      "updated": "2025-08-05",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9386,7 +9386,7 @@
         "home",
         "full"
       ],
-      "body": "Same detail, recorded separately:\n\n# Thornwood\n\nClient: Halvorsen Marine. Engineering lead: Ingrid Saarinen. Design lead: Hanna Brozek.\nBudget 2100 kSEK. Repository `nordvik/thornwood`. Built on Polars.\n\nStatus: active. Started 2026-07-20."
+      "body": "Repeated in passing:\n\n# Thornwood\n\nClient: Halvorsen Marine. Engineering lead: Ingrid Saarinen. Design lead: Hanna Brozek.\nBudget 2100 kSEK. Repository `nordvik/thornwood`. Built on Polars.\n\nStatus: active. Started 2026-07-20."
     },
     {
       "path": "home/cabin-at-smogen-dup",
@@ -9398,7 +9398,7 @@
       "namespace": "pcp.home",
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.79,
+      "confidence": 0.63,
       "tags": [
         "home",
         "cabin-at-smogen",
@@ -9413,13 +9413,13 @@
       "derived_from": [
         "home/cabin-at-smogen"
       ],
-      "updated": "2025-02-06",
+      "updated": "2026-09-05",
       "default_visible": true,
       "visible_in": [
         "home",
         "full"
       ],
-      "body": "Restated during a clear-out of old notes:\n\nCabin at smogen: inherited from Astrid's side, wood heated."
+      "body": "Same detail, recorded separately:\n\nCabin at smogen: inherited from Astrid's side, wood heated."
     },
     {
       "path": "vehicles/piaggio-vespa-gts-dup",
@@ -9429,9 +9429,9 @@
       "lifecycle": "stale",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
+      "valid_from": "2021-06-30",
       "valid_until": null,
-      "confidence": 0.78,
+      "confidence": 0.6,
       "tags": [
         "vehicles",
         "piaggio",
@@ -9447,7 +9447,7 @@
       "derived_from": [
         "vehicles/piaggio-vespa-gts"
       ],
-      "updated": "2026-05-26",
+      "updated": "2026-02-24",
       "default_visible": false,
       "visible_in": [
         "default",
@@ -9456,19 +9456,19 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\n2021 Piaggio Vespa GTS, sage green. Registration CFN 145.\n\nSummer runabout, kept at smogen. Serviced by Peder Norrback at Norrback Bil in Molndal."
+      "body": "Restated during a clear-out of old notes:\n\n2021 Piaggio Vespa GTS, sage green. Registration CFN 145.\n\nSummer runabout, kept at smogen. Serviced by Peder Norrback at Norrback Bil in Molndal."
     },
     {
       "path": "preferences/lang_home-dup",
       "title": "Preference — language (duplicate note)",
       "domain": "preferences",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.72,
+      "confidence": 0.62,
       "tags": [
         "preferences",
         "language",
@@ -9483,8 +9483,8 @@
       "derived_from": [
         "preferences/lang_home"
       ],
-      "updated": "2026-05-17",
-      "default_visible": false,
+      "updated": "2026-05-26",
+      "default_visible": true,
       "visible_in": [
         "default",
         "health",
@@ -9492,19 +9492,19 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nSwedish at home with the children, english at work.\n\nHeld strongly; applies across contexts."
+      "body": "Restated during a clear-out of old notes:\n\nSwedish at home with the children, english at work.\n\nHeld strongly; applies across contexts."
     },
     {
       "path": "people/aisha-rahman-dup",
       "title": "Aisha Rahman (duplicate note)",
       "domain": "people",
       "type": "semantic",
-      "lifecycle": "stale",
+      "lifecycle": "active",
       "sensitivity": "normal",
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.7,
+      "confidence": 0.78,
       "tags": [
         "people",
         "colleague",
@@ -9520,8 +9520,8 @@
       "derived_from": [
         "people/aisha-rahman"
       ],
-      "updated": "2024-04-28",
-      "default_visible": false,
+      "updated": "2026-05-17",
+      "default_visible": true,
       "visible_in": [
         "default",
         "health",
@@ -9529,7 +9529,7 @@
         "home",
         "full"
       ],
-      "body": "Noted again, from a later conversation:\n\nAisha Rahman — colleague. Security engineer at Nordvik Analytics, based in Gothenburg.\n\nMara sees Aisha mostly through work contexts. Reachable on the internal directory."
+      "body": "Same detail, recorded separately:\n\nAisha Rahman — colleague. Security engineer at Nordvik Analytics, based in Gothenburg.\n\nMara sees Aisha mostly through work contexts. Reachable on the internal directory."
     },
     {
       "path": "people/mira-tuominen-dup",
@@ -9541,7 +9541,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.58,
+      "confidence": 0.7,
       "tags": [
         "people",
         "colleague",
@@ -9557,7 +9557,7 @@
       "derived_from": [
         "people/mira-tuominen"
       ],
-      "updated": "2024-04-09",
+      "updated": "2025-05-18",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9566,19 +9566,19 @@
         "home",
         "full"
       ],
-      "body": "Repeated in passing:\n\nMira Tuominen — colleague. Product manager at Nordvik Analytics, based in Helsinki.\n\nMara sees Mira mostly through work contexts. Reachable on the internal directory."
+      "body": "Noted again, from a later conversation:\n\nMira Tuominen — colleague. Product manager at Nordvik Analytics, based in Helsinki.\n\nMara sees Mira mostly through work contexts. Reachable on the internal directory."
     },
     {
       "path": "vehicles/saab-9-5-dup",
       "title": "Saab 9-5 (duplicate note)",
       "domain": "vehicles",
       "type": "semantic",
-      "lifecycle": "active",
+      "lifecycle": "archived",
       "sensitivity": "normal",
       "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.61,
+      "valid_from": "2016-05-02",
+      "valid_until": "2023-04-02",
+      "confidence": 0.59,
       "tags": [
         "vehicles",
         "saab",
@@ -9594,8 +9594,8 @@
       "derived_from": [
         "vehicles/saab-9-5"
       ],
-      "updated": "2026-04-09",
-      "default_visible": true,
+      "updated": "2024-04-09",
+      "default_visible": false,
       "visible_in": [
         "default",
         "health",
@@ -9606,196 +9606,7 @@
       "body": "Repeated in passing:\n\n2008 Saab 9-5, midnight blue. Registration BJH 226.\n\nSold when the v60 arrived. Serviced by Peder Norrback at Norrback Bil in Molndal."
     },
     {
-      "path": "journal/2025-10-05-000",
-      "title": "Journal — 2025-10-05",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.63,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-10-05",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Emeka Nwosu sent over notes from the session. Skimmed, will read properly later."
-    },
-    {
-      "path": "journal/2025-10-01-001",
-      "title": "Journal — 2025-10-01",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.74,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-10-01",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Errand day: post office, then the hardware shop for cable ties."
-    },
-    {
-      "path": "journal/2026-08-11-002",
-      "title": "Journal — 2026-08-11",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.67,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2026-08-11",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Slow morning. Coffee, then two hours on seabird counts without interruption."
-    },
-    {
-      "path": "journal/2025-07-17-003",
-      "title": "Journal — 2025-07-17",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.66,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-07-17",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Short call with Dr. Ada Okonkwo about scheduling. Nothing decided."
-    },
-    {
-      "path": "journal/2025-05-26-004",
-      "title": "Journal — 2025-05-26",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.43,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-05-26",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Short call with Yaw Osei about scheduling. Nothing decided."
-    },
-    {
-      "path": "journal/2025-01-02-005",
-      "title": "Journal — 2025-01-02",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "stale",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.6,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-01-02",
-      "default_visible": false,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Read a long piece about urban cycling. Worth revisiting."
-    },
-    {
-      "path": "journal/2024-11-25-006",
-      "title": "Journal — 2024-11-25",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.59,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2024-11-25",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Hugo Ranta sent over notes from the session. Skimmed, will read properly later."
-    },
-    {
-      "path": "journal/2025-12-26-007",
+      "path": "journal/2025-12-26-000",
       "title": "Journal — 2025-12-26",
       "domain": "preferences",
       "type": "episodic",
@@ -9804,7 +9615,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.55,
+      "confidence": 0.48,
       "tags": [
         "journal"
       ],
@@ -9819,65 +9630,11 @@
         "home",
         "full"
       ],
-      "body": "Johan Wikstrom sent over notes from the session. Skimmed, will read properly later."
+      "body": "Rescheduled the call with Johan Wikstrom. New slot next week."
     },
     {
-      "path": "journal/2025-07-12-008",
-      "title": "Journal — 2025-07-12",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "stale",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.55,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-07-12",
-      "default_visible": false,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Short call with Mira Tuominen about scheduling. Nothing decided."
-    },
-    {
-      "path": "journal/2024-11-23-009",
-      "title": "Journal — 2024-11-23",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.5,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2024-11-23",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Ingrid Saarinen recommended a book on kora tuning. Added to the list."
-    },
-    {
-      "path": "journal/2024-09-07-010",
-      "title": "Journal — 2024-09-07",
+      "path": "journal/2025-01-13-001",
+      "title": "Journal — 2025-01-13",
       "domain": "preferences",
       "type": "episodic",
       "lifecycle": "active",
@@ -9891,7 +9648,7 @@
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2024-09-07",
+      "updated": "2025-01-13",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9900,11 +9657,11 @@
         "home",
         "full"
       ],
-      "body": "Read a long piece about orchard grafting. Worth revisiting."
+      "body": "Dr. Selma Ferreira recommended a book on tidal modelling. Added to the list."
     },
     {
-      "path": "journal/2025-09-06-011",
-      "title": "Journal — 2025-09-06",
+      "path": "journal/2025-02-09-002",
+      "title": "Journal — 2025-02-09",
       "domain": "preferences",
       "type": "episodic",
       "lifecycle": "active",
@@ -9912,13 +9669,13 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.59,
+      "confidence": 0.73,
       "tags": [
         "journal"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2025-09-06",
+      "updated": "2025-02-09",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9927,11 +9684,38 @@
         "home",
         "full"
       ],
-      "body": "Quiet day. Dr. Selma Ferreira and Cecilia Bratt came up in conversation; nothing to action."
+      "body": "Rosa Vidal recommended a book on kora tuning. Added to the list."
     },
     {
-      "path": "journal/2025-01-15-012",
-      "title": "Journal — 2025-01-15",
+      "path": "journal/2025-02-20-003",
+      "title": "Journal — 2025-02-20",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "stale",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.74,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2025-02-20",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Short call with Aisha Rahman about scheduling. Nothing decided."
+    },
+    {
+      "path": "journal/2026-04-14-004",
+      "title": "Journal — 2026-04-14",
       "domain": "preferences",
       "type": "episodic",
       "lifecycle": "active",
@@ -9939,13 +9723,13 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.59,
+      "confidence": 0.51,
       "tags": [
         "journal"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2025-01-15",
+      "updated": "2026-04-14",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9954,11 +9738,38 @@
         "home",
         "full"
       ],
-      "body": "Mira Tuominen recommended a book on Nordic archives. Added to the list."
+      "body": "Short call with Dr. Ada Okonkwo about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2024-11-23-013",
-      "title": "Journal — 2024-11-23",
+      "path": "journal/2024-10-31-005",
+      "title": "Journal — 2024-10-31",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "archived",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.64,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2024-10-31",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Rescheduled the call with Nils Bergqvist. New slot next week."
+    },
+    {
+      "path": "journal/2026-09-02-006",
+      "title": "Journal — 2026-09-02",
       "domain": "preferences",
       "type": "episodic",
       "lifecycle": "active",
@@ -9966,13 +9777,13 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.66,
+      "confidence": 0.46,
       "tags": [
         "journal"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2024-11-23",
+      "updated": "2026-09-02",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -9981,10 +9792,226 @@
         "home",
         "full"
       ],
-      "body": "Slow morning. Coffee, then two hours on typography without interruption."
+      "body": "Long thread with Theo Osei-Lindqvist and Mira Tuominen; resolved without a meeting."
     },
     {
-      "path": "journal/2025-10-08-014",
+      "path": "journal/2025-01-25-007",
+      "title": "Journal — 2025-01-25",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "stale",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.51,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2025-01-25",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Read a long piece about typography. Worth revisiting."
+    },
+    {
+      "path": "journal/2025-01-09-008",
+      "title": "Journal — 2025-01-09",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "active",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.42,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2025-01-09",
+      "default_visible": true,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Errand day: post office, then the hardware shop for a doormat."
+    },
+    {
+      "path": "journal/2025-03-02-009",
+      "title": "Journal — 2025-03-02",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "active",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.41,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2025-03-02",
+      "default_visible": true,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Short call with Dr. Anders Lindholm about scheduling. Nothing decided."
+    },
+    {
+      "path": "journal/2024-11-24-010",
+      "title": "Journal — 2024-11-24",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "stale",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.42,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2024-11-24",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Errand day: post office, then the hardware shop for a bicycle light."
+    },
+    {
+      "path": "journal/2024-07-07-011",
+      "title": "Journal — 2024-07-07",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "stale",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.46,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2024-07-07",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Idris Bello recommended a book on energy tariffs. Added to the list."
+    },
+    {
+      "path": "journal/2024-07-24-012",
+      "title": "Journal — 2024-07-24",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "archived",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.42,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2024-07-24",
+      "default_visible": false,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Quiet day. Theo Osei-Lindqvist and Yusuf Halim came up in conversation; nothing to action."
+    },
+    {
+      "path": "journal/2025-12-11-013",
+      "title": "Journal — 2025-12-11",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "active",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.45,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2025-12-11",
+      "default_visible": true,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Theo Osei-Lindqvist sent over notes from the session. Skimmed, will read properly later."
+    },
+    {
+      "path": "journal/2024-07-07-014",
+      "title": "Journal — 2024-07-07",
+      "domain": "preferences",
+      "type": "episodic",
+      "lifecycle": "active",
+      "sensitivity": "normal",
+      "namespace": null,
+      "valid_from": null,
+      "valid_until": null,
+      "confidence": 0.62,
+      "tags": [
+        "journal"
+      ],
+      "relations": [],
+      "derived_from": [],
+      "updated": "2024-07-07",
+      "default_visible": true,
+      "visible_in": [
+        "default",
+        "health",
+        "finance",
+        "home",
+        "full"
+      ],
+      "body": "Long thread with Markus Reinholt and Johan Wikstrom; resolved without a meeting."
+    },
+    {
+      "path": "journal/2025-10-08-015",
       "title": "Journal — 2025-10-08",
       "domain": "preferences",
       "type": "episodic",
@@ -10008,10 +10035,10 @@
         "home",
         "full"
       ],
-      "body": "Ingrid Saarinen recommended a book on stream processing. Added to the list."
+      "body": "Long thread with Nell Osei-Lindqvist and Frida Lund; resolved without a meeting."
     },
     {
-      "path": "journal/2024-06-12-015",
+      "path": "journal/2024-06-12-016",
       "title": "Journal — 2024-06-12",
       "domain": "preferences",
       "type": "episodic",
@@ -10038,7 +10065,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-09-06-016",
+      "path": "journal/2025-09-06-017",
       "title": "Journal — 2025-09-06",
       "domain": "preferences",
       "type": "episodic",
@@ -10065,7 +10092,7 @@
       "body": "Rescheduled the call with Markus Reinholt. New slot next week."
     },
     {
-      "path": "journal/2026-09-08-017",
+      "path": "journal/2026-09-08-018",
       "title": "Journal — 2026-09-08",
       "domain": "preferences",
       "type": "episodic",
@@ -10092,7 +10119,7 @@
       "body": "Emeka Nwosu recommended a book on seabird counts. Added to the list."
     },
     {
-      "path": "journal/2024-10-20-018",
+      "path": "journal/2024-10-20-019",
       "title": "Journal — 2024-10-20",
       "domain": "preferences",
       "type": "episodic",
@@ -10119,7 +10146,7 @@
       "body": "Errand day: post office, then the hardware shop for gaffer tape."
     },
     {
-      "path": "journal/2026-01-15-019",
+      "path": "journal/2026-01-15-020",
       "title": "Journal — 2026-01-15",
       "domain": "preferences",
       "type": "episodic",
@@ -10146,7 +10173,7 @@
       "body": "Quiet day. Dmitri Sokolov and Theo Osei-Lindqvist came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2025-12-21-020",
+      "path": "journal/2025-12-21-021",
       "title": "Journal — 2025-12-21",
       "domain": "preferences",
       "type": "episodic",
@@ -10173,7 +10200,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-02-18-021",
+      "path": "journal/2025-02-18-022",
       "title": "Journal — 2025-02-18",
       "domain": "preferences",
       "type": "episodic",
@@ -10200,7 +10227,7 @@
       "body": "Short call with Noor Haddad about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-07-20-022",
+      "path": "journal/2025-07-20-023",
       "title": "Journal — 2025-07-20",
       "domain": "preferences",
       "type": "episodic",
@@ -10227,7 +10254,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-04-28-023",
+      "path": "journal/2025-04-28-024",
       "title": "Journal — 2025-04-28",
       "domain": "preferences",
       "type": "episodic",
@@ -10254,7 +10281,7 @@
       "body": "Picked up a new kettle on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-09-10-024",
+      "path": "journal/2025-09-10-025",
       "title": "Journal — 2025-09-10",
       "domain": "preferences",
       "type": "episodic",
@@ -10281,7 +10308,7 @@
       "body": "Errand day: post office, then the hardware shop for picture hooks."
     },
     {
-      "path": "journal/2025-03-23-025",
+      "path": "journal/2025-03-23-026",
       "title": "Journal — 2025-03-23",
       "domain": "preferences",
       "type": "episodic",
@@ -10308,7 +10335,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2026-01-18-026",
+      "path": "journal/2026-01-18-027",
       "title": "Journal — 2026-01-18",
       "domain": "preferences",
       "type": "episodic",
@@ -10335,7 +10362,7 @@
       "body": "Slow morning. Coffee, then two hours on Nordic archives without interruption."
     },
     {
-      "path": "journal/2025-12-08-027",
+      "path": "journal/2025-12-08-028",
       "title": "Journal — 2025-12-08",
       "domain": "preferences",
       "type": "episodic",
@@ -10362,7 +10389,7 @@
       "body": "Read a long piece about orchard grafting. Worth revisiting."
     },
     {
-      "path": "journal/2024-07-26-028",
+      "path": "journal/2024-07-26-029",
       "title": "Journal — 2024-07-26",
       "domain": "preferences",
       "type": "episodic",
@@ -10389,7 +10416,7 @@
       "body": "Lucia Ferrante sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2026-08-02-029",
+      "path": "journal/2026-08-02-030",
       "title": "Journal — 2026-08-02",
       "domain": "preferences",
       "type": "episodic",
@@ -10416,7 +10443,7 @@
       "body": "Quiet day. Petra Hallgren and Nell Osei-Lindqvist came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2024-12-09-030",
+      "path": "journal/2024-12-09-031",
       "title": "Journal — 2024-12-09",
       "domain": "preferences",
       "type": "episodic",
@@ -10443,7 +10470,7 @@
       "body": "Long thread with Dr. Ada Okonkwo and Johan Wikstrom; resolved without a meeting."
     },
     {
-      "path": "journal/2025-02-27-031",
+      "path": "journal/2025-02-27-032",
       "title": "Journal — 2025-02-27",
       "domain": "preferences",
       "type": "episodic",
@@ -10470,7 +10497,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2025-02-10-032",
+      "path": "journal/2025-02-10-033",
       "title": "Journal — 2025-02-10",
       "domain": "preferences",
       "type": "episodic",
@@ -10497,7 +10524,7 @@
       "body": "Picked up a doormat on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-03-01-033",
+      "path": "journal/2025-03-01-034",
       "title": "Journal — 2025-03-01",
       "domain": "preferences",
       "type": "episodic",
@@ -10524,7 +10551,7 @@
       "body": "Rafael Duarte recommended a book on kora tuning. Added to the list."
     },
     {
-      "path": "journal/2025-05-29-034",
+      "path": "journal/2025-05-29-035",
       "title": "Journal — 2025-05-29",
       "domain": "preferences",
       "type": "episodic",
@@ -10551,7 +10578,7 @@
       "body": "Quiet day. Stig Ohman and Greta Palm came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2025-10-14-035",
+      "path": "journal/2025-10-14-036",
       "title": "Journal — 2025-10-14",
       "domain": "preferences",
       "type": "episodic",
@@ -10578,7 +10605,7 @@
       "body": "Read a long piece about risk models. Worth revisiting."
     },
     {
-      "path": "journal/2025-06-27-036",
+      "path": "journal/2025-06-27-037",
       "title": "Journal — 2025-06-27",
       "domain": "preferences",
       "type": "episodic",
@@ -10605,7 +10632,7 @@
       "body": "Short call with Rosa Vidal about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-12-27-037",
+      "path": "journal/2025-12-27-038",
       "title": "Journal — 2025-12-27",
       "domain": "preferences",
       "type": "episodic",
@@ -10632,7 +10659,7 @@
       "body": "Astrid Lindqvist recommended a book on kora tuning. Added to the list."
     },
     {
-      "path": "journal/2024-11-25-038",
+      "path": "journal/2024-11-25-039",
       "title": "Journal — 2024-11-25",
       "domain": "preferences",
       "type": "episodic",
@@ -10659,7 +10686,7 @@
       "body": "Picked up a doormat on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-07-26-039",
+      "path": "journal/2026-07-26-040",
       "title": "Journal — 2026-07-26",
       "domain": "preferences",
       "type": "episodic",
@@ -10686,7 +10713,7 @@
       "body": "Quiet day. Saskia Vermeer and Astrid Lindqvist came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2024-09-25-040",
+      "path": "journal/2024-09-25-041",
       "title": "Journal — 2024-09-25",
       "domain": "preferences",
       "type": "episodic",
@@ -10713,7 +10740,7 @@
       "body": "Rescheduled the call with Greta Palm. New slot next week."
     },
     {
-      "path": "journal/2025-08-27-041",
+      "path": "journal/2025-08-27-042",
       "title": "Journal — 2025-08-27",
       "domain": "preferences",
       "type": "episodic",
@@ -10740,7 +10767,7 @@
       "body": "Slow morning. Coffee, then two hours on column stores without interruption."
     },
     {
-      "path": "journal/2025-12-27-042",
+      "path": "journal/2025-12-27-043",
       "title": "Journal — 2025-12-27",
       "domain": "preferences",
       "type": "episodic",
@@ -10767,7 +10794,7 @@
       "body": "Long thread with Emeka Nwosu and Ingrid Saarinen; resolved without a meeting."
     },
     {
-      "path": "journal/2025-11-07-043",
+      "path": "journal/2025-11-07-044",
       "title": "Journal — 2025-11-07",
       "domain": "preferences",
       "type": "episodic",
@@ -10794,7 +10821,7 @@
       "body": "Quiet day. Mira Tuominen and Nils Bergqvist came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-05-30-044",
+      "path": "journal/2026-05-30-045",
       "title": "Journal — 2026-05-30",
       "domain": "preferences",
       "type": "episodic",
@@ -10821,7 +10848,7 @@
       "body": "Rescheduled the call with Olu Adeyemi. New slot next week."
     },
     {
-      "path": "journal/2025-06-03-045",
+      "path": "journal/2025-06-03-046",
       "title": "Journal — 2025-06-03",
       "domain": "preferences",
       "type": "episodic",
@@ -10848,7 +10875,7 @@
       "body": "Quiet day. Carmen Ibarra and Rafael Duarte came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-04-05-046",
+      "path": "journal/2026-04-05-047",
       "title": "Journal — 2026-04-05",
       "domain": "preferences",
       "type": "episodic",
@@ -10875,7 +10902,7 @@
       "body": "Short call with Lars Sundqvist about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-02-02-047",
+      "path": "journal/2026-02-02-048",
       "title": "Journal — 2026-02-02",
       "domain": "preferences",
       "type": "episodic",
@@ -10902,7 +10929,7 @@
       "body": "Rescheduled the call with Stig Ohman. New slot next week."
     },
     {
-      "path": "journal/2025-09-01-048",
+      "path": "journal/2025-09-01-049",
       "title": "Journal — 2025-09-01",
       "domain": "preferences",
       "type": "episodic",
@@ -10929,7 +10956,7 @@
       "body": "Slow morning. Coffee, then two hours on Swedish grammar without interruption."
     },
     {
-      "path": "journal/2026-04-20-049",
+      "path": "journal/2026-04-20-050",
       "title": "Journal — 2026-04-20",
       "domain": "preferences",
       "type": "episodic",
@@ -10956,7 +10983,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-01-28-050",
+      "path": "journal/2025-01-28-051",
       "title": "Journal — 2025-01-28",
       "domain": "preferences",
       "type": "episodic",
@@ -10983,7 +11010,7 @@
       "body": "Short call with Idris Bello about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2024-08-18-051",
+      "path": "journal/2024-08-18-052",
       "title": "Journal — 2024-08-18",
       "domain": "preferences",
       "type": "episodic",
@@ -11010,7 +11037,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-11-25-052",
+      "path": "journal/2024-11-25-053",
       "title": "Journal — 2024-11-25",
       "domain": "preferences",
       "type": "episodic",
@@ -11037,7 +11064,7 @@
       "body": "Short call with Kwame Osei about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-02-03-053",
+      "path": "journal/2025-02-03-054",
       "title": "Journal — 2025-02-03",
       "domain": "preferences",
       "type": "episodic",
@@ -11064,7 +11091,7 @@
       "body": "Short call with Carmen Ibarra about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2024-10-07-054",
+      "path": "journal/2024-10-07-055",
       "title": "Journal — 2024-10-07",
       "domain": "preferences",
       "type": "episodic",
@@ -11091,7 +11118,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2026-09-09-055",
+      "path": "journal/2026-09-09-056",
       "title": "Journal — 2026-09-09",
       "domain": "preferences",
       "type": "episodic",
@@ -11118,7 +11145,7 @@
       "body": "Petra Hallgren sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2025-05-07-056",
+      "path": "journal/2025-05-07-057",
       "title": "Journal — 2025-05-07",
       "domain": "preferences",
       "type": "episodic",
@@ -11145,7 +11172,7 @@
       "body": "Rescheduled the call with Dr. Anders Lindholm. New slot next week."
     },
     {
-      "path": "journal/2025-10-27-057",
+      "path": "journal/2025-10-27-058",
       "title": "Journal — 2025-10-27",
       "domain": "preferences",
       "type": "episodic",
@@ -11172,7 +11199,7 @@
       "body": "Olu Adeyemi recommended a book on orchard grafting. Added to the list."
     },
     {
-      "path": "journal/2025-04-29-058",
+      "path": "journal/2025-04-29-059",
       "title": "Journal — 2025-04-29",
       "domain": "preferences",
       "type": "episodic",
@@ -11199,7 +11226,7 @@
       "body": "Slow morning. Coffee, then two hours on typography without interruption."
     },
     {
-      "path": "journal/2025-02-22-059",
+      "path": "journal/2025-02-22-060",
       "title": "Journal — 2025-02-22",
       "domain": "preferences",
       "type": "episodic",
@@ -11226,7 +11253,7 @@
       "body": "Picked up picture hooks on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-06-20-060",
+      "path": "journal/2026-06-20-061",
       "title": "Journal — 2026-06-20",
       "domain": "preferences",
       "type": "episodic",
@@ -11253,7 +11280,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2026-03-24-061",
+      "path": "journal/2026-03-24-062",
       "title": "Journal — 2026-03-24",
       "domain": "preferences",
       "type": "episodic",
@@ -11280,7 +11307,7 @@
       "body": "Picked up sandpaper on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-05-10-062",
+      "path": "journal/2025-05-10-063",
       "title": "Journal — 2025-05-10",
       "domain": "preferences",
       "type": "episodic",
@@ -11307,7 +11334,7 @@
       "body": "Long thread with Noor Haddad and Idris Bello; resolved without a meeting."
     },
     {
-      "path": "journal/2024-09-06-063",
+      "path": "journal/2024-09-06-064",
       "title": "Journal — 2024-09-06",
       "domain": "preferences",
       "type": "episodic",
@@ -11334,7 +11361,7 @@
       "body": "Quiet day. Ingrid Saarinen and Dr. Ada Okonkwo came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-07-20-064",
+      "path": "journal/2026-07-20-065",
       "title": "Journal — 2026-07-20",
       "domain": "preferences",
       "type": "episodic",
@@ -11361,7 +11388,7 @@
       "body": "Short call with Aisha Rahman about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-01-14-065",
+      "path": "journal/2026-01-14-066",
       "title": "Journal — 2026-01-14",
       "domain": "preferences",
       "type": "episodic",
@@ -11388,7 +11415,7 @@
       "body": "Quiet day. Lucia Ferrante and Stig Ohman came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2025-01-22-066",
+      "path": "journal/2025-01-22-067",
       "title": "Journal — 2025-01-22",
       "domain": "preferences",
       "type": "episodic",
@@ -11415,7 +11442,7 @@
       "body": "Quiet day. Carmen Ibarra and Dmitri Sokolov came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-04-08-067",
+      "path": "journal/2026-04-08-068",
       "title": "Journal — 2026-04-08",
       "domain": "preferences",
       "type": "episodic",
@@ -11442,7 +11469,7 @@
       "body": "Slow morning. Coffee, then two hours on wooden boats without interruption."
     },
     {
-      "path": "journal/2026-04-05-068",
+      "path": "journal/2026-04-05-069",
       "title": "Journal — 2026-04-05",
       "domain": "preferences",
       "type": "episodic",
@@ -11469,7 +11496,7 @@
       "body": "Slow morning. Coffee, then two hours on stream processing without interruption."
     },
     {
-      "path": "journal/2026-04-29-069",
+      "path": "journal/2026-04-29-070",
       "title": "Journal — 2026-04-29",
       "domain": "preferences",
       "type": "episodic",
@@ -11496,7 +11523,7 @@
       "body": "Short call with Tomas Ek about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-05-13-070",
+      "path": "journal/2025-05-13-071",
       "title": "Journal — 2025-05-13",
       "domain": "preferences",
       "type": "episodic",
@@ -11523,7 +11550,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2025-03-31-071",
+      "path": "journal/2025-03-31-072",
       "title": "Journal — 2025-03-31",
       "domain": "preferences",
       "type": "episodic",
@@ -11550,7 +11577,7 @@
       "body": "Short call with Dr. Selma Ferreira about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-05-03-072",
+      "path": "journal/2026-05-03-073",
       "title": "Journal — 2026-05-03",
       "domain": "preferences",
       "type": "episodic",
@@ -11577,7 +11604,7 @@
       "body": "Slow morning. Coffee, then two hours on energy tariffs without interruption."
     },
     {
-      "path": "journal/2026-08-13-073",
+      "path": "journal/2026-08-13-074",
       "title": "Journal — 2026-08-13",
       "domain": "preferences",
       "type": "episodic",
@@ -11604,7 +11631,7 @@
       "body": "Long thread with Kwame Osei and Tomas Ek; resolved without a meeting."
     },
     {
-      "path": "journal/2024-06-19-074",
+      "path": "journal/2024-06-19-075",
       "title": "Journal — 2024-06-19",
       "domain": "preferences",
       "type": "episodic",
@@ -11631,7 +11658,7 @@
       "body": "Quiet day. Priya Venkatesan and Stig Ohman came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-06-14-075",
+      "path": "journal/2026-06-14-076",
       "title": "Journal — 2026-06-14",
       "domain": "preferences",
       "type": "episodic",
@@ -11658,7 +11685,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-09-21-076",
+      "path": "journal/2024-09-21-077",
       "title": "Journal — 2024-09-21",
       "domain": "preferences",
       "type": "episodic",
@@ -11685,7 +11712,7 @@
       "body": "Picked up gaffer tape on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-09-26-077",
+      "path": "journal/2025-09-26-078",
       "title": "Journal — 2025-09-26",
       "domain": "preferences",
       "type": "episodic",
@@ -11712,7 +11739,7 @@
       "body": "Quiet day. Ingrid Saarinen and Nell Osei-Lindqvist came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2024-07-31-078",
+      "path": "journal/2024-07-31-079",
       "title": "Journal — 2024-07-31",
       "domain": "preferences",
       "type": "episodic",
@@ -11739,7 +11766,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-07-02-079",
+      "path": "journal/2025-07-02-080",
       "title": "Journal — 2025-07-02",
       "domain": "preferences",
       "type": "episodic",
@@ -11766,7 +11793,7 @@
       "body": "Slow morning. Coffee, then two hours on Nordic archives without interruption."
     },
     {
-      "path": "journal/2025-03-28-080",
+      "path": "journal/2025-03-28-081",
       "title": "Journal — 2025-03-28",
       "domain": "preferences",
       "type": "episodic",
@@ -11793,7 +11820,7 @@
       "body": "Dmitri Sokolov sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2026-04-14-081",
+      "path": "journal/2026-04-14-082",
       "title": "Journal — 2026-04-14",
       "domain": "preferences",
       "type": "episodic",
@@ -11820,7 +11847,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2025-03-02-082",
+      "path": "journal/2025-03-02-083",
       "title": "Journal — 2025-03-02",
       "domain": "preferences",
       "type": "episodic",
@@ -11847,7 +11874,7 @@
       "body": "Read a long piece about typography. Worth revisiting."
     },
     {
-      "path": "journal/2024-10-02-083",
+      "path": "journal/2024-10-02-084",
       "title": "Journal — 2024-10-02",
       "domain": "preferences",
       "type": "episodic",
@@ -11874,7 +11901,7 @@
       "body": "Picked up a torch on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-05-06-084",
+      "path": "journal/2025-05-06-085",
       "title": "Journal — 2025-05-06",
       "domain": "preferences",
       "type": "episodic",
@@ -11901,7 +11928,7 @@
       "body": "Picked up a bicycle light on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-02-03-085",
+      "path": "journal/2026-02-03-086",
       "title": "Journal — 2026-02-03",
       "domain": "preferences",
       "type": "episodic",
@@ -11928,7 +11955,7 @@
       "body": "Rosa Vidal sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2025-02-09-086",
+      "path": "journal/2025-02-09-087",
       "title": "Journal — 2025-02-09",
       "domain": "preferences",
       "type": "episodic",
@@ -11955,7 +11982,7 @@
       "body": "Hugo Ranta recommended a book on Swedish grammar. Added to the list."
     },
     {
-      "path": "journal/2024-09-05-087",
+      "path": "journal/2024-09-05-088",
       "title": "Journal — 2024-09-05",
       "domain": "preferences",
       "type": "episodic",
@@ -11982,7 +12009,7 @@
       "body": "Picked up gaffer tape on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-03-13-088",
+      "path": "journal/2026-03-13-089",
       "title": "Journal — 2026-03-13",
       "domain": "preferences",
       "type": "episodic",
@@ -12009,7 +12036,7 @@
       "body": "Slow morning. Coffee, then two hours on risk models without interruption."
     },
     {
-      "path": "journal/2025-10-29-089",
+      "path": "journal/2025-10-29-090",
       "title": "Journal — 2025-10-29",
       "domain": "preferences",
       "type": "episodic",
@@ -12036,7 +12063,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-06-05-090",
+      "path": "journal/2025-06-05-091",
       "title": "Journal — 2025-06-05",
       "domain": "preferences",
       "type": "episodic",
@@ -12063,7 +12090,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2026-07-10-091",
+      "path": "journal/2026-07-10-092",
       "title": "Journal — 2026-07-10",
       "domain": "preferences",
       "type": "episodic",
@@ -12090,7 +12117,7 @@
       "body": "Bengt Ahlgren recommended a book on school reform. Added to the list."
     },
     {
-      "path": "journal/2024-12-31-092",
+      "path": "journal/2024-12-31-093",
       "title": "Journal — 2024-12-31",
       "domain": "preferences",
       "type": "episodic",
@@ -12117,7 +12144,7 @@
       "body": "Errand day: post office, then the hardware shop for seed trays."
     },
     {
-      "path": "journal/2025-02-07-093",
+      "path": "journal/2025-02-07-094",
       "title": "Journal — 2025-02-07",
       "domain": "preferences",
       "type": "episodic",
@@ -12144,7 +12171,7 @@
       "body": "Aisha Rahman sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2025-12-26-094",
+      "path": "journal/2025-12-26-095",
       "title": "Journal — 2025-12-26",
       "domain": "preferences",
       "type": "episodic",
@@ -12171,7 +12198,7 @@
       "body": "Yaw Osei recommended a book on urban cycling. Added to the list."
     },
     {
-      "path": "journal/2024-12-28-095",
+      "path": "journal/2024-12-28-096",
       "title": "Journal — 2024-12-28",
       "domain": "preferences",
       "type": "episodic",
@@ -12198,7 +12225,7 @@
       "body": "Read a long piece about column stores. Worth revisiting."
     },
     {
-      "path": "journal/2025-03-21-096",
+      "path": "journal/2025-03-21-097",
       "title": "Journal — 2025-03-21",
       "domain": "preferences",
       "type": "episodic",
@@ -12225,7 +12252,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2026-04-09-097",
+      "path": "journal/2026-04-09-098",
       "title": "Journal — 2026-04-09",
       "domain": "preferences",
       "type": "episodic",
@@ -12252,7 +12279,7 @@
       "body": "Long thread with Dmitri Sokolov and Nell Osei-Lindqvist; resolved without a meeting."
     },
     {
-      "path": "journal/2025-06-06-098",
+      "path": "journal/2025-06-06-099",
       "title": "Journal — 2025-06-06",
       "domain": "preferences",
       "type": "episodic",
@@ -12279,7 +12306,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2025-10-19-099",
+      "path": "journal/2025-10-19-100",
       "title": "Journal — 2025-10-19",
       "domain": "preferences",
       "type": "episodic",
@@ -12306,7 +12333,7 @@
       "body": "Short call with Stig Ohman about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-01-26-100",
+      "path": "journal/2025-01-26-101",
       "title": "Journal — 2025-01-26",
       "domain": "preferences",
       "type": "episodic",
@@ -12333,7 +12360,7 @@
       "body": "Rescheduled the call with Beatrice Holm. New slot next week."
     },
     {
-      "path": "journal/2026-02-20-101",
+      "path": "journal/2026-02-20-102",
       "title": "Journal — 2026-02-20",
       "domain": "preferences",
       "type": "episodic",
@@ -12360,7 +12387,7 @@
       "body": "Short call with Priya Venkatesan about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-07-16-102",
+      "path": "journal/2026-07-16-103",
       "title": "Journal — 2026-07-16",
       "domain": "preferences",
       "type": "episodic",
@@ -12387,7 +12414,7 @@
       "body": "Slow morning. Coffee, then two hours on wooden boats without interruption."
     },
     {
-      "path": "journal/2026-04-30-103",
+      "path": "journal/2026-04-30-104",
       "title": "Journal — 2026-04-30",
       "domain": "preferences",
       "type": "episodic",
@@ -12414,7 +12441,7 @@
       "body": "Rescheduled the call with Ingrid Saarinen. New slot next week."
     },
     {
-      "path": "journal/2024-08-09-104",
+      "path": "journal/2024-08-09-105",
       "title": "Journal — 2024-08-09",
       "domain": "preferences",
       "type": "episodic",
@@ -12441,7 +12468,7 @@
       "body": "Short call with Rafael Duarte about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-06-13-105",
+      "path": "journal/2025-06-13-106",
       "title": "Journal — 2025-06-13",
       "domain": "preferences",
       "type": "episodic",
@@ -12468,7 +12495,7 @@
       "body": "Long thread with Sofie Lindqvist and Bengt Ahlgren; resolved without a meeting."
     },
     {
-      "path": "journal/2025-01-04-106",
+      "path": "journal/2025-01-04-107",
       "title": "Journal — 2025-01-04",
       "domain": "preferences",
       "type": "episodic",
@@ -12495,7 +12522,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-04-13-107",
+      "path": "journal/2025-04-13-108",
       "title": "Journal — 2025-04-13",
       "domain": "preferences",
       "type": "episodic",
@@ -12522,7 +12549,7 @@
       "body": "Read a long piece about stream processing. Worth revisiting."
     },
     {
-      "path": "journal/2024-09-08-108",
+      "path": "journal/2024-09-08-109",
       "title": "Journal — 2024-09-08",
       "domain": "preferences",
       "type": "episodic",
@@ -12549,7 +12576,7 @@
       "body": "Read a long piece about orchard grafting. Worth revisiting."
     },
     {
-      "path": "journal/2026-03-31-109",
+      "path": "journal/2026-03-31-110",
       "title": "Journal — 2026-03-31",
       "domain": "preferences",
       "type": "episodic",
@@ -12576,7 +12603,7 @@
       "body": "Read a long piece about Swedish grammar. Worth revisiting."
     },
     {
-      "path": "journal/2026-08-13-110",
+      "path": "journal/2026-08-13-111",
       "title": "Journal — 2026-08-13",
       "domain": "preferences",
       "type": "episodic",
@@ -12603,7 +12630,7 @@
       "body": "Tomas Ek sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2024-11-13-111",
+      "path": "journal/2024-11-13-112",
       "title": "Journal — 2024-11-13",
       "domain": "preferences",
       "type": "episodic",
@@ -12630,7 +12657,7 @@
       "body": "Cecilia Bratt recommended a book on kora tuning. Added to the list."
     },
     {
-      "path": "journal/2025-02-07-112",
+      "path": "journal/2025-02-07-113",
       "title": "Journal — 2025-02-07",
       "domain": "preferences",
       "type": "episodic",
@@ -12657,7 +12684,7 @@
       "body": "Kwame Osei recommended a book on school reform. Added to the list."
     },
     {
-      "path": "journal/2024-09-04-113",
+      "path": "journal/2024-09-04-114",
       "title": "Journal — 2024-09-04",
       "domain": "preferences",
       "type": "episodic",
@@ -12684,7 +12711,7 @@
       "body": "Read a long piece about column stores. Worth revisiting."
     },
     {
-      "path": "journal/2024-08-31-114",
+      "path": "journal/2024-08-31-115",
       "title": "Journal — 2024-08-31",
       "domain": "preferences",
       "type": "episodic",
@@ -12711,7 +12738,7 @@
       "body": "Read a long piece about Swedish grammar. Worth revisiting."
     },
     {
-      "path": "journal/2026-04-28-115",
+      "path": "journal/2026-04-28-116",
       "title": "Journal — 2026-04-28",
       "domain": "preferences",
       "type": "episodic",
@@ -12738,7 +12765,7 @@
       "body": "Short call with Beatrice Holm about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-03-22-116",
+      "path": "journal/2025-03-22-117",
       "title": "Journal — 2025-03-22",
       "domain": "preferences",
       "type": "episodic",
@@ -12765,7 +12792,7 @@
       "body": "Beatrice Holm recommended a book on seabird counts. Added to the list."
     },
     {
-      "path": "journal/2025-01-18-117",
+      "path": "journal/2025-01-18-118",
       "title": "Journal — 2025-01-18",
       "domain": "preferences",
       "type": "episodic",
@@ -12792,7 +12819,7 @@
       "body": "Errand day: post office, then the hardware shop for a torch."
     },
     {
-      "path": "journal/2026-05-01-118",
+      "path": "journal/2026-05-01-119",
       "title": "Journal — 2026-05-01",
       "domain": "preferences",
       "type": "episodic",
@@ -12819,7 +12846,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-03-21-119",
+      "path": "journal/2025-03-21-120",
       "title": "Journal — 2025-03-21",
       "domain": "preferences",
       "type": "episodic",
@@ -12846,7 +12873,7 @@
       "body": "Nils Bergqvist sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2026-03-04-120",
+      "path": "journal/2026-03-04-121",
       "title": "Journal — 2026-03-04",
       "domain": "preferences",
       "type": "episodic",
@@ -12873,7 +12900,7 @@
       "body": "Long thread with Cecilia Bratt and Nils Bergqvist; resolved without a meeting."
     },
     {
-      "path": "journal/2024-08-06-121",
+      "path": "journal/2024-08-06-122",
       "title": "Journal — 2024-08-06",
       "domain": "preferences",
       "type": "episodic",
@@ -12900,7 +12927,7 @@
       "body": "Short call with Carmen Ibarra about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-03-01-122",
+      "path": "journal/2026-03-01-123",
       "title": "Journal — 2026-03-01",
       "domain": "preferences",
       "type": "episodic",
@@ -12927,7 +12954,7 @@
       "body": "Elin Nordgren recommended a book on typography. Added to the list."
     },
     {
-      "path": "journal/2024-12-27-123",
+      "path": "journal/2024-12-27-124",
       "title": "Journal — 2024-12-27",
       "domain": "preferences",
       "type": "episodic",
@@ -12954,7 +12981,7 @@
       "body": "Read a long piece about seabird counts. Worth revisiting."
     },
     {
-      "path": "journal/2025-01-30-124",
+      "path": "journal/2025-01-30-125",
       "title": "Journal — 2025-01-30",
       "domain": "preferences",
       "type": "episodic",
@@ -12981,7 +13008,7 @@
       "body": "Errand day: post office, then the hardware shop for picture hooks."
     },
     {
-      "path": "journal/2025-06-26-125",
+      "path": "journal/2025-06-26-126",
       "title": "Journal — 2025-06-26",
       "domain": "preferences",
       "type": "episodic",
@@ -13008,7 +13035,7 @@
       "body": "Errand day: post office, then the hardware shop for a new kettle."
     },
     {
-      "path": "journal/2026-02-21-126",
+      "path": "journal/2026-02-21-127",
       "title": "Journal — 2026-02-21",
       "domain": "preferences",
       "type": "episodic",
@@ -13035,7 +13062,7 @@
       "body": "Theo Osei-Lindqvist recommended a book on wooden boats. Added to the list."
     },
     {
-      "path": "journal/2024-09-06-127",
+      "path": "journal/2024-09-06-128",
       "title": "Journal — 2024-09-06",
       "domain": "preferences",
       "type": "episodic",
@@ -13062,7 +13089,7 @@
       "body": "Rosa Vidal recommended a book on typography. Added to the list."
     },
     {
-      "path": "journal/2026-08-27-128",
+      "path": "journal/2026-08-27-129",
       "title": "Journal — 2026-08-27",
       "domain": "preferences",
       "type": "episodic",
@@ -13089,7 +13116,7 @@
       "body": "Rescheduled the call with Bengt Ahlgren. New slot next week."
     },
     {
-      "path": "journal/2024-11-11-129",
+      "path": "journal/2024-11-11-130",
       "title": "Journal — 2024-11-11",
       "domain": "preferences",
       "type": "episodic",
@@ -13116,7 +13143,7 @@
       "body": "Theo Osei-Lindqvist sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2024-06-05-130",
+      "path": "journal/2024-06-05-131",
       "title": "Journal — 2024-06-05",
       "domain": "preferences",
       "type": "episodic",
@@ -13143,7 +13170,7 @@
       "body": "Long thread with Johan Wikstrom and Tomas Ek; resolved without a meeting."
     },
     {
-      "path": "journal/2025-02-11-131",
+      "path": "journal/2025-02-11-132",
       "title": "Journal — 2025-02-11",
       "domain": "preferences",
       "type": "episodic",
@@ -13170,7 +13197,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2026-04-05-132",
+      "path": "journal/2026-04-05-133",
       "title": "Journal — 2026-04-05",
       "domain": "preferences",
       "type": "episodic",
@@ -13197,7 +13224,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2024-11-07-133",
+      "path": "journal/2024-11-07-134",
       "title": "Journal — 2024-11-07",
       "domain": "preferences",
       "type": "episodic",
@@ -13224,7 +13251,7 @@
       "body": "Long thread with Theo Osei-Lindqvist and Olu Adeyemi; resolved without a meeting."
     },
     {
-      "path": "journal/2025-10-08-134",
+      "path": "journal/2025-10-08-135",
       "title": "Journal — 2025-10-08",
       "domain": "preferences",
       "type": "episodic",
@@ -13251,7 +13278,7 @@
       "body": "Slow morning. Coffee, then two hours on risk models without interruption."
     },
     {
-      "path": "journal/2025-03-14-135",
+      "path": "journal/2025-03-14-136",
       "title": "Journal — 2025-03-14",
       "domain": "preferences",
       "type": "episodic",
@@ -13278,7 +13305,7 @@
       "body": "Picked up a doormat on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-03-06-136",
+      "path": "journal/2026-03-06-137",
       "title": "Journal — 2026-03-06",
       "domain": "preferences",
       "type": "episodic",
@@ -13305,7 +13332,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2026-04-27-137",
+      "path": "journal/2026-04-27-138",
       "title": "Journal — 2026-04-27",
       "domain": "preferences",
       "type": "episodic",
@@ -13332,7 +13359,7 @@
       "body": "Rescheduled the call with Yusuf Halim. New slot next week."
     },
     {
-      "path": "journal/2026-02-18-138",
+      "path": "journal/2026-02-18-139",
       "title": "Journal — 2026-02-18",
       "domain": "preferences",
       "type": "episodic",
@@ -13359,7 +13386,7 @@
       "body": "Rescheduled the call with Stig Ohman. New slot next week."
     },
     {
-      "path": "journal/2026-05-08-139",
+      "path": "journal/2026-05-08-140",
       "title": "Journal — 2026-05-08",
       "domain": "preferences",
       "type": "episodic",
@@ -13386,7 +13413,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-11-11-140",
+      "path": "journal/2025-11-11-141",
       "title": "Journal — 2025-11-11",
       "domain": "preferences",
       "type": "episodic",
@@ -13413,7 +13440,7 @@
       "body": "Short call with Saskia Vermeer about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-05-14-141",
+      "path": "journal/2026-05-14-142",
       "title": "Journal — 2026-05-14",
       "domain": "preferences",
       "type": "episodic",
@@ -13440,7 +13467,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-10-17-142",
+      "path": "journal/2024-10-17-143",
       "title": "Journal — 2024-10-17",
       "domain": "preferences",
       "type": "episodic",
@@ -13467,7 +13494,7 @@
       "body": "Rescheduled the call with Peder Norrback. New slot next week."
     },
     {
-      "path": "journal/2025-11-04-143",
+      "path": "journal/2025-11-04-144",
       "title": "Journal — 2025-11-04",
       "domain": "preferences",
       "type": "episodic",
@@ -13494,7 +13521,7 @@
       "body": "Picked up cable ties on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-03-25-144",
+      "path": "journal/2025-03-25-145",
       "title": "Journal — 2025-03-25",
       "domain": "preferences",
       "type": "episodic",
@@ -13521,7 +13548,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-04-17-145",
+      "path": "journal/2025-04-17-146",
       "title": "Journal — 2025-04-17",
       "domain": "preferences",
       "type": "episodic",
@@ -13548,7 +13575,7 @@
       "body": "Slow morning. Coffee, then two hours on cold-water swimming without interruption."
     },
     {
-      "path": "journal/2025-11-22-146",
+      "path": "journal/2025-11-22-147",
       "title": "Journal — 2025-11-22",
       "domain": "preferences",
       "type": "episodic",
@@ -13575,7 +13602,7 @@
       "body": "Slow morning. Coffee, then two hours on energy tariffs without interruption."
     },
     {
-      "path": "journal/2026-06-03-147",
+      "path": "journal/2026-06-03-148",
       "title": "Journal — 2026-06-03",
       "domain": "preferences",
       "type": "episodic",
@@ -13602,7 +13629,7 @@
       "body": "Johan Wikstrom recommended a book on risk models. Added to the list."
     },
     {
-      "path": "journal/2026-02-21-148",
+      "path": "journal/2026-02-21-149",
       "title": "Journal — 2026-02-21",
       "domain": "preferences",
       "type": "episodic",
@@ -13629,7 +13656,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-12-06-149",
+      "path": "journal/2024-12-06-150",
       "title": "Journal — 2024-12-06",
       "domain": "preferences",
       "type": "episodic",
@@ -13656,7 +13683,7 @@
       "body": "Errand day: post office, then the hardware shop for seed trays."
     },
     {
-      "path": "journal/2024-09-26-150",
+      "path": "journal/2024-09-26-151",
       "title": "Journal — 2024-09-26",
       "domain": "preferences",
       "type": "episodic",
@@ -13683,7 +13710,7 @@
       "body": "Petra Hallgren recommended a book on stream processing. Added to the list."
     },
     {
-      "path": "journal/2026-09-07-151",
+      "path": "journal/2026-09-07-152",
       "title": "Journal — 2026-09-07",
       "domain": "preferences",
       "type": "episodic",
@@ -13710,7 +13737,7 @@
       "body": "Slow morning. Coffee, then two hours on energy tariffs without interruption."
     },
     {
-      "path": "journal/2026-01-25-152",
+      "path": "journal/2026-01-25-153",
       "title": "Journal — 2026-01-25",
       "domain": "preferences",
       "type": "episodic",
@@ -13737,7 +13764,7 @@
       "body": "Slow morning. Coffee, then two hours on typography without interruption."
     },
     {
-      "path": "journal/2024-07-29-153",
+      "path": "journal/2024-07-29-154",
       "title": "Journal — 2024-07-29",
       "domain": "preferences",
       "type": "episodic",
@@ -13764,7 +13791,7 @@
       "body": "Mira Tuominen sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2025-12-30-154",
+      "path": "journal/2025-12-30-155",
       "title": "Journal — 2025-12-30",
       "domain": "preferences",
       "type": "episodic",
@@ -13791,7 +13818,7 @@
       "body": "Yusuf Halim recommended a book on school reform. Added to the list."
     },
     {
-      "path": "journal/2026-07-01-155",
+      "path": "journal/2026-07-01-156",
       "title": "Journal — 2026-07-01",
       "domain": "preferences",
       "type": "episodic",
@@ -13818,7 +13845,7 @@
       "body": "Rescheduled the call with Elin Nordgren. New slot next week."
     },
     {
-      "path": "journal/2025-01-26-156",
+      "path": "journal/2025-01-26-157",
       "title": "Journal — 2025-01-26",
       "domain": "preferences",
       "type": "episodic",
@@ -13845,7 +13872,7 @@
       "body": "Picked up cable ties on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-07-22-157",
+      "path": "journal/2026-07-22-158",
       "title": "Journal — 2026-07-22",
       "domain": "preferences",
       "type": "episodic",
@@ -13872,7 +13899,7 @@
       "body": "Quiet day. Beatrice Holm and Saskia Vermeer came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2026-06-14-158",
+      "path": "journal/2026-06-14-159",
       "title": "Journal — 2026-06-14",
       "domain": "preferences",
       "type": "episodic",
@@ -13899,7 +13926,7 @@
       "body": "Long thread with Petra Hallgren and Rafael Duarte; resolved without a meeting."
     },
     {
-      "path": "journal/2026-07-26-159",
+      "path": "journal/2026-07-26-160",
       "title": "Journal — 2026-07-26",
       "domain": "preferences",
       "type": "episodic",
@@ -13926,7 +13953,7 @@
       "body": "Long thread with Hanna Brozek and Saskia Vermeer; resolved without a meeting."
     },
     {
-      "path": "journal/2026-03-25-160",
+      "path": "journal/2026-03-25-161",
       "title": "Journal — 2026-03-25",
       "domain": "preferences",
       "type": "episodic",
@@ -13953,7 +13980,7 @@
       "body": "Picked up hinges on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-09-08-161",
+      "path": "journal/2025-09-08-162",
       "title": "Journal — 2025-09-08",
       "domain": "preferences",
       "type": "episodic",
@@ -13980,7 +14007,7 @@
       "body": "Long thread with Dmitri Sokolov and Bengt Ahlgren; resolved without a meeting."
     },
     {
-      "path": "journal/2025-08-04-162",
+      "path": "journal/2025-08-04-163",
       "title": "Journal — 2025-08-04",
       "domain": "preferences",
       "type": "episodic",
@@ -14007,7 +14034,7 @@
       "body": "Slow morning. Coffee, then two hours on wooden boats without interruption."
     },
     {
-      "path": "journal/2024-07-29-163",
+      "path": "journal/2024-07-29-164",
       "title": "Journal — 2024-07-29",
       "domain": "preferences",
       "type": "episodic",
@@ -14034,7 +14061,7 @@
       "body": "Petra Hallgren recommended a book on Swedish grammar. Added to the list."
     },
     {
-      "path": "journal/2025-03-19-164",
+      "path": "journal/2025-03-19-165",
       "title": "Journal — 2025-03-19",
       "domain": "preferences",
       "type": "episodic",
@@ -14061,7 +14088,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2026-06-14-165",
+      "path": "journal/2026-06-14-166",
       "title": "Journal — 2026-06-14",
       "domain": "preferences",
       "type": "episodic",
@@ -14088,7 +14115,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2025-08-13-166",
+      "path": "journal/2025-08-13-167",
       "title": "Journal — 2025-08-13",
       "domain": "preferences",
       "type": "episodic",
@@ -14115,7 +14142,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-05-05-167",
+      "path": "journal/2025-05-05-168",
       "title": "Journal — 2025-05-05",
       "domain": "preferences",
       "type": "episodic",
@@ -14142,7 +14169,7 @@
       "body": "Mira Tuominen sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2026-05-24-168",
+      "path": "journal/2026-05-24-169",
       "title": "Journal — 2026-05-24",
       "domain": "preferences",
       "type": "episodic",
@@ -14169,7 +14196,7 @@
       "body": "Sofie Lindqvist recommended a book on column stores. Added to the list."
     },
     {
-      "path": "journal/2026-03-10-169",
+      "path": "journal/2026-03-10-170",
       "title": "Journal — 2026-03-10",
       "domain": "preferences",
       "type": "episodic",
@@ -14196,7 +14223,7 @@
       "body": "Astrid Lindqvist recommended a book on wooden boats. Added to the list."
     },
     {
-      "path": "journal/2025-09-04-170",
+      "path": "journal/2025-09-04-171",
       "title": "Journal — 2025-09-04",
       "domain": "preferences",
       "type": "episodic",
@@ -14223,7 +14250,7 @@
       "body": "Rescheduled the call with Elin Nordgren. New slot next week."
     },
     {
-      "path": "journal/2024-10-06-171",
+      "path": "journal/2024-10-06-172",
       "title": "Journal — 2024-10-06",
       "domain": "preferences",
       "type": "episodic",
@@ -14250,7 +14277,7 @@
       "body": "Rescheduled the call with Nell Osei-Lindqvist. New slot next week."
     },
     {
-      "path": "journal/2024-09-23-172",
+      "path": "journal/2024-09-23-173",
       "title": "Journal — 2024-09-23",
       "domain": "preferences",
       "type": "episodic",
@@ -14277,7 +14304,7 @@
       "body": "Rescheduled the call with Dr. Anders Lindholm. New slot next week."
     },
     {
-      "path": "journal/2025-05-02-173",
+      "path": "journal/2025-05-02-174",
       "title": "Journal — 2025-05-02",
       "domain": "preferences",
       "type": "episodic",
@@ -14304,7 +14331,7 @@
       "body": "Aisha Rahman sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2025-05-07-174",
+      "path": "journal/2025-05-07-175",
       "title": "Journal — 2025-05-07",
       "domain": "preferences",
       "type": "episodic",
@@ -14331,7 +14358,7 @@
       "body": "Short call with Idris Bello about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2026-05-21-175",
+      "path": "journal/2026-05-21-176",
       "title": "Journal — 2026-05-21",
       "domain": "preferences",
       "type": "episodic",
@@ -14358,7 +14385,7 @@
       "body": "Picked up a torch on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2024-09-28-176",
+      "path": "journal/2024-09-28-177",
       "title": "Journal — 2024-09-28",
       "domain": "preferences",
       "type": "episodic",
@@ -14385,7 +14412,7 @@
       "body": "Slow morning. Coffee, then two hours on energy tariffs without interruption."
     },
     {
-      "path": "journal/2025-09-24-177",
+      "path": "journal/2025-09-24-178",
       "title": "Journal — 2025-09-24",
       "domain": "preferences",
       "type": "episodic",
@@ -14412,7 +14439,7 @@
       "body": "Short call with Rosa Vidal about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2025-07-27-178",
+      "path": "journal/2025-07-27-179",
       "title": "Journal — 2025-07-27",
       "domain": "preferences",
       "type": "episodic",
@@ -14439,7 +14466,7 @@
       "body": "Read a long piece about tidal modelling. Worth revisiting."
     },
     {
-      "path": "journal/2026-04-13-179",
+      "path": "journal/2026-04-13-180",
       "title": "Journal — 2026-04-13",
       "domain": "preferences",
       "type": "episodic",
@@ -14466,7 +14493,7 @@
       "body": "Short call with Beatrice Holm about scheduling. Nothing decided."
     },
     {
-      "path": "journal/2024-11-04-180",
+      "path": "journal/2024-11-04-181",
       "title": "Journal — 2024-11-04",
       "domain": "preferences",
       "type": "episodic",
@@ -14493,7 +14520,7 @@
       "body": "Quiet day. Petra Hallgren and Olu Adeyemi came up in conversation; nothing to action."
     },
     {
-      "path": "journal/2025-10-20-181",
+      "path": "journal/2025-10-20-182",
       "title": "Journal — 2025-10-20",
       "domain": "preferences",
       "type": "episodic",
@@ -14520,7 +14547,7 @@
       "body": "Slow morning. Coffee, then two hours on energy tariffs without interruption."
     },
     {
-      "path": "journal/2026-02-22-182",
+      "path": "journal/2026-02-22-183",
       "title": "Journal — 2026-02-22",
       "domain": "preferences",
       "type": "episodic",
@@ -14547,7 +14574,7 @@
       "body": "Errand day: post office, then the hardware shop for a new kettle."
     },
     {
-      "path": "journal/2025-06-23-183",
+      "path": "journal/2025-06-23-184",
       "title": "Journal — 2025-06-23",
       "domain": "preferences",
       "type": "episodic",
@@ -14574,7 +14601,7 @@
       "body": "Slow morning. Coffee, then two hours on seabird counts without interruption."
     },
     {
-      "path": "journal/2025-02-17-184",
+      "path": "journal/2025-02-17-185",
       "title": "Journal — 2025-02-17",
       "domain": "preferences",
       "type": "episodic",
@@ -14601,7 +14628,7 @@
       "body": "Slow morning. Coffee, then two hours on orchard grafting without interruption."
     },
     {
-      "path": "journal/2025-03-17-185",
+      "path": "journal/2025-03-17-186",
       "title": "Journal — 2025-03-17",
       "domain": "preferences",
       "type": "episodic",
@@ -14628,7 +14655,7 @@
       "body": "Long thread with Saskia Vermeer and Greta Palm; resolved without a meeting."
     },
     {
-      "path": "journal/2025-07-17-186",
+      "path": "journal/2025-07-17-187",
       "title": "Journal — 2025-07-17",
       "domain": "preferences",
       "type": "episodic",
@@ -14655,7 +14682,7 @@
       "body": "Rescheduled the call with Greta Palm. New slot next week."
     },
     {
-      "path": "journal/2024-10-02-187",
+      "path": "journal/2024-10-02-188",
       "title": "Journal — 2024-10-02",
       "domain": "preferences",
       "type": "episodic",
@@ -14682,7 +14709,7 @@
       "body": "Picked up a new kettle on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2024-12-11-188",
+      "path": "journal/2024-12-11-189",
       "title": "Journal — 2024-12-11",
       "domain": "preferences",
       "type": "episodic",
@@ -14709,7 +14736,7 @@
       "body": "Beatrice Holm recommended a book on cold-water swimming. Added to the list."
     },
     {
-      "path": "journal/2024-08-31-189",
+      "path": "journal/2024-08-31-190",
       "title": "Journal — 2024-08-31",
       "domain": "preferences",
       "type": "episodic",
@@ -14736,7 +14763,7 @@
       "body": "Picked up gaffer tape on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-07-07-190",
+      "path": "journal/2025-07-07-191",
       "title": "Journal — 2025-07-07",
       "domain": "preferences",
       "type": "episodic",
@@ -14763,7 +14790,7 @@
       "body": "Long thread with Peder Norrback and Priya Venkatesan; resolved without a meeting."
     },
     {
-      "path": "journal/2026-06-24-191",
+      "path": "journal/2026-06-24-192",
       "title": "Journal — 2026-06-24",
       "domain": "preferences",
       "type": "episodic",
@@ -14790,7 +14817,7 @@
       "body": "Long thread with Petra Hallgren and Beatrice Holm; resolved without a meeting."
     },
     {
-      "path": "journal/2025-06-16-192",
+      "path": "journal/2025-06-16-193",
       "title": "Journal — 2025-06-16",
       "domain": "preferences",
       "type": "episodic",
@@ -14817,7 +14844,7 @@
       "body": "Tidied the notes directory. Merged a few near-identical entries."
     },
     {
-      "path": "journal/2025-12-24-193",
+      "path": "journal/2025-12-24-194",
       "title": "Journal — 2025-12-24",
       "domain": "preferences",
       "type": "episodic",
@@ -14844,7 +14871,7 @@
       "body": "Rescheduled the call with Greta Palm. New slot next week."
     },
     {
-      "path": "journal/2026-08-29-194",
+      "path": "journal/2026-08-29-195",
       "title": "Journal — 2026-08-29",
       "domain": "preferences",
       "type": "episodic",
@@ -14871,7 +14898,7 @@
       "body": "Dmitri Sokolov recommended a book on school reform. Added to the list."
     },
     {
-      "path": "journal/2025-12-15-195",
+      "path": "journal/2025-12-15-196",
       "title": "Journal — 2025-12-15",
       "domain": "preferences",
       "type": "episodic",
@@ -14898,7 +14925,7 @@
       "body": "Slow morning. Coffee, then two hours on bread making without interruption."
     },
     {
-      "path": "journal/2025-02-22-196",
+      "path": "journal/2025-02-22-197",
       "title": "Journal — 2025-02-22",
       "domain": "preferences",
       "type": "episodic",
@@ -14925,7 +14952,7 @@
       "body": "Rescheduled the call with Rosa Vidal. New slot next week."
     },
     {
-      "path": "journal/2026-04-23-197",
+      "path": "journal/2026-04-23-198",
       "title": "Journal — 2026-04-23",
       "domain": "preferences",
       "type": "episodic",
@@ -14952,7 +14979,7 @@
       "body": "Rafael Duarte sent over notes from the session. Skimmed, will read properly later."
     },
     {
-      "path": "journal/2026-02-16-198",
+      "path": "journal/2026-02-16-199",
       "title": "Journal — 2026-02-16",
       "domain": "preferences",
       "type": "episodic",
@@ -14979,7 +15006,7 @@
       "body": "Read a long piece about seabird counts. Worth revisiting."
     },
     {
-      "path": "journal/2025-04-10-199",
+      "path": "journal/2025-04-10-200",
       "title": "Journal — 2025-04-10",
       "domain": "preferences",
       "type": "episodic",
@@ -15006,7 +15033,7 @@
       "body": "Errand day: post office, then the hardware shop for a doormat."
     },
     {
-      "path": "journal/2024-10-21-200",
+      "path": "journal/2024-10-21-201",
       "title": "Journal — 2024-10-21",
       "domain": "preferences",
       "type": "episodic",
@@ -15033,7 +15060,7 @@
       "body": "Slow morning. Coffee, then two hours on cold-water swimming without interruption."
     },
     {
-      "path": "journal/2026-04-19-201",
+      "path": "journal/2026-04-19-202",
       "title": "Journal — 2026-04-19",
       "domain": "preferences",
       "type": "episodic",
@@ -15060,7 +15087,7 @@
       "body": "Slow morning. Coffee, then two hours on column stores without interruption."
     },
     {
-      "path": "journal/2024-12-22-202",
+      "path": "journal/2024-12-22-203",
       "title": "Journal — 2024-12-22",
       "domain": "preferences",
       "type": "episodic",
@@ -15087,7 +15114,7 @@
       "body": "Picked up gaffer tape on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2026-03-01-203",
+      "path": "journal/2026-03-01-204",
       "title": "Journal — 2026-03-01",
       "domain": "preferences",
       "type": "episodic",
@@ -15114,7 +15141,7 @@
       "body": "Slow morning. Coffee, then two hours on school reform without interruption."
     },
     {
-      "path": "journal/2026-02-08-204",
+      "path": "journal/2026-02-08-205",
       "title": "Journal — 2026-02-08",
       "domain": "preferences",
       "type": "episodic",
@@ -15141,7 +15168,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-12-27-205",
+      "path": "journal/2024-12-27-206",
       "title": "Journal — 2024-12-27",
       "domain": "preferences",
       "type": "episodic",
@@ -15168,7 +15195,7 @@
       "body": "Rescheduled the call with Cecilia Bratt. New slot next week."
     },
     {
-      "path": "journal/2026-08-08-206",
+      "path": "journal/2026-08-08-207",
       "title": "Journal — 2026-08-08",
       "domain": "preferences",
       "type": "episodic",
@@ -15195,7 +15222,7 @@
       "body": "Rescheduled the call with Saskia Vermeer. New slot next week."
     },
     {
-      "path": "journal/2025-02-21-207",
+      "path": "journal/2025-02-21-208",
       "title": "Journal — 2025-02-21",
       "domain": "preferences",
       "type": "episodic",
@@ -15222,7 +15249,7 @@
       "body": "Long thread with Lucia Ferrante and Emeka Nwosu; resolved without a meeting."
     },
     {
-      "path": "journal/2026-07-18-208",
+      "path": "journal/2026-07-18-209",
       "title": "Journal — 2026-07-18",
       "domain": "preferences",
       "type": "episodic",
@@ -15249,7 +15276,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2024-12-20-209",
+      "path": "journal/2024-12-20-210",
       "title": "Journal — 2024-12-20",
       "domain": "preferences",
       "type": "episodic",
@@ -15276,7 +15303,7 @@
       "body": "Slow morning. Coffee, then two hours on risk models without interruption."
     },
     {
-      "path": "journal/2024-09-09-210",
+      "path": "journal/2024-09-09-211",
       "title": "Journal — 2024-09-09",
       "domain": "preferences",
       "type": "episodic",
@@ -15303,7 +15330,7 @@
       "body": "Sofie Lindqvist recommended a book on risk models. Added to the list."
     },
     {
-      "path": "journal/2024-07-31-211",
+      "path": "journal/2024-07-31-212",
       "title": "Journal — 2024-07-31",
       "domain": "preferences",
       "type": "episodic",
@@ -15330,7 +15357,7 @@
       "body": "Nell Osei-Lindqvist recommended a book on cold-water swimming. Added to the list."
     },
     {
-      "path": "journal/2024-06-01-212",
+      "path": "journal/2024-06-01-213",
       "title": "Journal — 2024-06-01",
       "domain": "preferences",
       "type": "episodic",
@@ -15357,7 +15384,7 @@
       "body": "Slow morning. Coffee, then two hours on Swedish grammar without interruption."
     },
     {
-      "path": "journal/2025-12-11-213",
+      "path": "journal/2025-12-11-214",
       "title": "Journal — 2025-12-11",
       "domain": "preferences",
       "type": "episodic",
@@ -15384,7 +15411,7 @@
       "body": "Weather turned. Cancelled the ride, worked from the kitchen table instead."
     },
     {
-      "path": "journal/2026-04-03-214",
+      "path": "journal/2026-04-03-215",
       "title": "Journal — 2026-04-03",
       "domain": "preferences",
       "type": "episodic",
@@ -15411,7 +15438,7 @@
       "body": "Slow morning. Coffee, then two hours on stream processing without interruption."
     },
     {
-      "path": "journal/2025-11-25-215",
+      "path": "journal/2025-11-25-216",
       "title": "Journal — 2025-11-25",
       "domain": "preferences",
       "type": "episodic",
@@ -15438,7 +15465,7 @@
       "body": "Long thread with Johan Wikstrom and Ingrid Saarinen; resolved without a meeting."
     },
     {
-      "path": "journal/2026-06-12-216",
+      "path": "journal/2026-06-12-217",
       "title": "Journal — 2026-06-12",
       "domain": "preferences",
       "type": "episodic",
@@ -15465,7 +15492,7 @@
       "body": "Slow morning. Coffee, then two hours on bread making without interruption."
     },
     {
-      "path": "journal/2025-01-18-217",
+      "path": "journal/2025-01-18-218",
       "title": "Journal — 2025-01-18",
       "domain": "preferences",
       "type": "episodic",
@@ -15492,7 +15519,7 @@
       "body": "Picked up seed trays on the way home. Cheaper than expected."
     },
     {
-      "path": "journal/2025-11-23-218",
+      "path": "journal/2025-11-23-219",
       "title": "Journal — 2025-11-23",
       "domain": "preferences",
       "type": "episodic",
@@ -15517,33 +15544,6 @@
         "full"
       ],
       "body": "Slow morning. Coffee, then two hours on tidal modelling without interruption."
-    },
-    {
-      "path": "journal/2025-10-14-219",
-      "title": "Journal — 2025-10-14",
-      "domain": "preferences",
-      "type": "episodic",
-      "lifecycle": "active",
-      "sensitivity": "normal",
-      "namespace": null,
-      "valid_from": null,
-      "valid_until": null,
-      "confidence": 0.54,
-      "tags": [
-        "journal"
-      ],
-      "relations": [],
-      "derived_from": [],
-      "updated": "2025-10-14",
-      "default_visible": true,
-      "visible_in": [
-        "default",
-        "health",
-        "finance",
-        "home",
-        "full"
-      ],
-      "body": "Errand day: post office, then the hardware shop for gaffer tape."
     }
   ],
   "facts": [

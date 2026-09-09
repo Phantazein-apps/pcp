@@ -1,6 +1,6 @@
 ---
 title: Project Thornwood (duplicate note)
-updated: '2025-01-26'
+updated: '2025-08-05'
 type: semantic
 tags:
 - projects
@@ -9,7 +9,8 @@ tags:
 - polars
 - duplicate
 lifecycle: active
-confidence: 0.79
+confidence: 0.61
+valid_from: '2026-07-20'
 source:
   origin: chat
 derived_from:
@@ -19,7 +20,7 @@ relations:
   target: projects/thornwood
 ---
 
-Same detail, recorded separately:
+Repeated in passing:
 
 # Thornwood
 

@@ -6,8 +6,8 @@ tags:
 - home
 - home-network
 - duplicate
-lifecycle: active
-confidence: 0.61
+lifecycle: stale
+confidence: 0.58
 source:
   origin: chat
 derived_from:

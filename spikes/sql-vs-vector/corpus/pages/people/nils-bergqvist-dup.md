@@ -1,6 +1,6 @@
 ---
 title: Nils Bergqvist (duplicate note)
-updated: '2026-02-15'
+updated: '2026-06-01'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - tallhojd-energi
 - duplicate
 lifecycle: stale
-confidence: 0.78
+confidence: 0.74
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/nils-bergqvist
 ---
 
-Same detail, recorded separately:
+Noted again, from a later conversation:
 
 Nils Bergqvist — client. Operations director at Tallhojd Energi, based in Vasteras.
 

@@ -8,7 +8,8 @@ tags:
 - current
 - duplicate
 lifecycle: stale
-confidence: 0.79
+confidence: 0.76
+valid_from: '2023-04-11'
 source:
   origin: chat
 derived_from:

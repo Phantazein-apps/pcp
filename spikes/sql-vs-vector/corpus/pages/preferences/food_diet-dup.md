@@ -1,12 +1,12 @@
 ---
 title: Preference — food (duplicate note)
-updated: '2024-03-17'
+updated: '2025-04-21'
 type: semantic
 tags:
 - preferences
 - food
 - duplicate
-lifecycle: stale
+lifecycle: active
 confidence: 0.71
 source:
   origin: chat

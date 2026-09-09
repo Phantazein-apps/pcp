@@ -1,14 +1,14 @@
 ---
 title: Theo Osei-Lindqvist (duplicate note)
-updated: '2026-01-29'
+updated: '2025-07-04'
 type: semantic
 tags:
 - people
 - child
 - kvarnberget-skola
 - duplicate
-lifecycle: active
-confidence: 0.59
+lifecycle: stale
+confidence: 0.66
 source:
   origin: chat
 derived_from:

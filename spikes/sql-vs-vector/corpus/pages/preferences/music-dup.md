@@ -1,13 +1,13 @@
 ---
 title: Preference — leisure (duplicate note)
-updated: '2024-06-05'
+updated: '2025-07-12'
 type: semantic
 tags:
 - preferences
 - leisure
 - duplicate
 lifecycle: stale
-confidence: 0.58
+confidence: 0.78
 source:
   origin: chat
 derived_from:
@@ -17,7 +17,7 @@ relations:
   target: preferences/music
 ---
 
-Same detail, recorded separately:
+Noted again, from a later conversation:
 
 Listens to highlife and nordic jazz while working.
 

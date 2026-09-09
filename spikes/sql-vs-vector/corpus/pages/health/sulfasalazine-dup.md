@@ -1,14 +1,16 @@
 ---
 title: Sulfasalazine (duplicate note)
-updated: '2025-03-15'
+updated: '2025-09-12'
 type: semantic
 tags:
 - health
 - sulfasalazine
 - duplicate
 sensitivity: sensitive
-lifecycle: active
-confidence: 0.58
+lifecycle: archived
+confidence: 0.6
+valid_from: '2021-12-01'
+valid_until: '2022-01-09'
 source:
   origin: chat
 derived_from:

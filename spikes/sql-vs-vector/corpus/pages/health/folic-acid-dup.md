@@ -1,6 +1,6 @@
 ---
 title: Folic acid (duplicate note)
-updated: '2024-08-14'
+updated: '2026-04-20'
 type: semantic
 tags:
 - health
@@ -8,7 +8,8 @@ tags:
 - duplicate
 sensitivity: sensitive
 lifecycle: active
-confidence: 0.75
+confidence: 0.59
+valid_from: '2022-01-10'
 source:
   origin: chat
 derived_from:

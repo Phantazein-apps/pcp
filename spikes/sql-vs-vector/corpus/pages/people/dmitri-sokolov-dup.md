@@ -1,6 +1,6 @@
 ---
 title: Dmitri Sokolov (duplicate note)
-updated: '2026-06-20'
+updated: '2025-09-09'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - nordvik-analytics
 - duplicate
 lifecycle: active
-confidence: 0.62
+confidence: 0.6
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/dmitri-sokolov
 ---
 
-Repeated in passing:
+Same detail, recorded separately:
 
 Dmitri Sokolov — colleague. Qa lead at Nordvik Analytics, based in Tallinn.
 

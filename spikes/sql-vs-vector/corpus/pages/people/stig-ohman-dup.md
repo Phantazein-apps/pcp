@@ -1,14 +1,14 @@
 ---
 title: Stig Ohman (duplicate note)
-updated: '2025-05-26'
+updated: '2026-07-19'
 type: semantic
 tags:
 - people
 - neighbour
 - ''
 - duplicate
-lifecycle: active
-confidence: 0.8
+lifecycle: stale
+confidence: 0.67
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/stig-ohman
 ---
 
-Same detail, recorded separately:
+Noted again, from a later conversation:
 
 Stig Ohman — neighbour. Retired teacher at -, based in Gothenburg.
 

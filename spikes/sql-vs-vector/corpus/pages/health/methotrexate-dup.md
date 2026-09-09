@@ -1,6 +1,6 @@
 ---
 title: Methotrexate (duplicate note)
-updated: '2026-01-16'
+updated: '2026-02-15'
 type: semantic
 tags:
 - health
@@ -8,7 +8,8 @@ tags:
 - duplicate
 sensitivity: sensitive
 lifecycle: stale
-confidence: 0.59
+confidence: 0.65
+valid_from: '2022-01-10'
 source:
   origin: chat
 derived_from:
@@ -18,7 +19,7 @@ relations:
   target: health/methotrexate
 ---
 
-Noted again, from a later conversation:
+Same detail, recorded separately:
 
 Methotrexate. 15 mg weekly, thursday evenings.
 

@@ -8,8 +8,10 @@ tags:
 - cancelled
 - superset
 - duplicate
-lifecycle: stale
-confidence: 0.73
+lifecycle: archived
+confidence: 0.7
+valid_from: '2025-08-04'
+valid_until: '2026-01-09'
 source:
   origin: chat
 derived_from:

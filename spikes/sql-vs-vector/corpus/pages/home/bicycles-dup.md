@@ -1,13 +1,13 @@
 ---
 title: Bicycles (duplicate note)
-updated: '2024-10-19'
+updated: '2024-04-07'
 type: semantic
 tags:
 - home
 - bicycles
 - duplicate
-lifecycle: active
-confidence: 0.63
+lifecycle: stale
+confidence: 0.62
 source:
   origin: chat
 derived_from:
@@ -17,6 +17,6 @@ relations:
   target: home/bicycles
 ---
 
-Noted again, from a later conversation:
+Same detail, recorded separately:
 
 Bicycles: four, two cargo, stored in the basement cage.

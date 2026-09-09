@@ -6,8 +6,8 @@ tags:
 - preferences
 - health
 - duplicate
-lifecycle: active
-confidence: 0.77
+lifecycle: stale
+confidence: 0.72
 source:
   origin: chat
 derived_from:
@@ -17,7 +17,7 @@ relations:
   target: preferences/dentist
 ---
 
-Same detail, recorded separately:
+Repeated in passing:
 
 Books dental checkups in january and july.
 

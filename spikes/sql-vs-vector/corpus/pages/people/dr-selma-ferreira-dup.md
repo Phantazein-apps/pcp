@@ -7,8 +7,8 @@ tags:
 - clinician
 - sahlberg-clinic
 - duplicate
-lifecycle: active
-confidence: 0.77
+lifecycle: stale
+confidence: 0.71
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/dr-selma-ferreira
 ---
 
-Same detail, recorded separately:
+Restated during a clear-out of old notes:
 
 Dr. Selma Ferreira — clinician. Rheumatologist at Sahlberg Clinic, based in Gothenburg.
 

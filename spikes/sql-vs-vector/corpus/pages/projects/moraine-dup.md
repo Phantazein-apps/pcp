@@ -1,6 +1,6 @@
 ---
 title: Project Moraine (duplicate note)
-updated: '2024-01-21'
+updated: '2026-03-16'
 type: semantic
 tags:
 - projects
@@ -9,7 +9,8 @@ tags:
 - terraform
 - duplicate
 lifecycle: active
-confidence: 0.61
+confidence: 0.68
+valid_from: '2026-05-18'
 source:
   origin: chat
 derived_from:
@@ -19,7 +20,7 @@ relations:
   target: projects/moraine
 ---
 
-Repeated in passing:
+Same detail, recorded separately:
 
 # Moraine
 

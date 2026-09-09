@@ -1,6 +1,6 @@
 ---
 title: Mira Tuominen (duplicate note)
-updated: '2024-04-09'
+updated: '2025-05-18'
 type: semantic
 tags:
 - people
@@ -8,7 +8,7 @@ tags:
 - nordvik-analytics
 - duplicate
 lifecycle: active
-confidence: 0.58
+confidence: 0.7
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/mira-tuominen
 ---
 
-Repeated in passing:
+Noted again, from a later conversation:
 
 Mira Tuominen — colleague. Product manager at Nordvik Analytics, based in Helsinki.
 

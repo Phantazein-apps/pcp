@@ -1,14 +1,14 @@
 ---
 title: Petra Hallgren (duplicate note)
-updated: '2026-04-06'
+updated: '2026-01-24'
 type: semantic
 tags:
 - people
 - manager
 - nordvik-analytics
 - duplicate
-lifecycle: stale
-confidence: 0.68
+lifecycle: active
+confidence: 0.66
 source:
   origin: chat
 derived_from:
@@ -18,7 +18,7 @@ relations:
   target: people/petra-hallgren
 ---
 
-Repeated in passing:
+Same detail, recorded separately:
 
 Petra Hallgren — manager. Vp engineering at Nordvik Analytics, based in Gothenburg.
 

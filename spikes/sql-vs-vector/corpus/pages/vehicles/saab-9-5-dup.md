@@ -1,14 +1,16 @@
 ---
 title: Saab 9-5 (duplicate note)
-updated: '2026-04-09'
+updated: '2024-04-09'
 type: semantic
 tags:
 - vehicles
 - saab
 - sold
 - duplicate
-lifecycle: active
-confidence: 0.61
+lifecycle: archived
+confidence: 0.59
+valid_from: '2016-05-02'
+valid_until: '2023-04-02'
 source:
   origin: chat
 derived_from:

@@ -1,13 +1,13 @@
 ---
 title: Preference — family (duplicate note)
-updated: '2025-01-28'
+updated: '2024-06-10'
 type: semantic
 tags:
 - preferences
 - family
 - duplicate
 lifecycle: active
-confidence: 0.8
+confidence: 0.72
 source:
   origin: chat
 derived_from:
@@ -17,7 +17,7 @@ relations:
   target: preferences/weekend
 ---
 
-Same detail, recorded separately:
+Repeated in passing:
 
 Saturdays are family time, no work calls.
 

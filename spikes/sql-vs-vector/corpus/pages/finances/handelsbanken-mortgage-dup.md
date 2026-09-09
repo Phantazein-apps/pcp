@@ -1,6 +1,6 @@
 ---
 title: Handelsbanken — mortgage (duplicate note)
-updated: '2026-03-18'
+updated: '2024-09-11'
 type: semantic
 tags:
 - finances
@@ -9,7 +9,7 @@ tags:
 - duplicate
 sensitivity: sensitive
 lifecycle: active
-confidence: 0.69
+confidence: 0.7
 source:
   origin: chat
 derived_from:
@@ -19,7 +19,7 @@ relations:
   target: finances/handelsbanken-mortgage
 ---
 
-Repeated in passing:
+Noted again, from a later conversation:
 
 Mortgage with Handelsbanken. Reference HB-1153.
 

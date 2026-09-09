@@ -1,6 +1,6 @@
 ---
 title: Piaggio Vespa GTS (duplicate note)
-updated: '2026-05-26'
+updated: '2026-02-24'
 type: semantic
 tags:
 - vehicles
@@ -8,7 +8,8 @@ tags:
 - current
 - duplicate
 lifecycle: stale
-confidence: 0.78
+confidence: 0.6
+valid_from: '2021-06-30'
 source:
   origin: chat
 derived_from:
@@ -18,7 +19,7 @@ relations:
   target: vehicles/piaggio-vespa-gts
 ---
 
-Repeated in passing:
+Restated during a clear-out of old notes:
 
 2021 Piaggio Vespa GTS, sage green. Registration CFN 145.
 
