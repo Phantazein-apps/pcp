@@ -1,12 +1,12 @@
 ---
 title: Work laptop
-updated: '2026-08-02'
+updated: '2025-06-14'
 type: semantic
 tags:
 - work
 - equipment
 lifecycle: active
-confidence: 0.95
+confidence: 0.9
 source:
   origin: chat
 ---

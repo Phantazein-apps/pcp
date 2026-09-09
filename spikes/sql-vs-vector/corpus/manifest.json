@@ -5903,14 +5903,14 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.95,
+      "confidence": 0.9,
       "tags": [
         "work",
         "role"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2026-08-02",
+      "updated": "2025-06-14",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -5967,14 +5967,14 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.95,
+      "confidence": 0.9,
       "tags": [
         "work",
         "reporting-line"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2026-08-02",
+      "updated": "2025-06-14",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -6031,7 +6031,7 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.95,
+      "confidence": 0.9,
       "tags": [
         "projects",
         "tidewater",
@@ -6039,7 +6039,7 @@
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2026-08-02",
+      "updated": "2025-06-14",
       "default_visible": true,
       "visible_in": [
         "default",
@@ -6097,14 +6097,14 @@
       "namespace": null,
       "valid_from": null,
       "valid_until": null,
-      "confidence": 0.95,
+      "confidence": 0.9,
       "tags": [
         "work",
         "equipment"
       ],
       "relations": [],
       "derived_from": [],
-      "updated": "2026-08-02",
+      "updated": "2025-06-14",
       "default_visible": true,
       "visible_in": [
         "default",
