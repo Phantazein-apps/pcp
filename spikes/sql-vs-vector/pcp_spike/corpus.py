@@ -23,6 +23,8 @@ from pathlib import Path
 from .model import Fact, Page, SEED, TODAY, content_tokens
 from . import persona as P
 
+from .reconcile import RECONCILE
+
 PEOPLE_BY_ID = {p[0]: p for p in P.PEOPLE}
 
 
@@ -37,7 +39,16 @@ def _slug(s: str) -> str:
 
 
 class Builder:
-    def __init__(self, seed: int = SEED, flat_supersession: bool = False):
+    def __init__(self, seed: int = SEED, flat_supersession: bool = False,
+                 target_pages: int | None = None, with_reconcile: bool = False):
+        # with_reconcile: the second pass's `reconcile` stratum -- contradicting
+        # page pairs with no marker (reconcile.py). OFF by default, so the
+        # first-pass corpus this generator also builds stays byte-identical.
+        self.with_reconcile = with_reconcile
+        # target_pages: grow the filler and near-duplicate pools until the
+        # corpus reaches roughly this many pages. The second pass runs at
+        # ~2000 to stop a full LIKE scan being free (REPORT.md §5 item 5).
+        self.target_pages = target_pages
         # flat_supersession: give both pages of a supersession pair the SAME
         # `updated` and `confidence`, so recency and confidence carry no
         # signal and the `supersedes` EDGE is the only discriminator left.
@@ -629,11 +640,40 @@ class Builder:
                          "preferences/pool-", "finances/mortgage-rate-",
                          "finances/bank-", "legal/")
 
+    @property
+    def RECONCILE_PATHS(self) -> set[str]:
+        return {s[side]["path"] for s in RECONCILE for side in ("current", "stale")}
+
+    def build_reconcile(self) -> None:
+        """Case (c): contradicting page pairs with NO structural marker.
+
+        Both pages active, open validity, identical confidence, no relations
+        edge, no shared path prefix. See `reconcile.py` for why.
+        """
+        for spec in RECONCILE:
+            for side in ("current", "stale"):
+                d = spec[side]
+                self.add(Page(
+                    path=d["path"], title=d["title"], updated=d["updated"],
+                    type="semantic", domain=spec["domain"], body=d["body"],
+                    tags=spec["tags"], lifecycle="active",
+                    confidence=0.9,          # IDENTICAL on both sides
+                    source={"origin": "chat"},
+                ))
+            self.fact(id=f"rec.{spec['key']}.current", domain=spec["domain"],
+                      subject=spec["subject"], predicate=spec["predicate"],
+                      obj=spec["gold"], page=spec["current"]["path"],
+                      aliases=list(spec["aliases"]))
+            self.fact(id=f"rec.{spec['key']}.stale", domain=spec["domain"],
+                      subject=spec["subject"], predicate="superseded " + spec["predicate"],
+                      obj=spec["stale_gold"], page=spec["stale"]["path"])
+
     def build_near_duplicates(self, n: int = 45) -> None:
         """Near-duplicate pages: same fact, reworded, lower confidence."""
         pool = [p for p in self.pages
                 if p.type == "semantic"
                 and not p.path.startswith(self.DESIGNED_PREFIXES)
+                and p.path not in self.RECONCILE_PATHS
                 and p.path not in {s["path"] for s in self.PARAPHRASE}]
         for src in self.rng.sample(pool, min(n, len(pool))):
             lead = self.rng.choice([
@@ -854,9 +894,19 @@ class Builder:
         for m in ("build_people", "build_projects", "build_vehicles", "build_finances",
                   "build_health", "build_travel", "build_preferences", "build_home",
                   "build_designed", "build_paraphrase", "build_traces", "build_legal",
-                  "build_work_misc", "build_procedural", "build_near_duplicates",
-                  "build_filler"):
+                  "build_work_misc", "build_procedural"):
             getattr(self, m)()
+        if self.with_reconcile:
+            self.build_reconcile()
+        # Noise last, sized to hit the requested corpus scale.
+        if self.target_pages:
+            core = len(self.pages)
+            dups = max(45, int(core * 0.12))
+            self.build_near_duplicates(dups)
+            self.build_filler(max(0, self.target_pages - len(self.pages) - 1))
+        else:
+            self.build_near_duplicates()
+            self.build_filler()
         self.build_index()
 
     # ----------------------------------------------------------- validate --
@@ -867,7 +917,9 @@ class Builder:
         dupes = {p for p in paths if paths.count(p) > 1}
         if dupes:
             errs.append(f"duplicate page paths: {sorted(dupes)[:5]}")
-        if not (500 <= len(self.pages) <= 800):
+        lo, hi = ((int(self.target_pages * 0.95), int(self.target_pages * 1.05))
+                  if self.target_pages else (500, 800))
+        if not (lo <= len(self.pages) <= hi):
             errs.append(f"page count {len(self.pages)} outside the required 500-800")
 
         by_path = {p.path: p for p in self.pages}
@@ -965,6 +1017,7 @@ class Builder:
 
         manifest = {
             "seed": SEED,
+            "shape": "atomic",
             "today": TODAY,
             "persona": P.PERSONA,
             "counts": {
@@ -998,6 +1051,7 @@ class Builder:
                 "supersession": self.SUPERSESSION,
                 "windows": self.WINDOWS,
                 "historical": self.HISTORICAL,
+                "reconcile": RECONCILE if self.with_reconcile else [],
                 "paraphrase": self.PARAPHRASE,
                 "traces": [t[0] for t in self.TRACES],
             },
@@ -1008,8 +1062,9 @@ class Builder:
 
 
 def main(root: str = "corpus", seed: int = SEED,
-         flat_supersession: bool = False) -> dict:
-    b = Builder(seed, flat_supersession)
+         flat_supersession: bool = False, target_pages: int | None = None,
+         with_reconcile: bool = False) -> dict:
+    b = Builder(seed, flat_supersession, target_pages, with_reconcile)
     b.build_all()
     errs = b.validate()
     if errs:

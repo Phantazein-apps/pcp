@@ -1,0 +1,39 @@
+{
+  "name": "Mara Osei-Lindqvist",
+  "preferred_name": "Mara",
+  "pronouns": "she/her",
+  "languages": [
+    {
+      "code": "sv",
+      "level": "native",
+      "rule": "at home with the children"
+    },
+    {
+      "code": "en",
+      "level": "native",
+      "rule": "at work, and for AI output"
+    },
+    {
+      "code": "tw",
+      "level": "conversational",
+      "rule": "with Kwame on calls"
+    }
+  ],
+  "locale": "en-GB",
+  "timezone": "Europe/Stockholm",
+  "location": {
+    "city": "Gothenburg",
+    "country": "SE"
+  },
+  "communication": {
+    "tone": "direct, unhurried",
+    "verbosity": "prose over bullet lists for anything long-form",
+    "formatting": "metric units, ISO-8601 dates, no emoji"
+  },
+  "work": {
+    "employer": "Nordvik Analytics",
+    "role": "Principal Data Engineer",
+    "group": "Data Platform"
+  },
+  "ai_instructions": "Answer in British English. Do not schedule anything before 09:30. Never send notifications between 21:00 and 07:00."
+}

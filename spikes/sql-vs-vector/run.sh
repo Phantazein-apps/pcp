@@ -16,7 +16,7 @@ TAG=first-pass
 BACKEND=vector
 while [ $# -gt 0 ]; do
   case "$1" in
-    --full)        FULL="--full"; TAG=full; shift ;;
+    --full)        FULL="--models sonnet,haiku --seeds 1,2"; TAG=full; shift ;;
     --embeddings)  EMB="$2"; shift 2 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
@@ -35,13 +35,20 @@ if [ ! -x "$PY" ]; then
 fi
 
 echo "== build: corpus, storage, embeddings =="
-$PY -m pcp_spike.build --embeddings "$EMB"
+$PY -m pcp_spike.build --shape atomic --corpus-root corpus --data-root data \
+    --embeddings "$EMB"
 
 echo "== questions =="
 $PY -m pcp_spike.qset
 
 echo "== runs =="
-$PY -m pcp_spike.runner --tag "$TAG" --backend "$BACKEND" --concurrency 6 $FULL
+# The second pass renamed `sql_only` to `sql_narrow` and added two conditions;
+# the runner still accepts the old name, but the roots and question set have
+# to be named explicitly now that there is more than one corpus.
+$PY -m pcp_spike.runner --tag "$TAG" --backend "$BACKEND" --concurrency 6 \
+    --shape atomic --corpus-root corpus --data-root data \
+    --questions questions/questions.json \
+    --conditions sql_only,vector_only,both $FULL
 
 echo "== judging =="
 $PY -m pcp_spike.judge --runs "logs/raw/runs-$TAG.jsonl"

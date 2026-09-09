@@ -62,6 +62,20 @@ CREATE TABLE wp_term_relationships (
     term_taxonomy_id INTEGER NOT NULL REFERENCES wp_term_taxonomy(term_taxonomy_id),
     PRIMARY KEY (object_id, term_taxonomy_id)
 );
+
+-- One row per LINE of a page body. In corpus-a a page is one fact, so a
+-- page has one or two lines and this table adds nothing. In corpus-b a page
+-- is a subject file of 8-25 bullets, and this is the row a `LIKE` actually
+-- matches -- which is what makes narrow projection a real choice rather
+-- than a formality (REPORT.md §8.3).
+CREATE TABLE pcp_lines (
+    post_id  INTEGER NOT NULL REFERENCES wp_posts(ID),
+    path     TEXT    NOT NULL,
+    line_no  INTEGER NOT NULL,
+    text     TEXT    NOT NULL,
+    PRIMARY KEY (path, line_no)
+);
+CREATE INDEX idx_lines_path ON pcp_lines(path);
 """
 
 # Meta keys carrying SPEC.md §5.1 frontmatter.
@@ -81,7 +95,8 @@ def _pivot(alias: str = "p") -> str:
     return ",\n           ".join(cols)
 
 
-def build_master(manifest: dict, db_path: Path) -> None:
+def build_master(manifest: dict, db_path: Path,
+                 corpus_root: Path | None = None) -> None:
     """Populate layer (a) and define layer (b) over it."""
     db_path.parent.mkdir(parents=True, exist_ok=True)
     if db_path.exists():
@@ -127,6 +142,11 @@ def build_master(manifest: dict, db_path: Path) -> None:
         for d in pg["derived_from"]:
             con.execute("INSERT INTO wp_postmeta(post_id,meta_key,meta_value) "
                         "VALUES (?,?,?)", (i, "pcp_derived_from", d))
+        for ln, raw in enumerate(pg["body"].splitlines(), start=1):
+            txt = raw.strip().lstrip("-").strip()
+            if txt:
+                con.execute("INSERT INTO pcp_lines VALUES (?,?,?,?)",
+                            (i, pg["path"], ln, txt))
         con.execute("INSERT OR IGNORE INTO wp_term_relationships VALUES (?,?)",
                     (i, term("pcp_domain", pg["domain"])))
         for t in pg["tags"]:
@@ -134,7 +154,7 @@ def build_master(manifest: dict, db_path: Path) -> None:
                         (i, term("pcp_tag", t)))
 
     # Profile documents live as their own post type, body = JSON (SPEC.md §4).
-    prof_root = db_path.parent.parent / "corpus" / "profile"
+    prof_root = Path(corpus_root or db_path.parent.parent / "corpus") / "profile"
     for j, ns in enumerate(manifest["profile_namespaces"], start=1):
         doc = json.loads((prof_root / f"{ns}.json").read_text(encoding="utf-8"))
         pid = 100000 + j
@@ -207,6 +227,9 @@ SELECT p.post_name AS path, t.name AS tag
   JOIN wp_terms t ON t.term_id = tt.term_id
  WHERE tt.taxonomy = 'pcp_tag' AND p.post_type = 'pcp_memory';
 
+CREATE VIEW v_base_lines AS
+SELECT l.path, l.line_no, l.text FROM pcp_lines l;
+
 CREATE VIEW v_base_relations AS
 SELECT p.post_name AS source_page,
        json_extract(m.meta_value, '$.rel')        AS rel,
@@ -228,6 +251,15 @@ SELECT {cols} FROM v_base v WHERE {scope};
 
 CREATE VIEW v_{bundle}_memory AS
 SELECT {cols} FROM v_base v WHERE {scope} AND {_default_predicate()};
+
+CREATE VIEW v_{bundle}_lines AS
+SELECT l.path, l.line_no, l.text FROM v_base_lines l
+ WHERE l.path IN (SELECT v.path FROM v_base v
+                   WHERE {scope} AND {_default_predicate()});
+
+CREATE VIEW v_{bundle}_lines_all AS
+SELECT l.path, l.line_no, l.text FROM v_base_lines l
+ WHERE l.path IN (SELECT v.path FROM v_base v WHERE {scope});
 
 CREATE VIEW v_{bundle}_tags AS
 SELECT t.path, t.tag FROM v_base_tags t
@@ -272,6 +304,8 @@ def materialise_scope(master: Path, out: Path, bundle: str,
     for name, view in [
         ("memory",         f"v_{bundle}_memory"),
         ("memory_all",     f"v_{bundle}_memory_all"),
+        ("lines",          f"v_{bundle}_lines"),
+        ("lines_all",      f"v_{bundle}_lines_all"),
         ("tags",           f"v_{bundle}_tags"),
         ("relations",      f"v_{bundle}_relations"),
         ("relations_all",  f"v_{bundle}_relations_all"),
@@ -298,6 +332,8 @@ CREATE INDEX idx_rel_src    ON relations(source_page);
 CREATE INDEX idx_rel_tgt    ON relations(target_page);
 CREATE INDEX idx_rela_tgt   ON relations_all(target_page);
 CREATE INDEX idx_tag_path   ON tags(path);
+CREATE INDEX idx_lines_path ON lines(path);
+CREATE INDEX idx_linesa_path ON lines_all(path);
 CREATE INDEX idx_prof_key   ON profile(key);
 """)
     con.commit()
@@ -306,14 +342,14 @@ CREATE INDEX idx_prof_key   ON profile(key);
     return made
 
 
-# The schema blurb handed to the agent in the sql_only and both conditions.
+# The schema blurb handed to the agent in the SQL conditions.
 SCHEMA_DOC = """\
 You are querying a read-only SQLite database of one person's PCP personal
 memory. Only the tables below exist; there are no others.
 
   memory(path, title, domain, type, lifecycle, sensitivity,
          valid_from, valid_until, confidence, updated, body)
-      One row per memory page that is CURRENTLY IN FORCE. This view already
+      One row per memory PAGE that is currently in force. This view already
       applies the PCP default retrieval policy: it contains only pages whose
       lifecycle is 'active' or 'validated' AND whose valid_until is either
       NULL or not yet passed. Start here.
@@ -322,31 +358,37 @@ memory. Only the tables below exist; there are no others.
                     vehicles, travel, preferences, home
         type        episodic (something that happened) | semantic (a durable
                     fact or preference) | procedural (how the person does a thing)
-        lifecycle   active | validated   (in this view only)
-        valid_from  / valid_until  ISO-8601 dates bounding when the fact
-                    is/was true. NULL valid_until means open-ended.
-        confidence  0.0-1.0, how sure the context is of this page
-        body        the page's markdown text
+        updated     when the page was last written. It is the ONLY timestamp
+                    a page carries, and it is not guaranteed to track which
+                    of two conflicting pages is the current one.
+        body        the page's full markdown text
 
   memory_all(...same columns...)
       EVERY page, including ones the default policy hides: lifecycle 'stale'
       or 'archived', and pages whose valid_until has passed. Use this when
       the question is about the PAST -- what something used to be, when it
-      changed, what was true on a given date. It is the only place historical
-      facts are visible.
+      changed, what was true on a given date.
+
+  lines(path, line_no, text)
+      One row per LINE of a page body, joinable to memory.path. A page may
+      hold many lines, and a line is not self-contained: the fact you match
+      on and the words that say whether it is still true are often on
+      DIFFERENT lines of the same page. lines_all(...) is the same over
+      memory_all.
 
   relations(source_page, rel, target_page, confidence)
-      Typed edges between pages. rel is one of:
+      Typed edges between pages, where the store has any. rel is one of:
         supersedes  source_page REPLACES target_page. The newer page is the
                     source. Both pages can be active at once, so this edge is
                     often the ONLY way to tell which of two similar pages is
                     current: a page that appears as a target_page of a
                     'supersedes' edge has been replaced.
         contradicts, refines, about
-      relations_all(...) is the same over memory_all.
+      relations_all(...) is the same over memory_all. THIS TABLE MAY BE
+      EMPTY -- not every store records edges.
 
   tags(path, tag)
-      Free labels per page.
+      Free labels per page. May be empty.
 
   profile(namespace, key, value)
       The structured profile, flattened. key is a dotted path into the JSON,
@@ -355,18 +397,42 @@ memory. Only the tables below exist; there are no others.
 Notes:
   - Today's date is {today}.
   - Only SELECT statements are permitted. One statement per call.
-  - Results are capped at 200 rows and 20 KB and returned as CSV.
-  - Page bodies are prose; use LIKE '%...%' on body, or filter by domain/tag
-    first and read the bodies of what comes back.
+  - Results are capped at 200 rows and 20 KB.
+  - Page bodies are prose; use LIKE '%...%' on memory.body or lines.text, or
+    filter by domain first and read what comes back.
 """
 
+# sql_narrow: the agent chooses its own projection, exactly as in the first
+# pass. It MAY select a whole body; nothing forces it to.
+NARROW_DOC = """\
+Results come back as CSV: you get precisely the columns you SELECT, and
+nothing else. Selecting `body` returns whole pages; selecting `lines.text`
+returns single lines. That choice is yours to make.
+"""
 
+# sql_document: the projection decision is taken away. Any matched row is
+# expanded to the whole page that contains it. This is the condition that
+# tests whether SQL keeps its context advantage once it has to return enough
+# surrounding text to be correct (REPORT.md §8.3).
+DOCUMENT_DOC = """\
+IMPORTANT -- how results are returned in this session:
+
+Your SELECT must include the `path` column. Whatever else you select is used
+only to find rows; the tool then replies with the FULL TEXT of every distinct
+page your query matched, not with your chosen columns. So:
+
+    SELECT path FROM lines WHERE text LIKE '%steering%'
+
+returns the entire body of each page holding a matching line. You never see a
+column projection, and you cannot ask for less than a whole page. Query for
+as few pages as you can, because every one of them arrives in full.
+"""
 def main(corpus_root: str = "corpus", data_root: str = "data") -> None:
     corpus = Path(corpus_root)
     data = Path(data_root)
     manifest = json.loads((corpus / "manifest.json").read_text(encoding="utf-8"))
     master = data / "pcp.sqlite"
-    build_master(manifest, master)
+    build_master(manifest, master, corpus)
     con = sqlite3.connect(master)
     build_profile_tables(con, manifest, corpus)
     con.close()
@@ -374,9 +440,9 @@ def main(corpus_root: str = "corpus", data_root: str = "data") -> None:
     for bundle in SCOPE_BUNDLES:
         made = materialise_scope(master, data / f"scope_{bundle}.sqlite",
                                  bundle, manifest, corpus)
-        print(f"  scope {bundle:8s} memory={made['memory']:4d} "
-              f"memory_all={made['memory_all']:4d} relations={made['relations']:3d} "
-              f"profile={made['profile']:3d}")
+        print(f"  scope {bundle:8s} memory={made['memory']:5d} "
+              f"memory_all={made['memory_all']:5d} lines={made['lines']:6d} "
+              f"relations={made['relations']:3d} profile={made['profile']:3d}")
 
 
 if __name__ == "__main__":

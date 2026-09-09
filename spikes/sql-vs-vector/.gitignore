@@ -8,6 +8,22 @@ __pycache__/
 data/*.sqlite
 data/*.npy
 data/embedding_paths.json
+data-a/*.sqlite
+data-a/*.npy
+data-a/embedding_paths.json
+data-b/*.sqlite
+data-b/*.npy
+data-b/embedding_paths.json
+
+# The two second-pass corpora are 2,000 units each -- ~16 MB of generated
+# markdown and ~5 MB of manifest, all byte-identical from the seed and
+# rebuilt by `./run2.sh --build-only`. What IS committed is
+# `ground-truth.json`: the same manifest minus the page bodies, which is
+# what the report's claims are checked against.
+corpus-a/pages/
+corpus-b/pages/
+corpus-a/manifest.json
+corpus-b/manifest.json
 
 # Per-run tool-call logs duplicate the `tool_log` field already carried in
 # logs/raw/runs-*.jsonl, one file per run. The JSONL is the authoritative

@@ -1,0 +1,411 @@
+[
+  {
+    "id": "EX01",
+    "stratum": "exact_lookup",
+    "scope": "default",
+    "question": "What is the registration number of Mara's Volvo V60?",
+    "gold": "MLK 471",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "vehicles/volvo-v60"
+    ],
+    "leak_tokens": [],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "EX02",
+    "stratum": "exact_lookup",
+    "scope": "default",
+    "question": "Which client funds the Ledgerline project?",
+    "gold": "Stellarcrest Bank",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "projects/ledgerline"
+    ],
+    "leak_tokens": [],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "PA01",
+    "stratum": "paraphrase",
+    "scope": "default",
+    "question": "Which instrument did Kwame teach Mara to play?",
+    "gold": "the kora",
+    "aliases": [
+      "kora"
+    ],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "preferences/instrument"
+    ],
+    "leak_tokens": [],
+    "note": "paraphrase target kora",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "PA02",
+    "stratum": "paraphrase",
+    "scope": "default",
+    "question": "Which cloud provider does Nordvik use?",
+    "gold": "AWS",
+    "aliases": [
+      "Amazon",
+      "Amazon Web Services",
+      "Amazon's platform"
+    ],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "work/platform-footprint"
+    ],
+    "leak_tokens": [],
+    "note": "paraphrase target cloud",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "PA03",
+    "stratum": "paraphrase",
+    "scope": "default",
+    "question": "Which bakery does Mara get her loaves from?",
+    "gold": "the bakery on Karl Johansgatan",
+    "aliases": [
+      "Karl Johansgatan bakery"
+    ],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "preferences/loaves"
+    ],
+    "leak_tokens": [],
+    "note": "paraphrase target bakery",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "PA04",
+    "stratum": "paraphrase",
+    "scope": "default",
+    "question": "What do colleagues call the internal utility Mara looks after?",
+    "gold": "Tallyho",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "work/internal-utility"
+    ],
+    "leak_tokens": [],
+    "note": "paraphrase target tallyho",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "MH01",
+    "stratum": "multi_hop",
+    "scope": "default",
+    "question": "Which city is the design lead of the Bluefin project based in?",
+    "gold": "Oslo",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "projects/bluefin",
+      "people/frida-lund"
+    ],
+    "leak_tokens": [],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "MH05",
+    "stratum": "multi_hop",
+    "scope": "default",
+    "question": "Who is the design lead on the most expensive project that is currently active?",
+    "gold": "Hanna Brozek",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": null,
+    "targets": [
+      "projects/oxbow"
+    ],
+    "leak_tokens": [],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "TP01",
+    "stratum": "temporal",
+    "scope": "default",
+    "question": "What is Mara's job title at Nordvik Analytics?",
+    "gold": "Principal Data Engineer",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": "T-a",
+    "targets": [
+      "work/role-principal-data-engineer",
+      "work/role-senior-data-engineer"
+    ],
+    "leak_tokens": [],
+    "note": "supersession case role",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "TP02",
+    "stratum": "temporal",
+    "scope": "default",
+    "question": "Who does Mara report to at work?",
+    "gold": "Petra Hallgren",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": "T-a",
+    "targets": [
+      "work/reporting-line-hallgren",
+      "work/reporting-line-adeyemi"
+    ],
+    "leak_tokens": [],
+    "note": "supersession case reporting",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "TP03",
+    "stratum": "temporal",
+    "scope": "default",
+    "question": "Who chairs the Tidewater steering group?",
+    "gold": "Elin Nordgren",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": "T-a",
+    "targets": [
+      "projects/tidewater/steering-chair-nordgren",
+      "projects/tidewater/steering-chair-tuominen"
+    ],
+    "leak_tokens": [],
+    "note": "supersession case steering",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "TP04",
+    "stratum": "temporal",
+    "scope": "default",
+    "question": "What laptop does Mara use for work?",
+    "gold": "Framework 16",
+    "aliases": [
+      "Framework"
+    ],
+    "expect": "answer",
+    "mechanism": "T-a",
+    "targets": [
+      "work/laptop-framework-16",
+      "work/laptop-macbook-pro"
+    ],
+    "leak_tokens": [],
+    "note": "supersession case laptop",
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "NG01",
+    "stratum": "negative",
+    "scope": "default",
+    "question": "What is the name of Mara's dog?",
+    "gold": "not found",
+    "aliases": [],
+    "expect": "not_found",
+    "mechanism": null,
+    "targets": [],
+    "leak_tokens": [
+      "dog"
+    ],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "NG05",
+    "stratum": "negative",
+    "scope": "default",
+    "question": "What model of espresso machine does Mara own?",
+    "gold": "not found",
+    "aliases": [],
+    "expect": "not_found",
+    "mechanism": null,
+    "targets": [],
+    "leak_tokens": [
+      "espresso machine"
+    ],
+    "note": null,
+    "withheld": null,
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "SR01",
+    "stratum": "scope_restricted",
+    "scope": "default",
+    "question": "What condition is Mara being treated for by Dr Selma Ferreira?",
+    "gold": "not found",
+    "aliases": [],
+    "expect": "not_found",
+    "mechanism": null,
+    "targets": [
+      "health/psoriatic-arthritis"
+    ],
+    "leak_tokens": [
+      "psoriatic"
+    ],
+    "note": null,
+    "withheld": "psoriatic arthritis",
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "SR05",
+    "stratum": "scope_restricted",
+    "scope": "default",
+    "question": "Which institution holds Mara's emergency savings buffer?",
+    "gold": "not found",
+    "aliases": [],
+    "expect": "not_found",
+    "mechanism": null,
+    "targets": [
+      "finances/lansforsakringar-savings"
+    ],
+    "leak_tokens": [
+      "Lansforsakringar"
+    ],
+    "note": null,
+    "withheld": "Lansforsakringar",
+    "distractor": null,
+    "shape": "atomic"
+  },
+  {
+    "id": "RC01",
+    "stratum": "reconcile",
+    "scope": "default",
+    "question": "Which dental practice does Mara go to?",
+    "gold": "Tandvard Majorna",
+    "aliases": [
+      "Tandvard Majorna on Saggatan",
+      "Tandvård Majorna"
+    ],
+    "expect": "answer",
+    "mechanism": "R-recency",
+    "targets": [
+      "health/dental-care",
+      "health/dentist-appointments"
+    ],
+    "leak_tokens": [],
+    "note": "stale twin: Kliniken Linne",
+    "withheld": null,
+    "distractor": "Kliniken Linne",
+    "shape": "atomic"
+  },
+  {
+    "id": "RC02",
+    "stratum": "reconcile",
+    "scope": "default",
+    "question": "Which company provides the broadband at the flat?",
+    "gold": "Bahnhof",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": "R-recency",
+    "targets": [
+      "home/broadband",
+      "home/internet-connection"
+    ],
+    "leak_tokens": [],
+    "note": "stale twin: Telenor",
+    "withheld": null,
+    "distractor": "Telenor",
+    "shape": "atomic"
+  },
+  {
+    "id": "RC03",
+    "stratum": "reconcile",
+    "scope": "default",
+    "question": "Which roaster supplies Mara's coffee subscription?",
+    "gold": "Kafferosteriet Kaj",
+    "aliases": [
+      "Kafferosteriet"
+    ],
+    "expect": "answer",
+    "mechanism": "R-content",
+    "targets": [
+      "preferences/coffee-subscription",
+      "preferences/coffee-delivery"
+    ],
+    "leak_tokens": [],
+    "note": "stale twin: Bonor och Bryggd",
+    "withheld": null,
+    "distractor": "Bonor och Bryggd",
+    "shape": "atomic"
+  },
+  {
+    "id": "RC04",
+    "stratum": "reconcile",
+    "scope": "default",
+    "question": "Which firm does the fortnightly clean at the flat?",
+    "gold": "Hemfrid",
+    "aliases": [],
+    "expect": "answer",
+    "mechanism": "R-content",
+    "targets": [
+      "home/cleaning-service",
+      "home/household-help"
+    ],
+    "leak_tokens": [],
+    "note": "stale twin: Stadpartner Vast",
+    "withheld": null,
+    "distractor": "Stadpartner Vast",
+    "shape": "atomic"
+  },
+  {
+    "id": "RC05",
+    "stratum": "reconcile",
+    "scope": "default",
+    "question": "Which workshop services the family's bicycles?",
+    "gold": "Cykelkraft",
+    "aliases": [
+      "Cykelkraft on Andra Langgatan"
+    ],
+    "expect": "answer",
+    "mechanism": "R-content",
+    "targets": [
+      "vehicles/bicycle-servicing",
+      "home/bike-workshop"
+    ],
+    "leak_tokens": [],
+    "note": "stale twin: Velo Verkstad",
+    "withheld": null,
+    "distractor": "Velo Verkstad",
+    "shape": "atomic"
+  }
+]

@@ -12,7 +12,12 @@ import sqlite3
 from pathlib import Path
 
 from . import persona as P
-from .model import STRATA
+
+# The first pass's six strata. `model.STRATA` gained a seventh (`reconcile`)
+# in the second pass; this set is pinned so the first-pass question build
+# keeps validating against the set it was written for.
+STRATA = ["exact_lookup", "paraphrase", "multi_hop",
+          "temporal", "negative", "scope_restricted"]
 
 PEOPLE = {p[0]: p for p in P.PEOPLE}
 PROJ = {p[0]: p for p in P.PROJECTS}

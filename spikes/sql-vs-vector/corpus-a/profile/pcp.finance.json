@@ -1,0 +1,84 @@
+{
+  "accounts": [
+    {
+      "institution": "Handelsbanken",
+      "kind": "salary account",
+      "reference": "HB-4471"
+    },
+    {
+      "institution": "Handelsbanken",
+      "kind": "joint account",
+      "reference": "HB-8802"
+    },
+    {
+      "institution": "Lansforsakringar",
+      "kind": "savings",
+      "reference": "LF-2290"
+    },
+    {
+      "institution": "Avanza",
+      "kind": "investment (ISK)",
+      "reference": "AV-7715"
+    },
+    {
+      "institution": "Alecta",
+      "kind": "occupational pension",
+      "reference": "AL-3364"
+    },
+    {
+      "institution": "Avanza",
+      "kind": "private pension",
+      "reference": "AV-9021"
+    },
+    {
+      "institution": "Handelsbanken",
+      "kind": "mortgage",
+      "reference": "HB-1153"
+    },
+    {
+      "institution": "Lansforsakringar",
+      "kind": "mortgage",
+      "reference": "LF-6640"
+    },
+    {
+      "institution": "Amex",
+      "kind": "credit card",
+      "reference": "AX-5528"
+    },
+    {
+      "institution": "Handelsbanken",
+      "kind": "childrens savings",
+      "reference": "HB-7734"
+    },
+    {
+      "institution": "Skatteverket",
+      "kind": "sole trader reg.",
+      "reference": "SE-556914"
+    },
+    {
+      "institution": "Trygg-Hansa",
+      "kind": "home insurance",
+      "reference": "TH-4102"
+    }
+  ],
+  "advisors": [
+    {
+      "name": "Yusuf Halim",
+      "role": "accountant",
+      "firm": "Halim Revision"
+    }
+  ],
+  "obligations": [
+    {
+      "kind": "mortgage",
+      "property": "flat in Majorna",
+      "rate": "3.42 per cent",
+      "since": "2025-12-01"
+    },
+    {
+      "kind": "mortgage",
+      "property": "cabin at Smogen",
+      "lender": "Lansforsakringar"
+    }
+  ]
+}

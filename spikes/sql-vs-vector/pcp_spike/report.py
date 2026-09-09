@@ -13,7 +13,15 @@ CONDITION_ORDER = ["sql_only", "vector_only", "both"]
 
 
 def load(path: str) -> list[dict]:
-    return [json.loads(l) for l in Path(path).read_text(encoding="utf-8").splitlines() if l.strip()]
+    recs = [json.loads(l) for l in Path(path).read_text(encoding="utf-8").splitlines()
+            if l.strip()]
+    # The second pass renamed `sql_only` to `sql_narrow` (REPORT.md §8.2).
+    # Old logs carry the old name; new runs of the first-pass sweep carry the
+    # new one. Normalise so both aggregate into the same row.
+    for r in recs:
+        if r.get("condition") == "sql_narrow":
+            r["condition"] = "sql_only"
+    return recs
 
 
 def _agg(rows: list[dict]) -> dict:

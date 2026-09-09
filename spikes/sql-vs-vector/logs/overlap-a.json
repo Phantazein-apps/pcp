@@ -1,0 +1,409 @@
+{
+  "shape": "atomic",
+  "paraphrase": [
+    {
+      "key": "kora",
+      "in_run_set": true,
+      "question": "Which instrument did Kwame teach Mara to play?",
+      "path": "preferences/instrument",
+      "first_pass_question": "Which musical instrument does Mara play?",
+      "containment": 0.2,
+      "jaccard": 0.062,
+      "q_tokens": 5,
+      "shared": [
+        "kwame"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "recycling",
+      "in_run_set": false,
+      "question": "Which day is the rubbish taken from the courtyard?",
+      "path": "home/courtyard-collections",
+      "first_pass_question": "What day is rubbish collected at the flat?",
+      "containment": 0.25,
+      "jaccard": 0.059,
+      "q_tokens": 4,
+      "shared": [
+        "courtyard"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "cloud",
+      "in_run_set": true,
+      "question": "Which cloud provider does Nordvik use?",
+      "path": "work/platform-footprint",
+      "first_pass_question": "Which cloud vendor does Mara's employer use?",
+      "containment": 0.25,
+      "jaccard": 0.059,
+      "q_tokens": 4,
+      "shared": [
+        "nordvik"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "climbing",
+      "in_run_set": false,
+      "question": "What does Nell do on Saturday mornings?",
+      "path": "people/notes/elder-child-saturdays",
+      "first_pass_question": "What activity does Nell do at weekends?",
+      "containment": 0.667,
+      "jaccard": 0.182,
+      "q_tokens": 3,
+      "shared": [
+        "morning",
+        "saturday"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "tallyho",
+      "in_run_set": true,
+      "question": "What do colleagues call the internal utility Mara looks after?",
+      "path": "work/internal-utility",
+      "first_pass_question": "What is the in-house program Mara maintains called?",
+      "containment": 0.667,
+      "jaccard": 0.267,
+      "q_tokens": 6,
+      "shared": [
+        "colleagu",
+        "internal",
+        "look",
+        "utility"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "dinghy",
+      "in_run_set": false,
+      "question": "What is the wooden boat by the boathouse called?",
+      "path": "home/boathouse",
+      "first_pass_question": "What is Mara's dinghy called?",
+      "containment": 0.5,
+      "jaccard": 0.133,
+      "q_tokens": 4,
+      "shared": [
+        "boathouse",
+        "wooden"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "seat",
+      "in_run_set": false,
+      "question": "Which side of the plane does Mara ask for a place on?",
+      "path": "travel/aloft",
+      "first_pass_question": "Which seat does Mara book on planes?",
+      "containment": 0.2,
+      "jaccard": 0.056,
+      "q_tokens": 5,
+      "shared": [
+        "place"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "assembly",
+      "in_run_set": false,
+      "question": "Where does the household meet if the building is evacuated?",
+      "path": "home/evacuation",
+      "first_pass_question": "Where does Mara's family regroup during a fire?",
+      "containment": 0.75,
+      "jaccard": 0.25,
+      "q_tokens": 4,
+      "shared": [
+        "build",
+        "evacuat",
+        "household"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "bakery",
+      "in_run_set": true,
+      "question": "Which bakery does Mara get her loaves from?",
+      "path": "preferences/loaves",
+      "first_pass_question": "Which shop does Mara get her bread from?",
+      "containment": 0.5,
+      "jaccard": 0.154,
+      "q_tokens": 4,
+      "shared": [
+        "bakery",
+        "loav"
+      ],
+      "first_pass_containment": 0.0
+    },
+    {
+      "key": "tyres",
+      "in_run_set": false,
+      "question": "When does Mara put the winter rubber on the estate?",
+      "path": "vehicles/seasonal-rubber",
+      "first_pass_question": "When does Mara swap her car tyres?",
+      "containment": 0.6,
+      "jaccard": 0.2,
+      "q_tokens": 5,
+      "shared": [
+        "estate",
+        "rubber",
+        "winter"
+      ],
+      "first_pass_containment": 0.0
+    }
+  ],
+  "paraphrase_distribution": {
+    "n": 10,
+    "min": 0.2,
+    "max": 0.75,
+    "mean": 0.458,
+    "median": 0.5,
+    "bands": {
+      "0.0-0.2": 0,
+      "0.2-0.4": 4,
+      "0.4-0.6": 2,
+      "0.6-0.8": 4,
+      "0.8-1.0": 0
+    }
+  },
+  "paraphrase_run_set_distribution": {
+    "n": 4,
+    "min": 0.2,
+    "max": 0.667,
+    "mean": 0.404,
+    "median": 0.375,
+    "bands": {
+      "0.0-0.2": 0,
+      "0.2-0.4": 2,
+      "0.4-0.6": 1,
+      "0.6-0.8": 1,
+      "0.8-1.0": 0
+    }
+  },
+  "first_pass_paraphrase_distribution": {
+    "n": 10,
+    "min": 0.0,
+    "max": 0.0,
+    "mean": 0.0,
+    "median": 0.0,
+    "bands": {
+      "0.0-0.2": 10,
+      "0.2-0.4": 0,
+      "0.4-0.6": 0,
+      "0.6-0.8": 0,
+      "0.8-1.0": 0
+    }
+  },
+  "run_set": [
+    {
+      "id": "EX01",
+      "stratum": "exact_lookup",
+      "containment": 0.6,
+      "jaccard": 0.158,
+      "q_tokens": 5,
+      "shared": [
+        "registration",
+        "v60",
+        "volvo"
+      ]
+    },
+    {
+      "id": "EX02",
+      "stratum": "exact_lookup",
+      "containment": 0.75,
+      "jaccard": 0.115,
+      "q_tokens": 4,
+      "shared": [
+        "client",
+        "ledgerline",
+        "project"
+      ]
+    },
+    {
+      "id": "PA01",
+      "stratum": "paraphrase",
+      "containment": 0.2,
+      "jaccard": 0.062,
+      "q_tokens": 5,
+      "shared": [
+        "kwame"
+      ]
+    },
+    {
+      "id": "PA02",
+      "stratum": "paraphrase",
+      "containment": 0.25,
+      "jaccard": 0.059,
+      "q_tokens": 4,
+      "shared": [
+        "nordvik"
+      ]
+    },
+    {
+      "id": "PA03",
+      "stratum": "paraphrase",
+      "containment": 0.5,
+      "jaccard": 0.154,
+      "q_tokens": 4,
+      "shared": [
+        "bakery",
+        "loav"
+      ]
+    },
+    {
+      "id": "PA04",
+      "stratum": "paraphrase",
+      "containment": 0.667,
+      "jaccard": 0.267,
+      "q_tokens": 6,
+      "shared": [
+        "colleagu",
+        "internal",
+        "look",
+        "utility"
+      ]
+    },
+    {
+      "id": "MH01",
+      "stratum": "multi_hop",
+      "containment": 0.667,
+      "jaccard": 0.148,
+      "q_tokens": 6,
+      "shared": [
+        "bluefin",
+        "design",
+        "lead",
+        "project"
+      ]
+    },
+    {
+      "id": "MH05",
+      "stratum": "multi_hop",
+      "containment": 0.8,
+      "jaccard": 0.154,
+      "q_tokens": 5,
+      "shared": [
+        "active",
+        "design",
+        "lead",
+        "project"
+      ]
+    },
+    {
+      "id": "TP01",
+      "stratum": "temporal",
+      "containment": 0.8,
+      "jaccard": 0.333,
+      "q_tokens": 5,
+      "shared": [
+        "analytic",
+        "mara",
+        "nordvik",
+        "title"
+      ]
+    },
+    {
+      "id": "TP02",
+      "stratum": "temporal",
+      "containment": 0.667,
+      "jaccard": 0.2,
+      "q_tokens": 3,
+      "shared": [
+        "mara",
+        "report"
+      ]
+    },
+    {
+      "id": "TP03",
+      "stratum": "temporal",
+      "containment": 1.0,
+      "jaccard": 0.4,
+      "q_tokens": 4,
+      "shared": [
+        "chair",
+        "group",
+        "steer",
+        "tidewater"
+      ]
+    },
+    {
+      "id": "TP04",
+      "stratum": "temporal",
+      "containment": 0.75,
+      "jaccard": 0.25,
+      "q_tokens": 4,
+      "shared": [
+        "laptop",
+        "mara",
+        "work"
+      ]
+    },
+    {
+      "id": "RC01",
+      "stratum": "reconcile",
+      "containment": 0.25,
+      "jaccard": 0.067,
+      "q_tokens": 4,
+      "shared": [
+        "dental"
+      ]
+    },
+    {
+      "id": "RC02",
+      "stratum": "reconcile",
+      "containment": 0.5,
+      "jaccard": 0.222,
+      "q_tokens": 4,
+      "shared": [
+        "broadband",
+        "flat"
+      ]
+    },
+    {
+      "id": "RC03",
+      "stratum": "reconcile",
+      "containment": 0.4,
+      "jaccard": 0.111,
+      "q_tokens": 5,
+      "shared": [
+        "coffee",
+        "subscription"
+      ]
+    },
+    {
+      "id": "RC04",
+      "stratum": "reconcile",
+      "containment": 0.5,
+      "jaccard": 0.133,
+      "q_tokens": 4,
+      "shared": [
+        "clean",
+        "fortnightly"
+      ]
+    },
+    {
+      "id": "RC05",
+      "stratum": "reconcile",
+      "containment": 0.25,
+      "jaccard": 0.056,
+      "q_tokens": 4,
+      "shared": [
+        "servic"
+      ]
+    }
+  ],
+  "run_set_distribution": {
+    "n": 17,
+    "min": 0.2,
+    "max": 1.0,
+    "mean": 0.562,
+    "median": 0.6,
+    "bands": {
+      "0.0-0.2": 0,
+      "0.2-0.4": 4,
+      "0.4-0.6": 4,
+      "0.6-0.8": 6,
+      "0.8-1.0": 3
+    }
+  }
+}

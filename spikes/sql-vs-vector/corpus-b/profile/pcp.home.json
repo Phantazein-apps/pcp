@@ -1,0 +1,73 @@
+{
+  "addresses": [
+    {
+      "label": "flat",
+      "city": "Gothenburg",
+      "district": "Majorna",
+      "size_sqm": 78,
+      "floor": 4,
+      "lift": false
+    },
+    {
+      "label": "cabin",
+      "city": "Smogen",
+      "heating": "wood"
+    }
+  ],
+  "household": [
+    "Idris Bello",
+    "Nell Osei-Lindqvist",
+    "Theo Osei-Lindqvist"
+  ],
+  "vehicles": [
+    {
+      "make": "Volvo",
+      "model": "V60",
+      "year": 2019,
+      "colour": "graphite grey",
+      "registration": "MLK 471",
+      "status": "current"
+    },
+    {
+      "make": "Kia",
+      "model": "Soul EV",
+      "year": 2022,
+      "colour": "pearl white",
+      "registration": "RTB 908",
+      "status": "current"
+    },
+    {
+      "make": "Saab",
+      "model": "9-5",
+      "year": 2008,
+      "colour": "midnight blue",
+      "registration": "BJH 226",
+      "status": "sold"
+    },
+    {
+      "make": "Piaggio",
+      "model": "Vespa GTS",
+      "year": 2021,
+      "colour": "sage green",
+      "registration": "CFN 145",
+      "status": "current"
+    },
+    {
+      "make": "Brenderup",
+      "model": "1205S",
+      "year": 2017,
+      "colour": "galvanised",
+      "registration": "XPD 033",
+      "status": "current"
+    },
+    {
+      "make": "Ford",
+      "model": "Focus",
+      "year": 2012,
+      "colour": "silver",
+      "registration": "ZWQ 610",
+      "status": "sold"
+    }
+  ],
+  "spare_keys": "one set with Stig Ohman, one at the cabin"
+}

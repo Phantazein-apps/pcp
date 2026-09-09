@@ -29,8 +29,22 @@ BYTE_CAP = 20 * 1024
 TIMEOUT_S = 2.0
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data"
-CORPUS = ROOT / "corpus"
+# Which corpus this process is pointed at. The second pass runs two of them
+# side by side (corpus-a atomic, corpus-b subject), so these are rebindable
+# rather than constants; `configure()` is what the runner and run.sh call.
+DATA = Path(os.environ.get("PCP_DATA", ROOT / "data"))
+CORPUS = Path(os.environ.get("PCP_CORPUS", ROOT / "corpus"))
+
+# How many whole pages a document-mode query will expand to before it stops.
+# The 20 KB cap usually bites first; this stops a pathological match from
+# reading two thousand files off disk to build a reply nobody sees.
+DOC_PAGE_CAP = 25
+
+
+def configure(corpus: Path | str, data: Path | str) -> None:
+    """Point this process at one corpus. Call before any query or search."""
+    global CORPUS, DATA
+    CORPUS, DATA = Path(corpus), Path(data)
 
 _FORBIDDEN = re.compile(
     r"\b(attach|detach|pragma|insert|update|delete|drop|create|alter|replace|"
@@ -58,7 +72,35 @@ def _cap(text: str) -> tuple[str, bool]:
 
 
 # -------------------------------------------------------------------- query --
-def run_query(scope: str, sql: str) -> str:
+def _expand_to_documents(con: sqlite3.Connection, paths: list[str]) -> str:
+    """Return the whole containing file for each path, in match order."""
+    if not paths:
+        return "-- [0 pages matched] --\n"
+    capped = paths[:DOC_PAGE_CAP]
+    marks = ",".join("?" for _ in capped)
+    rows = {r[0]: r for r in con.execute(
+        f"SELECT path, title, updated, body FROM memory_all WHERE path IN ({marks})",
+        capped)}
+    parts = []
+    for i, pth in enumerate(capped, 1):
+        r = rows.get(pth)
+        if r is None:
+            continue
+        parts.append(f"### {i}. {r[0]}\n  title: {r[1]}\n  updated: {r[2]}\n\n{r[3]}\n")
+    out = "\n".join(parts)
+    if len(paths) > DOC_PAGE_CAP:
+        out += (f"-- [page cap: {len(paths)} pages matched, only the first "
+                f"{DOC_PAGE_CAP} are shown] --\n")
+    return out
+
+
+def run_query(scope: str, sql: str, document: bool = False) -> str:
+    """Run one read-only SELECT.
+
+    document=True is the `sql_document` condition: the projection is
+    discarded and every distinct page the query matched is returned in full.
+    The query must therefore surface a `path` column.
+    """
     db = DATA / f"scope_{scope}.sqlite"
     if not db.exists():
         raise ToolError(f"unknown scope {scope!r}")
@@ -75,10 +117,24 @@ def run_query(scope: str, sql: str) -> str:
     con.execute("PRAGMA query_only = ON")
     deadline = time.monotonic() + TIMEOUT_S
     con.set_progress_handler(lambda: 1 if time.monotonic() > deadline else 0, 2000)
+    doc_out = None
     try:
         cur = con.execute(stripped)
         cols = [d[0] for d in cur.description] if cur.description else []
         rows = cur.fetchmany(ROW_CAP + 1)
+        if document:
+            if "path" not in cols:
+                raise ToolError(
+                    "this session returns whole pages, so your SELECT must "
+                    "include the `path` column -- e.g. SELECT path FROM lines "
+                    "WHERE text LIKE '%...%'")
+            pi = cols.index("path")
+            seen: list[str] = []
+            for r in rows:
+                v = r[pi]
+                if v is not None and v not in seen:
+                    seen.append(str(v))
+            doc_out = _expand_to_documents(con, seen)
     except sqlite3.OperationalError as e:
         msg = str(e)
         if "interrupted" in msg.lower():
@@ -88,6 +144,9 @@ def run_query(scope: str, sql: str) -> str:
         raise ToolError(f"SQL error: {e}") from None
     finally:
         con.close()
+
+    if doc_out is not None:
+        return doc_out
 
     truncated_rows = len(rows) > ROW_CAP
     rows = rows[:ROW_CAP]
@@ -106,10 +165,26 @@ def run_query(scope: str, sql: str) -> str:
 
 
 # ------------------------------------------------------------------- search --
+_INDEX_CACHE: dict[tuple, object] = {}
+
+
+def _index(backend: str):
+    """One Index per (corpus, data, backend).
+
+    corpus-b's manifest is a few MB, so rebuilding the Index per call would
+    cost more than the search does. The cache is keyed on the roots, so
+    `configure()` switching corpora still gets a fresh one.
+    """
+    key = (str(CORPUS), str(DATA), backend)
+    if key not in _INDEX_CACHE:
+        from .retrieval import Index
+        _INDEX_CACHE[key] = Index(DATA, CORPUS, backend=backend)
+    return _INDEX_CACHE[key]
+
+
 def run_search(scope: str, text: str, k: int, backend: str,
                include_stale: bool, hide_relations: bool = False) -> str:
-    from .retrieval import Index
-    idx = Index(DATA, CORPUS, backend=backend)
+    idx = _index(backend)
     hits = idx.search(scope, text, k=k, include_stale=include_stale,
                       hide_relations=hide_relations)
     if not hits:
@@ -136,6 +211,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     q = sub.add_parser("query", help="read-only SQL over the scope's curated views")
     q.add_argument("--scope", required=True)
+    q.add_argument("--document", action="store_true",
+                   help="return the WHOLE containing file for every matched row "
+                        "instead of the selected columns (the sql_document condition)")
     q.add_argument("sql")
 
     s = sub.add_parser("search", help="semantic (or lexical) search over the scope's pages")
@@ -164,7 +242,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if a.cmd == "query":
             rec["sql"] = a.sql
-            out = run_query(a.scope, a.sql)
+            rec["document"] = a.document
+            out = run_query(a.scope, a.sql, a.document)
         elif a.cmd == "search":
             rec.update(text=a.text, k=a.k, backend=a.backend,
                        include_stale=a.include_stale)

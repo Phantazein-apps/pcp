@@ -181,3 +181,159 @@ single lookup.
 - **Paraphrase disjointness is asserted, not assumed.** For the paraphrase
   stratum the build fails if a question shares any content token (after
   lowercasing, stopword removal and light stemming) with its target page.
+
+---
+
+# Second pass — corpus shape, variance, and the projection risk
+
+Design record for the second pass. Findings are in [`REPORT.md`](REPORT.md)
+§8; this section records what was built, what was decided, and what it cost.
+
+## 4. What the second pass changes
+
+### 4.1 Two corpora, side by side
+
+| | corpus-a | corpus-b |
+|---|---|---|
+| Root | `corpus-a/`, `data-a/` | `corpus-b/`, `data-b/` |
+| Generator | `pcp_spike/corpus.py` | `pcp_spike/corpus_b.py` |
+| Unit | one page = one fact | one page = one SUBJECT FILE |
+| Size | 2,000 pages | 2,000 files, 32,869 bullets (8–25, mean 16.4) |
+| Frontmatter | full SPEC.md §5.1 | `title` + `updated` (+ `sensitivity`) |
+| Supersession | `supersedes` relations edge | prose only — cases (a), (b), (c) |
+| Lifecycle | active/validated/stale/archived | uniformly `active` |
+| Confidence, validity | per page | absent |
+| Tags | curated | absent — the directory is the taxonomy |
+| `relations` rows | 29 | **0** |
+| `memory` vs `memory_all` | 1,283 vs 2,000 | identical (nothing is ever stale) |
+
+The **first pass's 547-page corpus is untouched** at `corpus/` + `data/`, and
+`./run.sh` still reproduces it. corpus-a is a rebuild of the same generator at
+2,000 pages, not a replacement of the control.
+
+Both corpora are generated from the same `persona.py` entity tables, so gold
+answers are identical by construction wherever a fact survives the re-shaping.
+Where it does not — T-b validity windows and T-c the opt-in override both
+require per-fact metadata corpus-b does not have — the question is dropped
+from the second-pass set rather than quietly reweighted. §8.5 rules on what
+that costs.
+
+### 4.2 Measured per-run cost, and the budget guard
+
+The first pass cost $4.82 for 240 runs. Extrapolating that to a 2-corpus,
+4-condition, 2-model, 3-seed design put the second pass far over the $25 cap,
+so per-run cost was **measured in three pilots before the budget was
+committed** rather than assumed:
+
+| corpus | model | condition | $/run | result bytes/run |
+|---|---|---|---|---|
+| corpus-a | haiku | `sql_narrow` | 0.0156 | 3,887 |
+| corpus-a | haiku | `sql_document` | 0.0117 | 3,258 |
+| corpus-a | haiku | `vector_only` | 0.0063 | 1,993 |
+| corpus-a | haiku | `both` | 0.0083 | 2,035 |
+| corpus-b | haiku | `sql_narrow` | 0.0235 | 20,754 |
+| corpus-b | haiku | `sql_document` | 0.0202 | 11,364 |
+| corpus-b | sonnet | (all four) | 0.0204–0.0245 | 6,264–10,628 |
+
+Two things fell out of the pilots that changed the design:
+
+1. **Sonnet is barely more expensive than Haiku per run here** (~$0.023 vs
+   ~$0.022 on corpus-b), because Sonnet emits a third of the output tokens.
+   That made a full two-model factorial affordable, where a 3× assumption
+   would have forced Sonnet down to a token subset.
+2. **`sql_narrow` on corpus-b returns MORE bytes than `sql_document`** —
+   20.8 KB against 11.4 KB. Free projection over subject files does not
+   produce narrow results; it produces `SELECT body` and 20 KB-capped `LIKE`
+   scans. This is the second pass's central finding and it showed up in the
+   pilot, before a single scored run.
+
+The question set was then sized to the measured cost: **21 questions**, with
+the allocation weighted away from the four strata that ceilinged in the first
+pass and towards the three that can separate anything (§4.3).
+
+`runner.py --budget N` is a hard guard: the sweep stops paying for runs once
+measured spend passes N. Guards are per sweep and sum to $21.50.
+
+### 4.3 The seventh stratum, and why the allocation is uneven
+
+`reconcile` is new: two pages that contradict each other with **no marker of
+any kind** — no `supersedes` edge, no lifecycle difference, no confidence gap,
+no shared path prefix. This is case (c) of the supersession survey, and it is
+the commonest form in the two real stores examined. Eight pairs exist in both
+corpora; five carry questions. Build-time assertions enforce the absence of a
+marker, so the stratum cannot silently degrade into an exact lookup.
+
+The pairs split on what is left to resolve them:
+
+- **`R-recency` (2 questioned)** — the current page has the later `updated`.
+  Trusting mtime works.
+- **`R-content` (3 questioned)** — `updated` is *backwards*: the stale page
+  was touched later, so recency actively misleads, and only a date stated
+  inside the prose settles it. This is the corpus's answer to the first
+  pass's open question "do `updated` timestamps track currency, or does bulk
+  import stamp everything with the import date?"
+
+Question counts per stratum are 2 / 4 / 2 / 4 / 2 / 2 / 5. The four strata at
+100% for every condition in the first pass get two questions each — enough to
+show whether the ceiling survives corpus-b, not enough to spend budget on.
+
+### 4.4 Chunking, and why the vector condition gets it on corpus-b
+
+corpus-a pages are one fact each and fit inside `all-MiniLM-L6-v2`'s 256-token
+window. corpus-b subject files do not: at a mean of 16.4 bullets, embedding
+them whole would silently truncate most of every file and hand `vector_only` a
+rigged loss on corpus-b that had nothing to do with retrieval method.
+
+corpus-b is therefore embedded **one vector per bullet** (32,869 vectors) and
+scored max-over-bullets, returning whole pages. That is the standard
+mitigation, and it is also the fair comparison: it makes the vector condition
+match at line granularity and return at page granularity — precisely what
+`sql_document` is forced to do. The shape is read from the manifest, so no
+condition has to ask for it.
+
+### 4.5 Paraphrase overlap is now measured, not asserted
+
+The first pass asserted **zero** content-token overlap between a paraphrase
+question and its target page, which is the maximally embedding-friendly
+extreme and was named as a bias in §5 item 4. The second pass rewrites all ten
+paraphrase questions for partial overlap and **measures what it actually
+generated** (`logs/overlap-{a,b}.json`), reporting containment `|Q ∩ P| / |Q|`
+per question rather than claiming a target band was hit.
+
+### 4.6 The judge got a deterministic stage, and a distractor guard
+
+Grading an answer `correct` without a model call now happens when the gold
+string or an alias appears in a short answer **and** the question's
+`distractor` — the value a reader gets by trusting the stale page of a
+supersession or reconcile pair — does *not*. That last clause is what makes
+the shortcut safe on exactly the two strata where it would otherwise be
+dangerous. Anything hedging between the two readings still goes to the model.
+The model judge is also now told the superseded value explicitly and told to
+grade it `wrong`.
+
+### 4.7 What did NOT change
+
+The scope model, the structural scope enforcement, the read-only guards
+(single SELECT, 2 s timeout, 200 rows, 20 KB), the tool-call logging, the
+`claude-agent-sdk` runner, and the cost accounting are all first-pass code,
+unmodified. `sql_only` is still accepted as an alias for `sql_narrow` so the
+§7 reproduction commands run.
+
+### 4.8 Spend, including what was thrown away
+
+Honest accounting: the second pass spent money before the scored sweeps
+started, and one partial sweep was discarded.
+
+| | runs | $ |
+|---|---|---|
+| Pilot: corpus-b, haiku, SQL conditions | 18 | 0.39 |
+| Pilot: corpus-b, sonnet, all conditions | 16 | 0.37 |
+| Pilot: corpus-a, haiku, all conditions | 36 | 0.38 |
+| Discarded partial `a-haiku` (budget guard set too tight; restarted) | 44 | 0.68 |
+| **Sunk before the scored sweeps** | **114** | **1.82** |
+
+The pilot logs were not retained — only the per-condition cost table in §4.2
+that was derived from them. The discarded `a-haiku` partial was thrown away
+because its budget guard would have truncated seed 3 wholesale, leaving two
+seeds in a design that requires three; restarting was cheaper than patching
+the gap. Scored-sweep spend is in REPORT.md §8.9.

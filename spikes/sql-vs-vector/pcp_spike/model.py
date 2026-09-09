@@ -50,10 +50,21 @@ LIFECYCLES = ["active", "validated", "stale", "archived"]
 LIFECYCLE_DEFAULT_VISIBLE = {"active", "validated"}
 
 TYPES = ["episodic", "semantic", "procedural"]
+
+# Six strata in the first pass. The second pass adds `reconcile`: two pages
+# that contradict each other with NO structural marker of which is current --
+# no `supersedes` edge, no lifecycle, no confidence gap. Case (c) of the
+# supersession survey in REPORT.md §8.1.
 STRATA = [
     "exact_lookup", "paraphrase", "multi_hop",
-    "temporal", "negative", "scope_restricted",
+    "temporal", "negative", "scope_restricted", "reconcile",
 ]
+
+# Corpus shapes (REPORT.md §8).
+#   atomic  -- corpus-a: one page = one fact, full §5.1 frontmatter per fact
+#   subject -- corpus-b: one page = one SUBJECT FILE of 8-25 bullet facts,
+#              a single file-level `updated` and nothing else
+SHAPES = ["atomic", "subject"]
 
 TODAY = "2026-09-09"
 
@@ -100,6 +111,11 @@ class Page:
     relations: list[dict[str, Any]] = field(default_factory=list)
     namespace: str | None = None   # extension namespace gating this page
     facts: list[str] = field(default_factory=list)  # Fact ids carried here
+    # corpus-b: a SUBJECT FILE carries one file-level `updated` and nothing
+    # else. No lifecycle, confidence, validity or relations in the rendered
+    # frontmatter -- because the real stores surveyed in REPORT.md §8.1 have
+    # none. `sensitivity` survives only because scope enforcement needs it.
+    minimal: bool = False
 
     # ---- derived -----------------------------------------------------
     def default_visible(self) -> bool:
@@ -112,6 +128,10 @@ class Page:
 
     def frontmatter(self) -> dict[str, Any]:
         fm: dict[str, Any] = {"title": self.title, "updated": self.updated}
+        if self.minimal:
+            if self.sensitivity != "normal":
+                fm["sensitivity"] = self.sensitivity
+            return fm
         fm["type"] = self.type
         if self.tags:
             fm["tags"] = list(self.tags)

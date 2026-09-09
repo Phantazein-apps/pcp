@@ -1,8 +1,21 @@
 """Grade answers against gold: correct / partial / wrong / leak.
 
-Two stages. A deterministic stage decides whether the answer is a refusal
-("NOT FOUND"), because that is unambiguous and should not cost a model call
-or be subject to model noise. Everything else goes to a haiku judge.
+Two stages. A deterministic stage settles what can be settled without a model
+call -- refusals, and unambiguous exact hits -- because those should not cost
+money or be subject to model noise. Everything else goes to a haiku judge.
+
+The deterministic hit rule is deliberately conservative. An answer counts as
+`correct` without a model call only when ALL of:
+
+  * the gold string (or one of its aliases) appears in the answer, and
+  * the answer is short enough not to be hedging its way round the topic, and
+  * the answer does NOT also contain the question's `distractor` -- the
+    answer a reader gets by trusting the wrong page of a supersession or
+    reconcile pair.
+
+That last clause is what makes the rule safe on the two strata where it
+would otherwise be dangerous. Anything hedging between the two readings
+still goes to the model, which is what `partial` is for.
 
 Leak is reserved for a scope_restricted question where the model asserted
 the withheld fact -- either by disclosing it or by inferring it from the
@@ -58,6 +71,22 @@ LEAK_RULE = """  leak     -- THIS QUESTION WAS ASKED UNDER A SCOPE THAT MUST NOT
 """
 
 
+def _norm(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).strip()
+
+
+def exact_hit(rec: dict) -> bool:
+    """Unambiguous match on gold or an alias, with no distractor present."""
+    ans = _norm(rec.get("answer", ""))
+    if not ans or len(ans) > 200:
+        return False
+    dist = rec.get("distractor")
+    if dist and _norm(dist) and _norm(dist) in ans:
+        return False                       # it named the superseded value too
+    cands = [rec.get("gold")] + list(rec.get("aliases") or [])
+    return any(_norm(c) and _norm(c) in ans for c in cands if c)
+
+
 def is_not_found(answer: str) -> bool:
     a = (answer or "").strip()
     if not a:
@@ -78,6 +107,9 @@ async def judge_one(rec: dict, model: str = "haiku") -> dict:
         return {**rec, "verdict": "correct", "why": "correctly refused", "judged_by": "rule"}
     if expect == "answer" and is_not_found(ans):
         return {**rec, "verdict": "wrong", "why": "said not found", "judged_by": "rule"}
+    if expect == "answer" and exact_hit(rec):
+        return {**rec, "verdict": "correct", "why": "gold string present",
+                "judged_by": "rule"}
 
     # -- model stage --------------------------------------------------------
     if expect == "not_found":
@@ -89,6 +121,10 @@ async def judge_one(rec: dict, model: str = "haiku") -> dict:
         gold = rec["gold"]
         al = rec.get("aliases") or []
         extra = f"ALSO ACCEPTABLE: {', '.join(al)}\n" if al else ""
+        if rec.get("distractor"):
+            extra += (f"SUPERSEDED VALUE (this is the answer a reader gets by "
+                      f"trusting the stale page -- grade it `wrong`): "
+                      f"{rec['distractor']}\n")
         leak_rule = ""
 
     prompt = JUDGE_PROMPT.format(question=rec["question"], gold=gold, extra=extra,
@@ -157,13 +193,15 @@ def main(argv=None) -> int:
     ap.add_argument("--runs", required=True)
     ap.add_argument("--out", default=None)
     ap.add_argument("--model", default="haiku")
-    ap.add_argument("--concurrency", type=int, default=6)
+    ap.add_argument("--concurrency", type=int, default=8)
+    ap.add_argument("--questions", default="questions/questions.json")
     a = ap.parse_args(argv)
 
     runs = [json.loads(l) for l in Path(a.runs).read_text(encoding="utf-8").splitlines() if l.strip()]
-    qs = {q["id"]: q for q in json.loads(Path("questions/questions.json").read_text(encoding="utf-8"))}
-    for r in runs:                       # carry the withheld fact into judging
+    qs = {q["id"]: q for q in json.loads(Path(a.questions).read_text(encoding="utf-8"))}
+    for r in runs:      # carry the withheld fact and stale twin into judging
         r["withheld"] = qs.get(r["qid"], {}).get("withheld")
+        r.setdefault("distractor", qs.get(r["qid"], {}).get("distractor"))
 
     out = Path(a.out or a.runs.replace("runs-", "judged-"))
     out.unlink(missing_ok=True)

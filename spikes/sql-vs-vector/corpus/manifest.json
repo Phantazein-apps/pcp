@@ -1,5 +1,6 @@
 {
   "seed": 20260909,
+  "shape": "atomic",
   "today": "2026-09-09",
   "persona": {
     "name": "Mara Osei-Lindqvist",
@@ -24260,6 +24261,7 @@
         "change_date": "2021-04-01"
       }
     ],
+    "reconcile": [],
     "paraphrase": [
       {
         "key": "dinghy",

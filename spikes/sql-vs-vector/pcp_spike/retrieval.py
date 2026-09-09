@@ -4,21 +4,29 @@ Both backends apply the SAME scope filter and the SAME SPEC.md §5.2 default
 lifecycle/validity policy as the SQL views, with the same `include_stale`
 opt-in. Neither condition is given a filtering power the other lacks.
 
-No ANN index -- 547 pages is small enough that exact cosine over a dense
-matrix is both faster and unambiguous.
+No ANN index -- exact cosine over a dense matrix is both faster and
+unambiguous at this corpus size.
+
+**Chunking.** corpus-a's pages are one fact each and fit inside the model's
+256-token window, so one vector per page is the whole page. corpus-b's
+subject files are 8-25 bullets and DO overflow that window, so embedding them
+whole would silently truncate most of every file and hand the vector
+condition a rigged loss. corpus-b is therefore embedded one vector PER LINE
+and scored max-over-lines, which is the standard mitigation and the fair
+comparison: it means the vector condition matches at line granularity and
+returns at page granularity -- exactly what `sql_document` is forced to do.
+The shape is read from the manifest, so no condition has to ask for it.
 """
 from __future__ import annotations
 
 import json
 import sqlite3
-import struct
 from pathlib import Path
 
 import numpy as np
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 _model = None
-_bm25_cache: dict[str, object] = {}
 
 
 def _load_model():
@@ -30,44 +38,72 @@ def _load_model():
 
 
 def embed_text(page: dict) -> str:
-    """What actually gets embedded for a page."""
+    """What gets embedded for an atomic page: the whole thing."""
     return f"{page['title']}\n{page['body']}"
 
 
+def chunks_for(page: dict) -> list[str]:
+    """What gets embedded for a subject file: one vector per bullet.
+
+    The title is prefixed to every chunk so a line like "Sold in 2023." is
+    still attached to the subject it belongs to.
+    """
+    out = []
+    for raw in page["body"].splitlines():
+        txt = raw.strip().lstrip("-").strip()
+        if txt:
+            out.append(f"{page['title']}: {txt}")
+    return out or [embed_text(page)]
+
+
 def build_embeddings(manifest: dict, master: Path) -> int:
-    """Populate the embeddings table: (page id, path, vector)."""
+    """Populate the embeddings table. Returns the number of VECTORS built."""
     model = _load_model()
     pages = manifest["pages"]
-    texts = [embed_text(p) for p in pages]
-    vecs = model.encode(texts, normalize_embeddings=True, batch_size=64,
+    chunked = manifest.get("shape") == "subject"
+
+    texts: list[str] = []
+    owners: list[str] = []          # one page path per vector
+    for p in pages:
+        for t in (chunks_for(p) if chunked else [embed_text(p)]):
+            texts.append(t)
+            owners.append(p["path"])
+
+    vecs = model.encode(texts, normalize_embeddings=True, batch_size=128,
                         show_progress_bar=False).astype(np.float32)
+
     con = sqlite3.connect(master)
     con.execute("DROP TABLE IF EXISTS pcp_embeddings")
     con.execute("CREATE TABLE pcp_embeddings "
-                "(page_id INTEGER PRIMARY KEY, path TEXT, dim INTEGER, vector BLOB)")
-    for i, (p, v) in enumerate(zip(pages, vecs), start=1):
-        con.execute("INSERT INTO pcp_embeddings VALUES (?,?,?,?)",
-                    (i, p["path"], int(v.shape[0]), v.tobytes()))
+                "(vec_id INTEGER PRIMARY KEY, path TEXT, dim INTEGER, vector BLOB)")
+    con.executemany(
+        "INSERT INTO pcp_embeddings VALUES (?,?,?,?)",
+        [(i, owners[i - 1], int(vecs.shape[1]), vecs[i - 1].tobytes())
+         for i in range(1, len(owners) + 1)])
     con.commit()
     con.close()
+
     np.save(master.parent / "embeddings.npy", vecs)
     (master.parent / "embedding_paths.json").write_text(
-        json.dumps([p["path"] for p in pages]), encoding="utf-8")
-    return len(pages)
+        json.dumps({"chunked": chunked, "owners": owners}), encoding="utf-8")
+    return len(owners)
 
 
 class Index:
-    """Scope-aware retrieval over the corpus."""
+    """Scope-aware retrieval over one corpus."""
 
     def __init__(self, data_root: Path, corpus_root: Path, backend: str = "vector"):
         self.data_root = Path(data_root)
         self.backend = backend
         self.manifest = json.loads(
             (Path(corpus_root) / "manifest.json").read_text(encoding="utf-8"))
+        self.shape = self.manifest.get("shape", "atomic")
         self.pages = {p["path"]: p for p in self.manifest["pages"]}
         self.order = [p["path"] for p in self.manifest["pages"]]
         self._vecs = None
+        self._owners = None
         self._bm25 = None
+        self._bm25_owners = None
 
     # -------------------------------------------------------------- data --
     def vectors(self) -> np.ndarray:
@@ -79,11 +115,25 @@ class Index:
             self._vecs = np.load(f)
         return self._vecs
 
+    def owners(self) -> list[str]:
+        """The page path each vector belongs to."""
+        if self._owners is None:
+            meta = json.loads(
+                (self.data_root / "embedding_paths.json").read_text(encoding="utf-8"))
+            self._owners = meta["owners"] if isinstance(meta, dict) else list(meta)
+        return self._owners
+
     def bm25(self):
         if self._bm25 is None:
             from rank_bm25 import BM25Okapi
-            toks = [self._tok(embed_text(self.pages[p])) for p in self.order]
-            self._bm25 = BM25Okapi(toks)
+            texts, owners = [], []
+            for path in self.order:
+                p = self.pages[path]
+                for t in (chunks_for(p) if self.shape == "subject" else [embed_text(p)]):
+                    texts.append(t)
+                    owners.append(path)
+            self._bm25 = BM25Okapi([self._tok(t) for t in texts])
+            self._bm25_owners = owners
         return self._bm25
 
     @staticmethod
@@ -102,40 +152,57 @@ class Index:
         return paths
 
     # ------------------------------------------------------------ search --
+    def _frontmatter(self, p: dict, hide_relations: bool) -> dict:
+        # corpus-b pages carry a file-level `updated` and nothing else, so
+        # search must not invent structure the store does not have.
+        if self.shape == "subject":
+            fm = {"title": p["title"], "updated": p["updated"]}
+            if p.get("sensitivity") not in (None, "normal"):
+                fm["sensitivity"] = p["sensitivity"]
+            return fm
+        return {
+            "title": p["title"], "updated": p["updated"], "type": p["type"],
+            "domain": p["domain"], "lifecycle": p["lifecycle"],
+            "sensitivity": p["sensitivity"], "confidence": p["confidence"],
+            "valid_from": p["valid_from"], "valid_until": p["valid_until"],
+            "tags": p["tags"],
+            **({} if hide_relations else {"relations": p["relations"]}),
+        }
+
     def search(self, scope: str, query: str, k: int = 5,
                include_stale: bool = False,
                hide_relations: bool = False) -> list[dict]:
         allowed = self.scope_paths(scope, include_stale)
-        mask = np.array([p in allowed for p in self.order])
-        if not mask.any():
+        if not allowed:
             return []
 
         if self.backend == "vector":
+            owners = self.owners()
             qv = _load_model().encode([query], normalize_embeddings=True).astype(np.float32)[0]
             scores = self.vectors() @ qv
         elif self.backend == "lexical":
-            scores = np.asarray(self.bm25().get_scores(self._tok(query)), dtype=np.float32)
+            bm = self.bm25()
+            owners = self._bm25_owners
+            scores = np.asarray(bm.get_scores(self._tok(query)), dtype=np.float32)
         else:
             raise ValueError(f"unknown backend {self.backend!r}")
 
-        scores = np.where(mask, scores, -np.inf)
-        idx = np.argsort(-scores)[:k]
+        # max-over-chunks, then top-k PAGES (a page is the retrieval unit in
+        # both shapes; chunking only changes what is matched, not what is
+        # returned).
+        best: dict[str, float] = {}
+        for owner, sc in zip(owners, scores):
+            if owner in allowed and (owner not in best or sc > best[owner]):
+                best[owner] = float(sc)
+        top = sorted(best.items(), key=lambda kv: -kv[1])[:k]
+
         out = []
-        for i in idx:
-            if not np.isfinite(scores[i]):
-                continue
-            p = self.pages[self.order[i]]
+        for path, sc in top:
+            p = self.pages[path]
             out.append({
-                "path": p["path"],
-                "score": round(float(scores[i]), 4),
-                "frontmatter": {
-                    "title": p["title"], "updated": p["updated"], "type": p["type"],
-                    "domain": p["domain"], "lifecycle": p["lifecycle"],
-                    "sensitivity": p["sensitivity"], "confidence": p["confidence"],
-                    "valid_from": p["valid_from"], "valid_until": p["valid_until"],
-                    "tags": p["tags"],
-                    **({} if hide_relations else {"relations": p["relations"]}),
-                },
+                "path": path,
+                "score": round(sc, 4),
+                "frontmatter": self._frontmatter(p, hide_relations),
                 "body": p["body"],
             })
         return out
