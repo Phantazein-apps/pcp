@@ -107,10 +107,11 @@ def run_query(scope: str, sql: str) -> str:
 
 # ------------------------------------------------------------------- search --
 def run_search(scope: str, text: str, k: int, backend: str,
-               include_stale: bool) -> str:
+               include_stale: bool, hide_relations: bool = False) -> str:
     from .retrieval import Index
     idx = Index(DATA, CORPUS, backend=backend)
-    hits = idx.search(scope, text, k=k, include_stale=include_stale)
+    hits = idx.search(scope, text, k=k, include_stale=include_stale,
+                      hide_relations=hide_relations)
     if not hits:
         return "-- [no matches] --\n"
     parts = []
@@ -141,6 +142,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--scope", required=True)
     s.add_argument("-k", type=int, default=5)
     s.add_argument("--backend", choices=["vector", "lexical"], default="vector")
+    s.add_argument("--hide-relations", action="store_true",
+                   help="omit the `relations` edges from returned frontmatter "
+                        "(ablation: forces supersession to be resolved by join)")
     s.add_argument("--include-stale", action="store_true",
                    help="also search pages the default policy hides "
                         "(stale, archived, expired)")
@@ -164,7 +168,8 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd == "search":
             rec.update(text=a.text, k=a.k, backend=a.backend,
                        include_stale=a.include_stale)
-            out = run_search(a.scope, a.text, a.k, a.backend, a.include_stale)
+            out = run_search(a.scope, a.text, a.k, a.backend, a.include_stale,
+                             getattr(a, 'hide_relations', False))
         else:
             from .store import SCHEMA_DOC
             from .model import TODAY

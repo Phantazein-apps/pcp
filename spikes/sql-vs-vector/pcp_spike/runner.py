@@ -66,7 +66,8 @@ nothing else. Rules:
 """
 
 
-def _tools(log: Path | None, scope: str, backend: str, sink: list[dict]):
+def _tools(log: Path | None, scope: str, backend: str, sink: list[dict],
+           hide_relations: bool = False):
     """The agent's only data access. Same code paths as tool.py, same caps.
 
     Every call is recorded with its result size and any error (brief §Build 4).
@@ -97,7 +98,8 @@ def _tools(log: Path | None, scope: str, backend: str, sink: list[dict]):
         t = time.monotonic(); err = None
         try:
             out = run_search(scope, args["text"], int(args.get("k") or 5),
-                             backend, bool(args.get("include_stale")))
+                             backend, bool(args.get("include_stale")),
+                             hide_relations)
         except ToolError as e:
             err = str(e); out = f"ERROR: {e}"
         out, _ = _cap(out)
@@ -117,11 +119,12 @@ def system_prompt(condition: str) -> str:
 
 
 async def run_one(q: dict, condition: str, model: str, backend: str,
-                  logdir: Path, max_turns: int = 14) -> dict:
+                  logdir: Path, max_turns: int = 14,
+                  hide_relations: bool = False) -> dict:
     run_id = uuid.uuid4().hex[:10]
     calllog = logdir / "tool_calls" / f"{run_id}.jsonl"
     tool_log: list[dict] = []
-    qt, st = _tools(calllog, q["scope"], backend, tool_log)
+    qt, st = _tools(calllog, q["scope"], backend, tool_log, hide_relations)
     tools = {"sql_only": [qt], "vector_only": [st], "both": [qt, st]}[condition]
     server = create_sdk_mcp_server("pcp", "1.0.0", tools)
     allowed = [f"mcp__pcp__{t.name}" for t in tools]
@@ -186,6 +189,7 @@ async def run_one(q: dict, condition: str, model: str, backend: str,
         "run_id": run_id, "qid": q["id"], "stratum": q["stratum"],
         "mechanism": q["mechanism"], "condition": condition, "model": model,
         "backend": backend, "scope": q["scope"], "question": q["question"],
+        "hide_relations": hide_relations,
         "gold": q["gold"], "aliases": q["aliases"], "expect": q["expect"],
         "answer": answer, "full_text": text,
         "tool_calls": calls, "n_tool_calls": len(calls),
@@ -199,7 +203,8 @@ async def run_one(q: dict, condition: str, model: str, backend: str,
 
 async def sweep(questions: list[dict], conditions: list[str], models: list[str],
                 seeds: list[int], backend: str, logdir: Path,
-                concurrency: int = 4, out: Path | None = None) -> list[dict]:
+                concurrency: int = 4, out: Path | None = None,
+                hide_relations: bool = False) -> list[dict]:
     jobs = [(q, c, m, s)
             for s in seeds for m in models for c in conditions for q in questions]
     sem = asyncio.Semaphore(concurrency)
@@ -211,7 +216,8 @@ async def sweep(questions: list[dict], conditions: list[str], models: list[str],
     async def one(q, c, m, s):
         nonlocal done
         async with sem:
-            r = await run_one(q, c, m, backend, logdir)
+            r = await run_one(q, c, m, backend, logdir,
+                              hide_relations=hide_relations)
             r["seed"] = s
         async with lock:
             done += 1
@@ -237,10 +243,18 @@ def main(argv=None) -> int:
     ap.add_argument("--models", default=None)
     ap.add_argument("--concurrency", type=int, default=4)
     ap.add_argument("--limit", type=int, default=None, help="first N questions only")
+    ap.add_argument("--strata", default=None,
+                    help="comma-separated strata to run (default: all)")
+    ap.add_argument("--hide-relations", action="store_true",
+                    help="ABLATION: search returns frontmatter WITHOUT `relations`, "
+                         "so a supersedes edge can only be resolved by a join")
     ap.add_argument("--tag", default=None, help="name for this run's output file")
     a = ap.parse_args(argv)
 
     qs = json.loads(Path(a.questions).read_text(encoding="utf-8"))
+    if a.strata:
+        keep = set(a.strata.split(","))
+        qs = [q for q in qs if q["stratum"] in keep]
     if a.limit:
         qs = qs[: a.limit]
     conditions = a.conditions.split(",")
@@ -264,7 +278,7 @@ def main(argv=None) -> int:
 
     t0 = time.monotonic()
     asyncio.run(sweep(qs, conditions, models, seeds, a.backend, logdir,
-                      a.concurrency, out))
+                      a.concurrency, out, a.hide_relations))
     print(f"done in {(time.monotonic()-t0)/60:.1f} min -> {out}")
     return 0
 

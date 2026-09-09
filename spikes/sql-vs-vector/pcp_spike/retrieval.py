@@ -103,7 +103,8 @@ class Index:
 
     # ------------------------------------------------------------ search --
     def search(self, scope: str, query: str, k: int = 5,
-               include_stale: bool = False) -> list[dict]:
+               include_stale: bool = False,
+               hide_relations: bool = False) -> list[dict]:
         allowed = self.scope_paths(scope, include_stale)
         mask = np.array([p in allowed for p in self.order])
         if not mask.any():
@@ -132,7 +133,8 @@ class Index:
                     "domain": p["domain"], "lifecycle": p["lifecycle"],
                     "sensitivity": p["sensitivity"], "confidence": p["confidence"],
                     "valid_from": p["valid_from"], "valid_until": p["valid_until"],
-                    "tags": p["tags"], "relations": p["relations"],
+                    "tags": p["tags"],
+                    **({} if hide_relations else {"relations": p["relations"]}),
                 },
                 "body": p["body"],
             })
