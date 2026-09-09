@@ -16,5 +16,5 @@ logs/tool_calls/
 
 # logs/raw/*.jsonl IS committed -- it is the evidence behind REPORT.md.
 
-# Transient nohup log from a background sweep; the JSONL is the record.
-logs/*-sweep.log
+# Transient nohup logs from backgrounded sweeps/pipelines; the JSONL is the record.
+logs/*.log
