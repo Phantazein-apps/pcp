@@ -1,7 +1,17 @@
 .venv/
-data/*.sqlite
-data/*.npy
-logs/raw/
 __pycache__/
 *.pyc
 .hf-cache/
+
+# Rebuildable from `./run.sh` -- corpus/, data/ and embeddings are all
+# regenerated deterministically from the seed.
+data/*.sqlite
+data/*.npy
+data/embedding_paths.json
+
+# Per-run tool-call logs duplicate the `tool_log` field already carried in
+# logs/raw/runs-*.jsonl, one file per run. The JSONL is the authoritative
+# record; these are churn.
+logs/tool_calls/
+
+# logs/raw/*.jsonl IS committed -- it is the evidence behind REPORT.md.
