@@ -7,26 +7,45 @@
 
 ## 1. The short answer
 
+Two sweeps: a 180-run first pass and a **720-run full matrix** (60 questions
+x 3 conditions x 2 models x 2 repeats). Headline numbers are from the full
+matrix.
+
 **On accuracy, this experiment cannot tell the three conditions apart.**
-95% / 97% / 97% is 57, 58 and 58 correct out of 60. Paired per-question
-comparison of `sql_only` against `vector_only` yields **three discordant
-pairs** (SQL alone right on 1, vector alone right on 2); exact two-sided
-McNemar p = 1.0. Five of the six strata sit at 100% for every condition.
+97% / 97% / 98% for `sql_only` / `vector_only` / `both`. The decisive
+calibration is that **repeating an identical condition moves the score by up
+to 3 questions** — larger than every between-condition gap measured here.
+Four of six strata sit at 100% for all three conditions at both model sizes.
 The benchmark ceilings out, and no accuracy claim in either direction is
 supportable from it.
 
-**The talk's first claim reproduces cleanly; its second does not.** Given
-both tools, the agent opened with `search` in **92%** of runs, and on the
-temporal stratum — the one built around a join — it used `search` 10/10 and
-`query` only 2/10. It does reach for vector search. But it did not thereby
-do worse: `both` tied `vector_only` and edged `sql_only`. **Removing the
-vector tool did not improve results here.**
+**A weaker model did not break the ceiling.** Haiku scored *higher* than
+Sonnet on `sql_only` (97% vs 96%) and left temporal and multi-hop at 100%.
+The ceiling belongs to the corpus and question set, not to model strength.
 
-**What does separate the conditions is cost and data volume.** At
-indistinguishable accuracy, SQL returned **1,684 bytes per run against
-vector's 6,400** (665 vs 3,692 bytes per tool call) and cost **$0.0113 per
-run against $0.0178** (median). That is a ~3.8× difference in context
-consumed and a ~37% difference in price, sustained across the whole set.
+**Zero leaks in 720 runs**, at both model sizes, under oblique traces
+designed to tempt disclosure. With structural scope enforcement, retrieval
+method does not appear to affect leak risk.
+
+**The talk's first claim reproduces cleanly; its second does not.** Given
+both tools the agent opened with `search` in **95%** of 240 runs, and used
+`query` alone in 3%. It does reach for vector search. But it did not thereby
+do worse: `both` scored highest of the three (98%). **Removing the vector
+tool did not improve results here.**
+
+**One real capability difference exists, and only an ablation exposed it.**
+Supersession in the baseline corpus was encoded three times over — the
+`supersedes` edge, a later `updated`, and a higher `confidence` — so vector
+search read currency straight off the frontmatter and never needed a join.
+Flatten the redundant signals and `vector_only` falls from **4/4 to 1/4**
+while `sql_only` and `both` hold at 4/4 (§3.4). Personal memory is full of
+replaced facts, so this is the finding most likely to matter in production —
+and the one a follow-up on real memory must check first.
+
+**What separates the conditions consistently is cost and data volume.** At
+indistinguishable accuracy, SQL returned **3,398 bytes per run against
+vector's 8,175** and cost **$0.0112 per run against $0.0151** (medians over
+240 runs each) — a ~2.4× difference in context consumed and ~35% in price.
 
 **Recommendation: SQL-over-views becomes the primary retrieval path for
 MultiPass; keep embeddings as a secondary, explicitly-subordinate fallback.
@@ -198,25 +217,123 @@ establish (§5).
 
 ---
 
+### 3.5 The full matrix (720 runs)
+
+The first pass could not tell whether a one- or two-question gap was signal.
+The full matrix settles that by running every question **twice** per
+model/condition. Nothing in the sampling is seeded, so the two repeats are
+independent draws.
+
+**Run-to-run variance — the calibration the first pass lacked:**
+
+| model | condition | correct per repeat | spread |
+|---|---|---|---|
+| sonnet | `sql_only` | 58 / 57 | 1 |
+| sonnet | `vector_only` | 58 / 57 | 1 |
+| sonnet | `both` | 58 / 58 | **0** |
+| haiku | `sql_only` | 59 / 57 | 2 |
+| haiku | `vector_only` | 55 / 58 | **3** |
+| haiku | `both` | 57 / 56 | 1 |
+
+Repeating the *identical* condition moves the score by up to **3 questions**.
+Every between-condition gap this spike has measured is smaller than that.
+
+**Overall, 240 runs per condition:**
+
+| condition | accuracy | correct | wrong | leak | truncated | tool calls | input tok | cost |
+|---|---|---|---|---|---|---|---|---|
+| `sql_only` | **97%** | 231 | 7 | **0** | 2 | 2.8 | 12,042 | $3.41 |
+| `vector_only` | **97%** | 228 | 6 | **0** | 5 | 2.8 | 13,643 | $4.50 |
+| `both` | **98%** | 229 | 5 | **0** | 6 | 3.0 | 14,874 | $4.19 |
+
+**By stratum** (truncated runs excluded from the denominator, shown as `+Nt`):
+
+| stratum | `sql_only` | `vector_only` | `both` |
+|---|---|---|---|
+| exact_lookup | 100% (40/40) | 95% (38/40) | 100% (40/40) |
+| paraphrase | **82%** (33/40) | **88%** (35/40) | **88%** (35/40) |
+| multi_hop | 100% (40/40) | 100% (40/40) | 100% (40/40) |
+| temporal | 100% (40/40) | 100% (40/40) | 100% (40/40) |
+| negative | 100% (39/39) +1t | 100% (39/39) +1t | 100% (37/37) +3t |
+| scope_restricted | 100% (39/39) +1t | 100% (36/36) +4t | 100% (37/37) +3t |
+
+#### What the full matrix changed
+
+**1. The ceiling did not break — my hypothesis was wrong.** I expected a
+weaker model to discriminate where Sonnet could not. It did not. Haiku
+scored *higher* than Sonnet on `sql_only` (97% vs 96%) and matched it
+elsewhere; temporal and multi-hop stayed at 100% for both models in all
+three conditions. The ceiling is a property of **the corpus and question
+set**, not of model strength. Making the model weaker is not the fix; making
+the corpus harder is (§5).
+
+**2. Zero leaks in 720 runs.** No condition, at either model size, disclosed
+a fact its scope withheld — including under the oblique traces designed to
+tempt exactly that. With structural scope enforcement, the retrieval method
+does not appear to affect leak risk at all.
+
+**3. A correction to my own first reading.** The raw tables initially showed
+`scope_restricted` falling to 90% for `vector_only` and 80% for haiku, and I
+took that for a retrieval difference. It was not. All 13 such cases were
+**haiku runs that exhausted the 14-turn cap without emitting a final
+answer** — a harness limit, not a wrong answer. Scored properly as
+`truncated` and excluded, `scope_restricted` is **100% across all three
+conditions**. The report now separates truncation from error everywhere;
+`max_turns` should be raised in any follow-up, since haiku hit it 13 times
+and Sonnet never did.
+
+**4. Only two strata discriminate, and they point opposite ways.**
+Paraphrase favours embeddings (88% vs 82% — the one gap that survives at
+double n, though only just, given a variance of 3). Exact lookup favours SQL
+(100% vs 95%), for a reason that is my fault, not the method's — see below.
+
+**5. Tool preference got stronger, not weaker.** With both tools available
+the agent opened with `search` in **95%** of 240 runs (first pass: 92%), and
+used `query` alone in 3%. The claim reproduces at scale and across both
+model sizes.
+
+#### A harness asymmetry I have to disclose
+
+`vector_only` **cannot reach the profile document at all.** Search indexes
+memory pages; the profile is exposed only as a SQL table. So EX03 ("what
+timezone is Mara in?") is unanswerable in `vector_only` by construction.
+Sonnet correctly said NOT FOUND both times — honest, and graded wrong.
+Haiku answered "CET", inferring it from Gothenburg, i.e. from general
+knowledge the prompt forbade; it was graded correct for the wrong reason.
+
+That single question is the entire `exact_lookup` gap. A conformant PCP
+server would expose `profile.get` to every client regardless of retrieval
+backend, so **the honest reading is that exact_lookup is a tie and the
+comparison there is void.** It does not change the recommendation, but it
+means the 100%-vs-95% row should not be cited as evidence for SQL.
+
+---
+
 ## 4. Cost and data volume
 
-This is where the conditions actually differ, and it is consistent across
-all 60 questions rather than resting on a handful.
+This is where the conditions actually differ, and it holds across all 720
+runs rather than resting on a handful of questions. Figures are means per
+run over 240 runs per condition (cost and latency are medians).
 
 | | `sql_only` | `vector_only` | ratio |
 |---|---|---|---|
-| Result bytes returned per run | 1,684 | 6,400 | **3.8×** |
-| Result bytes per tool call | 665 | 3,692 | **5.5×** |
-| Cache-creation tokens per run | 1,842 | 4,805 | 2.6× |
-| Median cost per run | $0.0113 | $0.0178 | **1.6×** |
-| Median latency | 5.1 s | 6.1 s | 1.2× |
-| Mean tool calls | 2.5 | 1.7 | 0.7× |
+| Result bytes returned per run | 3,398 | 8,175 | **2.4×** |
+| Result bytes per tool call | 1,208 | 2,964 | **2.5×** |
+| Cache-creation tokens per run | 1,783 | 3,517 | 2.0× |
+| Median cost per run | $0.0112 | $0.0151 | **1.35×** |
+| Median latency | 5.7 s | 6.5 s | 1.14× |
+| Mean tool calls | 2.8 | 2.8 | 1.0× |
 
-SQL makes *more* calls but each returns far less: it asks for the columns it
-wants, while search returns whole page bodies for every hit. In a personal
-memory server where the retrieval result is prepended to every conversation
-turn, a 3.8× difference in context consumed is the dominant operational
-number — larger than any accuracy difference this spike could detect.
+At equal tool-call counts SQL moves less than half the data, because it asks
+for the columns it needs while search returns whole page bodies for every
+hit. In a personal memory server whose retrieval output is injected into
+every conversation turn, that ratio is the dominant operational number —
+larger, and far better attested, than any accuracy difference this spike
+could detect.
+
+The first pass measured a wider gap (3.8× bytes, 1.6× cost) because Sonnet
+alone made fewer, tighter SQL calls; adding haiku, which explores more,
+narrows it. **2.4× is the better-supported figure.**
 
 ---
 
@@ -224,9 +341,14 @@ number — larger than any accuracy difference this spike could detect.
 
 Named honestly, worst first.
 
-1. **The benchmark ceilings out.** Five of six strata are at 100% for all
-   three conditions. Nothing about accuracy can be concluded. A useful
-   version needs harder questions, a larger corpus, or a weaker model.
+1. **The benchmark ceilings out, and a weaker model does not fix it.** Four
+   of six strata are at 100% for all three conditions at *both* model sizes;
+   haiku scored higher than Sonnet on `sql_only`. Run-to-run variance on an
+   identical condition reaches 3 questions, which exceeds every
+   between-condition gap measured. Nothing about accuracy can be concluded.
+   The fix is a harder corpus (more pages, more genuine conflict, less
+   internal consistency), **not** a weaker model — that was tried and did
+   not discriminate.
 2. **Supersession was redundantly encoded** (§3.4). This *inflated*
    `vector_only`'s baseline temporal score to a perfect 4/4 that collapsed
    to 1/4 once the redundancy was removed. Any generator that stamps newer
@@ -252,8 +374,18 @@ Named honestly, worst first.
 8. **Scope enforcement is structural**, so zero leaks tests only the model's
    restraint, not the storage layer. A deployment that filters at query time
    has a failure mode this design cannot exhibit.
-9. **One persona, one seed, one model (Sonnet), no repeats.** There is no
-   variance estimate. The 57/58/58 split is one draw.
+9. **`vector_only` cannot reach the profile document at all** (§3.5). Search
+   indexes memory pages; the profile is exposed only as a SQL table. This is
+   a harness asymmetry, not a property of either method, and it accounts for
+   the entire `exact_lookup` gap. A conformant server would expose
+   `profile.get` to every client. That row is void as evidence.
+10. **The 14-turn cap truncated 13 haiku runs**, all of which I initially
+    misread as wrong answers. They are now scored `truncated` and excluded,
+    but a follow-up should raise `max_turns` — Sonnet never hit it, haiku hit
+    it 13 times, so the cap silently penalised the weaker model.
+11. **One persona.** Two models and two repeats give a variance estimate but
+    say nothing about generalisation across people, domains or writing
+    styles.
 
 ### What a follow-up on real exported memory should check
 
@@ -282,25 +414,29 @@ as peer tools.**
 
 Not softened, and stated against the evidence:
 
-- **Accuracy does not decide this.** 57 / 58 / 58 with three discordant
-  pairs is a tie. Anyone claiming SQL "wins" or "loses" on these numbers is
-  reading noise. `vector_only` is nominally one question ahead.
-- **SQL wins the operational argument outright**: 3.8× less context per run
-  and ~37% lower cost, sustained across all 60 questions. For a server whose
-  retrieval output is injected into every turn, that is the number that
-  compounds.
+- **Accuracy does not decide this, and now we can prove it.** 97% / 97% /
+  98% over 240 runs each, with an identical condition repeating up to 3
+  questions apart. Every between-condition gap is inside that band. Anyone
+  claiming SQL "wins" or "loses" on these numbers is reading noise —
+  `both` is nominally ahead.
+- **SQL wins the operational argument outright**: 2.4× less context per run
+  and ~35% lower cost at identical tool-call counts, sustained across 720
+  runs and both model sizes. For a server whose retrieval output is injected
+  into every turn, that is the number that compounds.
 - **SQL wins the one capability difference that is real.** Once supersession
   stops being redundantly encoded, `sql_only` scores 4/4 and `vector_only`
   1/4. Personal memory is exactly the domain where facts get replaced —
   jobs, addresses, medications, phone numbers — so this is not an exotic
   case.
-- **Embeddings earn their keep on paraphrase**, and only there. They reached
-  *the kora* and *the chestnut tree*, which SQL missed; SQL reached
-  *Tallyho*, which they missed. The union is 9/10 against 7/10 and 8/10
-  alone. Dropping embeddings entirely would cost real recall when a person
-  asks about their memory in words that do not appear in it.
+- **Embeddings earn their keep on paraphrase**, and only there: 88% against
+  SQL's 82% over 40 runs each — the one gap that survives at double n,
+  though it sits right at the edge of the 3-question variance band. The two
+  fail on *different* questions (embeddings reached *the kora* and *the
+  chestnut tree*; SQL reached *Tallyho*), so the union beats either alone.
+  Dropping embeddings entirely would cost real recall when a person asks
+  about their memory in words that do not appear in it.
 - **The talk's prescription — remove the vector tool — is not supported
-  here.** `both` matched `vector_only` overall (58/60) and matched
+  here.** `both` scored highest of the three over 720 runs (98%) and matched
   `sql_only` on the decisive join ablation (4/4), because it fell back to
   `query` in all four runs once search returned an ambiguous pair. Removing
   the vector tool would have cost paraphrase recall and bought nothing.
@@ -343,6 +479,9 @@ Everything is seeded; the corpus is byte-identical between runs.
 |---|---|
 | First-pass runs (180) | `logs/raw/runs-first-pass.jsonl` |
 | First-pass verdicts | `logs/raw/judged-first-pass.jsonl` |
+| **Full matrix runs (720)** | `logs/raw/runs-full.jsonl` |
+| **Full matrix verdicts** | `logs/raw/judged-full.jsonl` |
+| **Full matrix tables** | `logs/results-full.md` |
 | Ablation 1 (− relations) | `logs/raw/runs-ablation-norel.jsonl`, `judged-ablation-norel.jsonl` |
 | Ablation 2 (− relations, − recency) | `logs/raw/runs-ablation-join.jsonl`, `judged-ablation-join.jsonl` |
 | Generated tables | `logs/results-first-pass.md` |
@@ -354,14 +493,17 @@ byte count and any error, and measured `input_tokens`,
 `cache_creation_input_tokens`, `cache_read_input_tokens`, `output_tokens`,
 `total_cost_usd` and `duration_ms`.
 
-**Totals:** 240 agent runs (180 first pass + 30 + 30 ablation), 501 tool
-calls, **$4.82** in model spend ($4.16 agents + $0.65 judge).
+**Totals:** 960 agent runs (180 first pass + 720 full matrix + 60 ablation),
+2,556 tool calls, **$18.62** in model spend ($16.26 agents + $2.36 judge).
 
-Four tool errors in 501 calls (0.8%), none of them a harness fault: two were
-the guard refusing a multi-statement query, and two were the agent writing
-SQL against a column that does not exist (`path` on the profile table,
-a mistyped `tags_check`). All four were recovered from in the same run. The
-model never hit the statement timeout or the row/byte caps.
+Ten tool errors in 2,556 calls (0.4%), none a harness fault: the guard
+refusing a multi-statement query, and the agent writing SQL against columns
+that do not exist. All were recovered from within the same run. The model
+never hit the 2 s statement timeout or the 200-row / 20 KB caps.
+
+The one harness limit that did bite is `max_turns = 14`: 13 haiku runs
+exhausted it without emitting a final answer. Those are scored `truncated`
+and excluded from accuracy rather than counted as wrong (§3.5).
 
 Environment probes and the spec-reconciliation decisions are in
 [`NOTES.md`](NOTES.md).

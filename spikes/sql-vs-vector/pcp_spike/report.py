@@ -12,8 +12,25 @@ from .model import STRATA
 CONDITION_ORDER = ["sql_only", "vector_only", "both"]
 
 
+MAX_TURNS = 14   # must match runner.run_one's max_turns
+
+
 def load(path: str) -> list[dict]:
-    return [json.loads(l) for l in Path(path).read_text(encoding="utf-8").splitlines() if l.strip()]
+    recs = [json.loads(l) for l in Path(path).read_text(encoding="utf-8").splitlines() if l.strip()]
+    return [_classify(r) for r in recs]
+
+
+def _classify(r: dict) -> dict:
+    """Separate harness truncation from a genuine wrong answer.
+
+    A run that exhausted the turn cap without emitting a final answer told us
+    nothing about retrieval -- it is a harness limit, not a model error.
+    Counting it as `wrong` understates the condition and, worse, invents a
+    difference between conditions where none exists.
+    """
+    if not (r.get("answer") or "").strip() and r.get("n_tool_calls", 0) >= MAX_TURNS:
+        r = {**r, "verdict": "truncated", "why": f"hit the {MAX_TURNS}-turn cap"}
+    return r
 
 
 def _agg(rows: list[dict]) -> dict:
@@ -21,6 +38,8 @@ def _agg(rows: list[dict]) -> dict:
     if not n:
         return {}
     v = [r["verdict"] for r in rows]
+    trunc = v.count("truncated")
+    scored = n - trunc          # truncated runs are excluded from accuracy
     tok_in = [r.get("input_tokens", 0) + r.get("cache_read_input_tokens", 0)
               + r.get("cache_creation_input_tokens", 0) for r in rows]
     return {
@@ -29,7 +48,9 @@ def _agg(rows: list[dict]) -> dict:
         "partial": v.count("partial"),
         "wrong": v.count("wrong"),
         "leak": v.count("leak"),
-        "acc": v.count("correct") / n,
+        "truncated": trunc,
+        "scored": scored,
+        "acc": (v.count("correct") / scored) if scored else 0.0,
         "calls": stat.mean(r["n_tool_calls"] for r in rows),
         "tok_in": stat.mean(tok_in),
         "tok_out": stat.mean(r.get("output_tokens", 0) for r in rows),
@@ -56,12 +77,12 @@ def by_condition(recs: list[dict], model: str | None = None) -> str:
             continue
         a = _agg(sel)
         rows.append([c, a["n"], f"{a['acc']*100:.0f}%", a["correct"], a["partial"],
-                     a["wrong"], a["leak"], f"{a['calls']:.1f}",
+                     a["wrong"], a["leak"], a["truncated"], f"{a['calls']:.1f}",
                      f"{a['tok_in']:,.0f}", f"{a['tok_out']:,.0f}",
                      f"{a['ms']/1000:.1f}", f"${a['cost']:.2f}"])
     return md_table(["condition", "n", "accuracy", "correct", "partial", "wrong",
-                     "leak", "mean tool calls", "mean input tok", "mean output tok",
-                     "median latency s", "cost"], rows)
+                     "leak", "truncated", "mean tool calls", "mean input tok",
+                     "mean output tok", "median latency s", "cost"], rows)
 
 
 def by_stratum(recs: list[dict], model: str | None = None) -> str:
@@ -75,7 +96,9 @@ def by_stratum(recs: list[dict], model: str | None = None) -> str:
                 row.append("-")
                 continue
             a = _agg(sel)
-            cell = f"{a['acc']*100:.0f}% ({a['correct']}/{a['n']})"
+            cell = f"{a['acc']*100:.0f}% ({a['correct']}/{a['scored']})"
+            if a["truncated"]:
+                cell += f" _+{a['truncated']}t_"
             if a["leak"]:
                 cell += f" **{a['leak']} leak**"
             row.append(cell)
@@ -94,7 +117,7 @@ def temporal_by_mechanism(recs: list[dict], model: str | None = None) -> str:
             sel = [r for r in recs if r["condition"] == c and r.get("mechanism") == m
                    and (model is None or r["model"] == model)]
             a = _agg(sel)
-            row.append(f"{a['acc']*100:.0f}% ({a['correct']}/{a['n']})" if a else "-")
+            row.append(f"{a['acc']*100:.0f}% ({a['correct']}/{a['scored']})" if a else "-")
         rows.append(row)
     return md_table(["temporal mechanism"] + CONDITION_ORDER, rows)
 
@@ -162,7 +185,8 @@ def seed_variance(recs: list[dict]) -> str:
             for sd in seeds:
                 sel = [r for r in recs if r["condition"] == c and r["model"] == m
                        and r.get("seed", 1) == sd]
-                per[sd] = {r["qid"]: r["verdict"] == "correct" for r in sel}
+                per[sd] = {r["qid"]: r["verdict"] == "correct" for r in sel
+                           if r["verdict"] != "truncated"}
             if not all(per.values()):
                 continue
             counts = [sum(v.values()) for v in per.values()]
@@ -175,7 +199,7 @@ def seed_variance(recs: list[dict]) -> str:
 
 
 def failures(recs: list[dict], limit: int = 12) -> str:
-    bad = [r for r in recs if r["verdict"] in ("wrong", "leak")]
+    bad = [r for r in recs if r["verdict"] in ("wrong", "leak")]  # truncated excluded
     bad.sort(key=lambda r: (r["verdict"] != "leak", r["stratum"], r["qid"]))
     rows = []
     for r in bad[:limit]:
@@ -217,7 +241,11 @@ def main(argv=None) -> int:
             parts += [f"### By stratum — {m}", "", by_stratum(recs, m), ""]
             parts += [f"### Temporal by mechanism — {m}", "",
                       temporal_by_mechanism(recs, m), ""]
-    parts += ["### Failures", "", failures(recs, 20), ""]
+    ntrunc = sum(1 for r in recs if r["verdict"] == "truncated")
+    parts += ["### Failures", "",
+              f"_{ntrunc} run(s) hit the {MAX_TURNS}-turn cap without emitting a final "
+              f"answer; those are counted as `truncated`, excluded from accuracy, and "
+              f"not listed below._", "", failures(recs, 20), ""]
     parts += ["### Totals", "", "```json",
               json.dumps(totals(recs), indent=2), "```", ""]
     text = "\n".join(parts)
