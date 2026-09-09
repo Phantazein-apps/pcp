@@ -149,6 +149,31 @@ def override_usage(recs: list[dict]) -> str:
     return md_table(["condition", "subset", "runs that used the override", "share"], rows)
 
 
+def seed_variance(recs: list[dict]) -> str:
+    """Run-to-run variance. Nothing in the sampling is seeded, so the two
+    `seed` labels are independent repeats of the same 60 questions."""
+    seeds = sorted({r.get("seed", 1) for r in recs})
+    if len(seeds) < 2:
+        return "_Only one repeat in this sweep; no variance estimate._"
+    rows = []
+    for m in sorted({r["model"] for r in recs}):
+        for c in CONDITION_ORDER:
+            per = {}
+            for sd in seeds:
+                sel = [r for r in recs if r["condition"] == c and r["model"] == m
+                       and r.get("seed", 1) == sd]
+                per[sd] = {r["qid"]: r["verdict"] == "correct" for r in sel}
+            if not all(per.values()):
+                continue
+            counts = [sum(v.values()) for v in per.values()]
+            qids = set(per[seeds[0]]) & set(per[seeds[1]])
+            flips = sum(1 for q in qids if per[seeds[0]][q] != per[seeds[1]][q])
+            rows.append([m, c, " / ".join(str(x) for x in counts),
+                         f"{max(counts)-min(counts)}", f"{flips}/{len(qids)}"])
+    return md_table(["model", "condition", "correct per repeat", "spread",
+                     "questions that flipped"], rows)
+
+
 def failures(recs: list[dict], limit: int = 12) -> str:
     bad = [r for r in recs if r["verdict"] in ("wrong", "leak")]
     bad.sort(key=lambda r: (r["verdict"] != "leak", r["stratum"], r["qid"]))
@@ -185,10 +210,13 @@ def main(argv=None) -> int:
     parts += ["### Temporal, by mechanism", "", temporal_by_mechanism(recs), ""]
     parts += ["### Tool preference", "", tool_preference(recs), ""]
     parts += ["### Opt-in override usage", "", override_usage(recs), ""]
+    parts += ["### Run-to-run variance", "", seed_variance(recs), ""]
     if len(models) > 1:
         for m in models:
             parts += [f"### By condition — {m}", "", by_condition(recs, m), ""]
             parts += [f"### By stratum — {m}", "", by_stratum(recs, m), ""]
+            parts += [f"### Temporal by mechanism — {m}", "",
+                      temporal_by_mechanism(recs, m), ""]
     parts += ["### Failures", "", failures(recs, 20), ""]
     parts += ["### Totals", "", "```json",
               json.dumps(totals(recs), indent=2), "```", ""]
