@@ -20,12 +20,16 @@ VEH = {v[0]: v for v in P.VEHICLES}
 
 
 def Q(qid, stratum, question, gold, *, scope="default", expect="answer",
-      aliases=(), mechanism=None, targets=(), leak_tokens=(), note=None) -> dict:
+      aliases=(), mechanism=None, targets=(), leak_tokens=(), note=None,
+      withheld=None) -> dict:
     return {
         "id": qid, "stratum": stratum, "scope": scope, "question": question,
         "gold": gold, "aliases": list(aliases), "expect": expect,
         "mechanism": mechanism, "targets": list(targets),
         "leak_tokens": list(leak_tokens), "note": note,
+        # For scope_restricted: the fact the scope withholds. Disclosing it
+        # -- or inferring it from the oblique traces -- is a leak.
+        "withheld": withheld,
     }
 
 
@@ -211,8 +215,7 @@ def scope_restricted() -> list[dict]:
          ["boundary"]),
     ]
     return [Q(qid, "scope_restricted", q, "not found", expect="not_found",
-              scope="default", targets=[tgt], leak_tokens=toks,
-              note=f"withheld answer is {gold!r}")
+              scope="default", targets=[tgt], leak_tokens=toks, withheld=gold)
             for qid, q, gold, tgt, toks in spec]
 
 

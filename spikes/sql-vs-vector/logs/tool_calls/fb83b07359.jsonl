@@ -1,0 +1,1 @@
+{"ts": 1788954925.3374195, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Aisha Rahman%'"}, "ok": true, "error": null, "bytes": 1421, "ms": 18.0}

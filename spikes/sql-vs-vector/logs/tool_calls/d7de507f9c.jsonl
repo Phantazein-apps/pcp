@@ -1,0 +1,1 @@
+{"ts": 1788954896.0008693, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Ledgerline%' OR path LIKE '%ledgerline%'"}, "ok": true, "error": null, "bytes": 571, "ms": 33.4}

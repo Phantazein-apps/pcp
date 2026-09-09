@@ -1,0 +1,1 @@
+{"ts": 1788954896.6224577, "cmd": "query", "scope": "default", "args": {"sql": "SELECT key, value FROM profile WHERE key LIKE '%timezone%' OR key LIKE '%tz%'"}, "ok": true, "error": null, "bytes": 36, "ms": 0.5}

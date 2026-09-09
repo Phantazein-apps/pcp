@@ -1,0 +1,2 @@
+{"ts": 1788954920.3153746, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Bluefin%' OR path LIKE '%bluefin%'"}, "ok": true, "error": null, "bytes": 245, "ms": 0.7}
+{"ts": 1788954921.776491, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Frida Lund%'"}, "ok": true, "error": null, "bytes": 1866, "ms": 2.8}

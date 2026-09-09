@@ -1,0 +1,1 @@
+{"ts": 1788954948.5376031, "cmd": "query", "scope": "finance", "args": {"sql": "SELECT path,title,valid_from,valid_until,lifecycle,body FROM memory_all WHERE body LIKE '%Majorna%' AND body LIKE '%mortgage%'"}, "ok": true, "error": null, "bytes": 710, "ms": 0.8}

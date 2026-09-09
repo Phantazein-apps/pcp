@@ -1,0 +1,3 @@
+{"ts": 1788954911.8422487, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%fire%' AND (body LIKE '%regroup%' OR body LIKE '%meet%' OR body LIKE '%evacuat%')"}, "ok": true, "error": null, "bytes": 31, "ms": 0.6}
+{"ts": 1788954913.1471107, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%fire%'"}, "ok": true, "error": null, "bytes": 31, "ms": 0.6}
+{"ts": 1788954914.3821564, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory_all WHERE body LIKE '%fire%'"}, "ok": true, "error": null, "bytes": 31, "ms": 6.8}

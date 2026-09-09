@@ -1,0 +1,3 @@
+{"ts": 1788954909.8185453, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%seat%' OR body LIKE '%aisle%' OR body LIKE '%window seat%'"}, "ok": true, "error": null, "bytes": 31, "ms": 0.8}
+{"ts": 1788954911.7224526, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='travel'"}, "ok": true, "error": null, "bytes": 659, "ms": 0.5}
+{"ts": 1788954911.8499382, "cmd": "query", "scope": "default", "args": {"sql": "SELECT namespace, key, value FROM profile WHERE key LIKE '%seat%' OR key LIKE '%travel%' OR key LIKE '%flight%'"}, "ok": true, "error": null, "bytes": 35, "ms": 6.4}

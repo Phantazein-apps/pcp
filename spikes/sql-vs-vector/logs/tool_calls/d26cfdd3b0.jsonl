@@ -1,0 +1,4 @@
+{"ts": 1788954919.7197075, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='vehicles' AND (body LIKE '%tyre%' OR body LIKE '%tire%')"}, "ok": true, "error": null, "bytes": 31, "ms": 0.5}
+{"ts": 1788954921.1540048, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%tyre%' OR body LIKE '%tire%'"}, "ok": true, "error": null, "bytes": 995, "ms": 0.8}
+{"ts": 1788954923.067617, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, domain, type, body, valid_from, valid_until FROM memory_all WHERE path='procedures/winter-prep'"}, "ok": true, "error": null, "bytes": 189, "ms": 2.1}
+{"ts": 1788954923.4063218, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='vehicles'"}, "ok": true, "error": null, "bytes": 868, "ms": 0.6}

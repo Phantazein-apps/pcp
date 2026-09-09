@@ -1,0 +1,3 @@
+{"ts": 1788954923.3513563, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Ledgerline%' OR title LIKE '%Ledgerline%'"}, "ok": true, "error": null, "bytes": 571, "ms": 8.0}
+{"ts": 1788954925.2907896, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Ingrid Saarinen%' OR title LIKE '%Ingrid%'"}, "ok": true, "error": null, "bytes": 2224, "ms": 0.8}
+{"ts": 1788954925.6490207, "cmd": "query", "scope": "default", "args": {"sql": "SELECT * FROM profile WHERE value LIKE '%Ingrid%'"}, "ok": true, "error": null, "bytes": 35, "ms": 0.6}

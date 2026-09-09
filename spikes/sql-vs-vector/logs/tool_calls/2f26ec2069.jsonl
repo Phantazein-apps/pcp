@@ -1,0 +1,1 @@
+{"ts": 1788954927.6507244, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE domain='projects'"}, "ok": true, "error": null, "bytes": 7479, "ms": 0.9}

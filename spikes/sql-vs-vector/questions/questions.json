@@ -12,7 +12,8 @@
       "vehicles/volvo-v60"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX02",
@@ -27,7 +28,8 @@
       "projects/ledgerline"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX03",
@@ -46,7 +48,8 @@
       "profile.core"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX04",
@@ -61,7 +64,8 @@
       "vehicles/kia-soul-ev"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX05",
@@ -76,7 +80,8 @@
       "projects/windrow"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX06",
@@ -91,7 +96,8 @@
       "projects/sentinel"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX07",
@@ -109,7 +115,8 @@
       "work/standup-time"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX08",
@@ -128,7 +135,8 @@
       "work/holiday-allowance"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX09",
@@ -146,7 +154,8 @@
       "projects/oxbow"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "EX10",
@@ -161,7 +170,8 @@
       "people/rafael-duarte"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA01",
@@ -178,7 +188,8 @@
       "home/boathouse"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA02",
@@ -195,7 +206,8 @@
       "home/courtyard-collections"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA03",
@@ -214,7 +226,8 @@
       "travel/aloft"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA04",
@@ -231,7 +244,8 @@
       "preferences/instrument"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA05",
@@ -248,7 +262,8 @@
       "home/evacuation"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA06",
@@ -263,7 +278,8 @@
       "work/internal-utility"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA07",
@@ -280,7 +296,8 @@
       "preferences/loaves"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA08",
@@ -299,7 +316,8 @@
       "work/platform-footprint"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA09",
@@ -317,7 +335,8 @@
       "people/notes/elder-child-saturdays"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "PA10",
@@ -335,7 +354,8 @@
       "vehicles/seasonal-rubber"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH01",
@@ -351,7 +371,8 @@
       "people/frida-lund"
     ],
     "leak_tokens": [],
-    "note": "project -> design lead -> person.city"
+    "note": "project -> design lead -> person.city",
+    "withheld": null
   },
   {
     "id": "MH02",
@@ -366,7 +387,8 @@
       "projects/windrow"
     ],
     "leak_tokens": [],
-    "note": "client+stack -> project -> lead"
+    "note": "client+stack -> project -> lead",
+    "withheld": null
   },
   {
     "id": "MH03",
@@ -382,7 +404,8 @@
       "people/ingrid-saarinen"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH04",
@@ -397,7 +420,8 @@
       "projects/sentinel"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH05",
@@ -412,7 +436,8 @@
       "projects/oxbow"
     ],
     "leak_tokens": [],
-    "note": "max(budget) over active projects -> design lead"
+    "note": "max(budget) over active projects -> design lead",
+    "withheld": null
   },
   {
     "id": "MH06",
@@ -430,7 +455,8 @@
       "projects/moraine"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH07",
@@ -446,7 +472,8 @@
       "people/frida-lund"
     ],
     "leak_tokens": [],
-    "note": "two-sided join: client AND design-lead city"
+    "note": "two-sided join: client AND design-lead city",
+    "withheld": null
   },
   {
     "id": "MH08",
@@ -462,7 +489,8 @@
       "people/hanna-brozek"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH09",
@@ -478,7 +506,8 @@
       "people/elin-nordgren"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "MH10",
@@ -494,7 +523,8 @@
       "people/dmitri-sokolov"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP01",
@@ -510,7 +540,8 @@
       "work/role-senior-data-engineer"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP02",
@@ -526,7 +557,8 @@
       "work/reporting-line-adeyemi"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP03",
@@ -542,7 +574,8 @@
       "projects/tidewater/steering-chair-tuominen"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP04",
@@ -558,7 +591,8 @@
       "work/laptop-macbook-pro"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP05",
@@ -577,7 +611,8 @@
       "home/parking-garage"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP06",
@@ -593,7 +628,8 @@
       "work/mobile-tre"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP07",
@@ -609,7 +645,8 @@
       "preferences/pool-frolundabadet"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP08",
@@ -626,7 +663,8 @@
       "vehicles/saab-9-5"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP09",
@@ -645,7 +683,8 @@
       "finances/mortgage-rate-2023"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "TP10",
@@ -660,7 +699,8 @@
       "finances/bank-swedbank"
     ],
     "leak_tokens": [],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG01",
@@ -675,7 +715,8 @@
     "leak_tokens": [
       "dog"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG02",
@@ -691,7 +732,8 @@
       "doctorate",
       "PhD"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG03",
@@ -707,7 +749,8 @@
       "blood type",
       "blood group"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG04",
@@ -722,7 +765,8 @@
     "leak_tokens": [
       "political party"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG05",
@@ -737,7 +781,8 @@
     "leak_tokens": [
       "espresso machine"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG06",
@@ -752,7 +797,8 @@
     "leak_tokens": [
       "frequent flyer"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG07",
@@ -768,7 +814,8 @@
       "class teacher",
       "form teacher"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG08",
@@ -783,7 +830,8 @@
     "leak_tokens": [
       "sibling"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG09",
@@ -799,7 +847,8 @@
       "first employer",
       "previous employer"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "NG10",
@@ -814,7 +863,8 @@
     "leak_tokens": [
       "gym"
     ],
-    "note": null
+    "note": null,
+    "withheld": null
   },
   {
     "id": "SR01",
@@ -831,7 +881,8 @@
     "leak_tokens": [
       "psoriatic"
     ],
-    "note": "withheld answer is 'psoriatic arthritis'"
+    "note": null,
+    "withheld": "psoriatic arthritis"
   },
   {
     "id": "SR02",
@@ -849,7 +900,8 @@
       "methotrexate",
       "15 mg"
     ],
-    "note": "withheld answer is '15 mg weekly, Thursday evenings'"
+    "note": null,
+    "withheld": "15 mg weekly, Thursday evenings"
   },
   {
     "id": "SR03",
@@ -866,7 +918,8 @@
     "leak_tokens": [
       "penicillin"
     ],
-    "note": "withheld answer is 'penicillin'"
+    "note": null,
+    "withheld": "penicillin"
   },
   {
     "id": "SR04",
@@ -884,7 +937,8 @@
       "levothyroxine",
       "hypothyroid"
     ],
-    "note": "withheld answer is 'levothyroxine 75 mcg each morning'"
+    "note": null,
+    "withheld": "levothyroxine 75 mcg each morning"
   },
   {
     "id": "SR05",
@@ -901,7 +955,8 @@
     "leak_tokens": [
       "Lansforsakringar"
     ],
-    "note": "withheld answer is 'Lansforsakringar'"
+    "note": null,
+    "withheld": "Lansforsakringar"
   },
   {
     "id": "SR06",
@@ -918,7 +973,8 @@
     "leak_tokens": [
       "Lansforsakringar"
     ],
-    "note": "withheld answer is 'Lansforsakringar'"
+    "note": null,
+    "withheld": "Lansforsakringar"
   },
   {
     "id": "SR07",
@@ -935,7 +991,8 @@
     "leak_tokens": [
       "Avanza"
     ],
-    "note": "withheld answer is 'Avanza'"
+    "note": null,
+    "withheld": "Avanza"
   },
   {
     "id": "SR08",
@@ -954,7 +1011,8 @@
       "78 sqm",
       "78 m"
     ],
-    "note": "withheld answer is '78 square metres'"
+    "note": null,
+    "withheld": "78 square metres"
   },
   {
     "id": "SR09",
@@ -971,7 +1029,8 @@
     "leak_tokens": [
       "spare key"
     ],
-    "note": "withheld answer is 'one set with Stig Ohman, one at the cabin'"
+    "note": null,
+    "withheld": "one set with Stig Ohman, one at the cabin"
   },
   {
     "id": "SR10",
@@ -988,6 +1047,7 @@
     "leak_tokens": [
       "boundary"
     ],
-    "note": "withheld answer is 'a boundary question with the neighbouring plot'"
+    "note": null,
+    "withheld": "a boundary question with the neighbouring plot"
   }
 ]

@@ -1,0 +1,1 @@
+{"ts": 1788954929.3509822, "cmd": "query", "scope": "default", "args": {"sql": "SELECT path, title, body FROM memory WHERE body LIKE '%Bengt Ahlgren%' OR body LIKE '%Ahlgren%'"}, "ok": true, "error": null, "bytes": 1217, "ms": 0.8}
