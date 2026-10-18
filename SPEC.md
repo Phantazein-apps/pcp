@@ -197,7 +197,7 @@ The RECOMMENDED default grant for a new chat client is: `profile.core:read`, `me
 
 ## 8. Portability: export & import
 
-- `export:read` scope grants a full export: a tar/zip of all markdown memory pages, the profile core + extension JSON documents, connection *configuration* (never third-party credentials/tokens), and the audit log. Format: [`schemas/export.manifest.schema.json`] (v0.2).
+- `export:read` scope grants a full export: a tar/zip of all markdown memory pages, the profile core + extension JSON documents, connection *configuration* (never third-party credentials/tokens), and the audit log. Format: the export manifest schema is not yet published; it is drafted for v0.3 (see [`docs/v0.3-plan.md`](docs/v0.3-plan.md), Phase 3).
 - A conforming server MUST be able to **import** its own export format. Migrating hosts = export → import → re-grant connections.
 - Third-party credentials (Gmail OAuth tokens, etc.) MUST NOT be included in exports.
 
