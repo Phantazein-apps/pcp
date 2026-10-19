@@ -63,7 +63,7 @@ Any MCP client can then use the standard tools — `context_brief`, `profile_get
 - **You own your context.** Full export and import are required for conformance. A server that can't hand your data back isn't a PCP server.
 - **Consent by category, not all-or-nothing.** Health, legal, family and financial data live in separate namespaces with their own OAuth scopes.
 - **One URL, any client.** If it speaks MCP, it can use your context. No SDK, no new transport.
-- **Run it anywhere.** Your laptop, a Raspberry Pi, a home server, a hosting provider. The wire format is identical, so switching hosts is export + import.
+- **Run it anywhere.** Your laptop, a Raspberry Pi next to a local LLM, a home server, a hosting provider. The wire format is identical, so switching hosts is export + import.
 - **Honest claims.** Terms like "encrypted" and "exportable" are defined by the spec and checkable — not marketing.
 - **Vendor-neutral by design.** Nothing in the spec may require a specific cloud, database, model provider or company. No implementation is privileged.
 
@@ -85,7 +85,20 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how changes are made.
 
 ## Implementations
 
-No implementation claims v0.3 conformance yet; the conformance suite arrives in the final v0.3 phase. If you are building one, open a PR to list it here. Listing is open to every implementation — open source or commercial, self-hosted or hosted — and is never an endorsement.
+No implementation claims v0.3 conformance yet; the conformance suite arrives in the final v0.3 phase. Listing is open to every implementation — open source or commercial, self-hosted or hosted — and is never an endorsement. Building one? Open a PR to add it.
+
+| Project | Role | License | Status |
+|---|---|---|---|
+| [Refugio](https://github.com/Phantazein-apps/refugio) | Local LLM; connects to any PCP context as an MCP client, and can host one on `localhost` | Open source, free | PCP client; local server planned |
+| [MultiPass](https://multipass.host) | Hosted PCP provider | Commercial service | Implements v0.2-draft; v0.3 in progress |
+
+### Fully local: PCP + Refugio
+
+PCP is the *context* refuge; [Refugio](https://github.com/Phantazein-apps/refugio) is the *compute* refuge — a local LLM that never sends data to the cloud. Together they make a fully sovereign setup:
+
+- Refugio connects to your PCP endpoint as a standard MCP client, so your local model gets the same memory and profile as Claude on your phone.
+- A PCP server can run on the same machine (`localhost` deployment profile), so nothing leaves your device.
+- Refugio's memory backends (MemPalace, PACK) use the format PCP standardizes, so a Refugio install can become a full PCP context without migrating data.
 
 ## Repository layout
 
