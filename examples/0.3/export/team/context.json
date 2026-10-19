@@ -1,0 +1,142 @@
+{
+  "pcp_version": "0.3",
+  "kind": "team",
+  "controller": "org:example-studio",
+  "features": [
+    "partitions",
+    "review"
+  ],
+  "principals": [
+    {
+      "id": "org:example-studio",
+      "display_name": "Example Studio",
+      "status": "active"
+    },
+    {
+      "id": "human:dana",
+      "display_name": "Dana",
+      "roles": [
+        "administrator",
+        "curator"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "human:lee",
+      "display_name": "Lee",
+      "roles": [
+        "curator"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "agent:scribe",
+      "display_name": "Scribe",
+      "roles": [
+        "agent"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "agent:scout",
+      "display_name": "Scout",
+      "roles": [
+        "agent"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "agent:intern",
+      "display_name": "Intern",
+      "roles": [
+        "agent"
+      ],
+      "status": "removed"
+    },
+    {
+      "id": "service:compression",
+      "status": "active"
+    },
+    {
+      "id": "service:retention",
+      "status": "active"
+    }
+  ],
+  "partitions": [
+    {
+      "name": "default",
+      "description": "Shared team memory",
+      "access": [
+        {
+          "principal": "human:dana",
+          "rights": [
+            "read",
+            "propose",
+            "write",
+            "review"
+          ]
+        },
+        {
+          "principal": "human:lee",
+          "rights": [
+            "read",
+            "propose",
+            "write",
+            "review"
+          ]
+        },
+        {
+          "principal": "agent:scribe",
+          "rights": [
+            "read",
+            "propose"
+          ]
+        },
+        {
+          "principal": "agent:scout",
+          "rights": [
+            "read",
+            "propose"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "site",
+      "description": "The studio website project",
+      "access": [
+        {
+          "principal": "human:dana",
+          "rights": [
+            "read",
+            "propose",
+            "write",
+            "review"
+          ]
+        },
+        {
+          "principal": "agent:scribe",
+          "rights": [
+            "read",
+            "propose",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scribe-working",
+      "description": "Scribe's private working memory",
+      "access": [
+        {
+          "principal": "agent:scribe",
+          "rights": [
+            "read",
+            "propose",
+            "write"
+          ]
+        }
+      ]
+    }
+  ]
+}

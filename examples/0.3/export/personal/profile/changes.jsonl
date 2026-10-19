@@ -1,0 +1,2 @@
+{"at":"2026-09-01T08:00:00Z","document":"core","principal":"human:sam","client":"panel","changed":["/name","/preferred_name","/languages"]}
+{"at":"2026-10-11T07:45:00Z","document":"core","principal":"human:sam","client":"https://claude.ai/oauth/client.json","changed":["/communication/verbosity"]}

@@ -1,0 +1,19 @@
+{
+  "pcp_version": "0.3",
+  "kind": "personal",
+  "controller": "human:sam",
+  "features": [],
+  "principals": [
+    {
+      "id": "human:sam",
+      "display_name": "Sam",
+      "status": "active"
+    }
+  ],
+  "partitions": [
+    {
+      "name": "default",
+      "access": []
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "handoff-7",
+  "partition": "default",
+  "from": "agent:scout",
+  "to": "human:dana",
+  "title": "Confirm the relaunch date",
+  "body": "Scout proposed 3 November for the relaunch. Please confirm or correct it before the client review.",
+  "pages": [
+    "knowledge/launch-date"
+  ],
+  "status": "open",
+  "recorded_at": "2026-10-17T15:21:00Z",
+  "updated": "2026-10-17T15:21:00Z"
+}

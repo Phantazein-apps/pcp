@@ -1,0 +1,149 @@
+{
+  "pcp_version": "0.3",
+  "manifest_version": "2",
+  "exported_at": "2026-10-19T08:00:00Z",
+  "exporter": {
+    "name": "example-personal-server",
+    "version": "0.3.0"
+  },
+  "requested_by": "human:sam",
+  "context": {
+    "kind": "personal",
+    "controller": "human:sam",
+    "handle": "sam",
+    "created_at": "2026-09-01T08:00:00Z",
+    "features": [],
+    "path": "context.json",
+    "encryption": {
+      "key_custody": "user",
+      "readable_by": [
+        "principals",
+        "host_in_request"
+      ]
+    }
+  },
+  "coverage": "full",
+  "profile": {
+    "type": "core",
+    "path": "profile/core.json",
+    "changes": "profile/changes.jsonl",
+    "extensions": [
+      {
+        "namespace": "pcp.health",
+        "path": "profile/pcp.health.json.jwe",
+        "schema": "https://phantazein-apps.github.io/pcp/schemas/0.3/pcp.health.schema.json",
+        "special_category": true
+      }
+    ]
+  },
+  "memory": {
+    "path": "memory/",
+    "page_count": 4,
+    "sensitive_page_count": 2,
+    "review_counts": {
+      "approved": 4,
+      "proposed": 0,
+      "rejected": 0
+    },
+    "partition_counts": {
+      "default": 4
+    },
+    "history": [
+      {
+        "file": "history/preferences/meetings/1.md",
+        "page": "preferences/meetings"
+      }
+    ],
+    "index_included": false
+  },
+  "audit": {
+    "path": "audit/log.jsonl",
+    "entries": 3,
+    "from": "2026-10-18T19:02:00Z",
+    "to": "2026-10-19T08:00:00Z",
+    "truncated": true
+  },
+  "connections": [
+    {
+      "id": "notion",
+      "path": "connections/notion.json",
+      "credentials_included": false
+    }
+  ],
+  "credentials_included": false,
+  "files": [
+    {
+      "path": "audit/log.jsonl",
+      "sha256": "15d197bd862274158720082663b06d0cbb7efe4e2149c412843067836b0ddfa4",
+      "bytes": 714
+    },
+    {
+      "path": "connections/notion.json",
+      "sha256": "e1f9a06d1d3b91124a07d50099c9f6cdbd99a26e6e4deb5cb98e30cabc09fc39",
+      "bytes": 145
+    },
+    {
+      "path": "context.json",
+      "sha256": "3370c72ad34fe2fd4a86f6f462fb030bec3337559e7468907244b344fc2d9b69",
+      "bytes": 289
+    },
+    {
+      "path": "history/preferences/meetings/1.md",
+      "sha256": "56848a93e12bb32210ced3286421202fd7cc083375f6e27e197846f7fdc2a01a",
+      "bytes": 269
+    },
+    {
+      "path": "memory/notes/visa-appointment.md.jwe",
+      "sha256": "b0d2a87e78f7c7f74f1d8178d5cb09832db9aa59cbb11365210a24c4100373ab",
+      "bytes": 568,
+      "encryption": {
+        "scheme": "jwe",
+        "key_source": "principal_key",
+        "key_id": "example-user-key-1",
+        "key_custody": "user",
+        "readable_by": [
+          "principals"
+        ]
+      }
+    },
+    {
+      "path": "memory/preferences/meetings.md",
+      "sha256": "563464702d1179ab7cb09db612160f902d642e045b62ddef5dd475d61f270b97",
+      "bytes": 318
+    },
+    {
+      "path": "memory/projects/garden-shed.md",
+      "sha256": "885e8ef62e88fea0b210a6161d64ada50e03d3a8ef1505d8a3c3c12b967d2634",
+      "bytes": 393
+    },
+    {
+      "path": "memory/style/writing-profile.md",
+      "sha256": "a029ba2b8e87749a02a1f3c78e433cbf949141d375c180720bb6a0155be4fdbb",
+      "bytes": 296
+    },
+    {
+      "path": "profile/changes.jsonl",
+      "sha256": "d9ce3bf81a4b6ea330053396995d7fde7e6c4663c56725d713d6d7cc9b5a0379",
+      "bytes": 298
+    },
+    {
+      "path": "profile/core.json",
+      "sha256": "18284f2fd493d7939245852eb41b11e130e0cae8c466b49f574113701b95cce5",
+      "bytes": 382
+    },
+    {
+      "path": "profile/pcp.health.json.jwe",
+      "sha256": "ca94fbcab4080dad041a076bbc3345c766938c1c8202e1384310d466d8069df9",
+      "bytes": 396,
+      "encryption": {
+        "scheme": "jwe",
+        "key_source": "principal_key",
+        "key_id": "example-user-key-1",
+        "key_custody": "user",
+        "readable_by": [
+          "principals"
+        ]
+      }
+    }
+  ]
+}

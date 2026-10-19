@@ -1,0 +1,53 @@
+{
+  "pcp_version": "0.3",
+  "manifest_version": "2",
+  "exported_at": "2026-10-19T10:00:00Z",
+  "exporter": {
+    "name": "example-invalid"
+  },
+  "context": {
+    "kind": "personal",
+    "controller": "human:ana",
+    "path": "context.json",
+    "encryption": {
+      "key_custody": "host",
+      "readable_by": [
+        "principals",
+        "host"
+      ]
+    }
+  },
+  "coverage": "full",
+  "profile": {
+    "type": "core"
+  },
+  "memory": {
+    "path": "memory/",
+    "page_count": 1,
+    "sensitive_page_count": 0,
+    "index_included": false
+  },
+  "audit": {
+    "path": "audit/log.jsonl",
+    "entries": 0,
+    "truncated": false
+  },
+  "credentials_included": false,
+  "files": [
+    {
+      "path": "audit/log.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "context.json",
+      "sha256": "4b159fe7de272ea5234c6de457ab117724642ddbcb3bf2fd78c221757330a2d1",
+      "bytes": 242
+    },
+    {
+      "path": "memory/a-note.md",
+      "sha256": "4997fdac8f76d8eb7090f647ed98e7ef725b09a6ec0f693834d99b4b219ab673",
+      "bytes": 109
+    }
+  ]
+}

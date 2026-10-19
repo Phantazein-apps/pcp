@@ -1,0 +1,6 @@
+{
+  "description": "The PUBLIC test key that encrypts the example archives' file-level JWE files (alg dir, enc A256GCM). Published so scripts/validate_schemas.py can decrypt and check them. Never use it for real data.",
+  "keys": {
+    "example-user-key-1": "8c8f2ae8752a997bbdcf2abd6509ab1993acb7a8bd4f0534e142630cbb0543f5"
+  }
+}
