@@ -78,6 +78,7 @@ This is the right time to shape the protocol. Early feedback changes the spec; l
 - **Read the spec** — [`SPEC.md`](SPEC.md). Section 11 lists open questions.
 - **Open an issue** — design questions, gaps, things that don't fit your use case.
 - **Build an implementation** — a server, a client, an importer, a conformance test. Running code carries the most weight. Open an issue so we can test interop together.
+- **Host it** — if you run a hosting platform, PCP is designed to be offered alongside email, storage and websites: one context per customer, standard export, no lock-in. We want to hear what you need from the spec.
 - **Write an extension** — new profile namespaces and connections: see [`extensions/`](extensions/).
 - **Harden it** — [`SECURITY.md`](SECURITY.md) is meant to be community-owned. Field reports from self-hosters are especially welcome.
 
@@ -90,7 +91,6 @@ No implementation claims v0.3 conformance yet; the conformance suite arrives in 
 | Project | Role | License | Status |
 |---|---|---|---|
 | [Refugio](https://github.com/Phantazein-apps/refugio) | Local LLM; connects to any PCP context as an MCP client, and can host one on `localhost` | Open source, free | PCP client; local server planned |
-| [MultiPass](https://multipass.host) | Hosted PCP provider | Commercial service | Implements v0.2-draft; v0.3 in progress |
 
 ### Fully local: PCP + Refugio
 
