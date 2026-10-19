@@ -885,8 +885,9 @@ from every copy the server controls (**erasure**). All three are core.
 2. **Over MCP.** `export_create` (§6.2) is OPTIONAL and needs `export:read`.
    `export:read` is the right to bundle, not to read: the archive holds what
    the token could read with its other scopes, within the principal's access
-   list (§7.3), plus the principal's own audit entries. It is `full` only
-   when that is the whole context; otherwise it is `partial`.
+   list (§7.3), and, with `audit:read`, the entries `audit_list` would return
+   to it. It is `full` only when that is the whole context; otherwise it is
+   `partial`.
 3. **Partial exports.** A partial archive lists what it leaves out in
    `omitted` with reason `not_authorized`, by category only. It MUST NOT
    reveal names, counts or anything else about partitions or pages the
@@ -969,8 +970,9 @@ connections/<id>.json         connection configuration (§8.5)
    access list. Roles are informative.
 6. **Audit.** `audit/log.jsonl` holds one audit entry (§7.5) per line. A
    full export includes every entry the server retains. A partial export
-   includes the requester's own entries, filtered as `audit_list` filters
-   them. If retention or limits cut the log, `audit.truncated` is `true`.
+   includes the entries `audit_list` would return to the requester, or none
+   without `audit:read`. If retention or limits cut the log,
+   `audit.truncated` is `true`.
 7. **Erasure receipts.** `erasures/receipts.jsonl` holds every receipt the
    context has (§8.9.3), one per line.
 8. **Never in an archive**, and never listed in `omitted`:
@@ -1147,14 +1149,16 @@ existing one.
    extension data. The requester MUST be its controller, and the archive
    MUST have `coverage: "full"`. The target takes the archive's `kind`.
 2. **Everything is kept as it is.** Page, revision and history files are
-   stored so that the server's own export of them is byte-identical
-   (§8.8). Server-stamped keys keep their archive values (§5.2.3), and no
+   stored so that the server's own export of them meets §8.8: the same
+   bytes on the same implementation, the same data and body bytes on
+   another. Server-stamped keys keep their archive values (§5.2.3), and no
    `x_import` is added.
 3. **Principals and partitions** are created from `context.json` with the
    same ids, partitions and access lists. Each principal is **unbound**
    until the controller binds it to an account or a credential on the new
    server, and an unbound principal cannot authenticate. The archive's
-   controller is bound to the requester.
+   controller becomes the target's controller, bound to the requester's
+   account.
 4. **Audit and receipts.** The audit entries and erasure receipts are
    imported with their ids and times, and the server appends an entry for
    the restore (`channel: "import"`, `action: "import.restore"`).
@@ -1347,7 +1351,8 @@ on its management surface.
    collect their results.
 4. **Check for residue.** Run the same matching again over the context and
    the remaining archives, and record what it finds per store.
-5. **Write the receipt** and a completion audit entry.
+5. **Write the receipt** and a completion audit entry (`action:
+   "erase.complete"`).
 6. Archives already downloaded are out of the server's reach. The
    management surface SHOULD tell the controller that archives made before
    the erasure still contain the erased data.
