@@ -34,7 +34,11 @@ planned for v0.4.
 
 A slot is filled by a PR that adds the extension's id, its tools with input
 and output schemas, its scopes, and how its data appears in an export
-(SPEC §8).
+(SPEC §8.5): the files under `extensions/<id>/` and their schemas, how
+records reference pages (by path or `id`), and how each record carries its
+partition and provenance. The team example archive
+([`examples/0.3/export/team/`](../examples/0.3/export/team/)) shows one
+handoff record under a placeholder id.
 
 ## Authoring rules
 

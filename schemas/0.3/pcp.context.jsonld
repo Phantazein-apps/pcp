@@ -1,0 +1,70 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "pcp": "https://phantazein-apps.github.io/pcp/ns#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "title": "dcterms:title",
+    "updated": { "@id": "dcterms:modified", "@type": "xsd:dateTime" },
+    "id": "dcterms:identifier",
+    "type": { "@id": "pcp:memoryType", "@type": "@vocab" },
+    "episodic": "pcp:Episodic",
+    "semantic": "pcp:Semantic",
+    "procedural": "pcp:Procedural",
+    "tags": { "@id": "schema:keywords", "@container": "@set" },
+    "sensitivity": "pcp:sensitivity",
+    "lifecycle": "pcp:lifecycle",
+    "confidence": { "@id": "pcp:confidence", "@type": "xsd:decimal" },
+    "importance": { "@id": "pcp:importance", "@type": "xsd:decimal" },
+    "valid_from": { "@id": "schema:validFrom" },
+    "valid_until": { "@id": "schema:validThrough" },
+    "recorded_at": { "@id": "pcp:recordedAt", "@type": "xsd:dateTime" },
+    "expires": { "@id": "pcp:expires", "@type": "xsd:dateTime" },
+    "partition": "pcp:partition",
+    "derived_from": { "@id": "prov:wasDerivedFrom", "@type": "@id", "@container": "@set" },
+
+    "source": {
+      "@id": "pcp:source",
+      "@context": {
+        "origin": "pcp:origin",
+        "basis": "pcp:basis",
+        "principal": { "@id": "prov:wasAttributedTo" },
+        "on_behalf_of": { "@id": "prov:actedOnBehalfOf" },
+        "client": "pcp:client",
+        "session": "pcp:session",
+        "at": { "@id": "prov:generatedAtTime" }
+      }
+    },
+
+    "relations": {
+      "@id": "pcp:relation",
+      "@container": "@set",
+      "@context": {
+        "rel": { "@id": "pcp:rel", "@type": "@vocab" },
+        "supersedes": "pcp:supersedes",
+        "contradicts": "pcp:contradicts",
+        "refines": "pcp:refines",
+        "about": "pcp:about",
+        "target": { "@id": "pcp:target", "@type": "@id" },
+        "confidence": { "@id": "pcp:confidence", "@type": "xsd:decimal" }
+      }
+    },
+
+    "review": {
+      "@id": "pcp:review",
+      "@context": {
+        "state": "pcp:reviewState",
+        "generated": "pcp:generated",
+        "verified": { "@id": "pcp:verified", "@container": "@set" },
+        "rejected": "pcp:rejected",
+        "by": { "@id": "prov:agent" },
+        "at": { "@id": "prov:atTime", "@type": "xsd:dateTime" }
+      }
+    },
+
+    "x_import": { "@id": "pcp:import", "@type": "@json" }
+  }
+}

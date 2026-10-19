@@ -1424,8 +1424,8 @@ v0.3 defines two claimable profiles, written out in Phase 5:
 
 - **Personal**: discovery (§2), transport and OAuth (§3), `profile.core`
   (§4.1, §4.3, §4.4), memory and the tools marked "Always" or "The context
-  has a profile" (§5, §6), scopes and audit (§7), export, import and erasure (§8). None of the
-  optional features in §1.4 is required.
+  has a profile" (§5, §6), scopes and audit (§7), export, import and
+  erasure (§8). None of the optional features in §1.4 is required.
 - **Team**: the same without `profile.core`, plus whichever of `partitions`,
   `review` and `delegation` the context declares, each with its tools and
   rules.
