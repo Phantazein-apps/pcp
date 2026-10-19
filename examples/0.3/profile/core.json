@@ -1,0 +1,9 @@
+{
+  "pcp_version": "0.3",
+  "name": "Dana Example",
+  "preferred_name": "Dana",
+  "languages": [{ "code": "en" }, { "code": "es", "contexts": ["family"] }],
+  "timezone": "Europe/Madrid",
+  "communication": { "tone": "direct, warm", "verbosity": "concise" },
+  "updated": "2026-10-18T09:12:44Z"
+}

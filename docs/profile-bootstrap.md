@@ -13,7 +13,7 @@ A person should not have to type their profile into a form. The natural flow:
    `profile.core:write` + `memory:write`, observes the owner's actual data
    (through the context's own `conn.*` tools, or through tool access it
    already has locally), and:
-   - patches `profile.core` via `profile.update` with **observed facts only**;
+   - patches `profile.core` via `profile_update` with **observed facts only**;
    - writes a full writing-style analysis to memory.
 3. **The host prompts for gaps.** Whatever no agent could derive, the host's
    management UI surfaces as missing and lets the owner fill in manually.

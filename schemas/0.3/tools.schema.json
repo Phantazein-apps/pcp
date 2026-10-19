@@ -1,0 +1,833 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/tools.schema.json",
+  "title": "PCP standard tools: inputs and outputs",
+  "description": "Input and output schemas of the standard tools (SPEC §6.2). A server uses $defs/<tool>_input as the tool's inputSchema and $defs/<tool>_output as its outputSchema. Servers MAY accept extra optional input properties and return extra output properties.",
+  "$defs": {
+    "path": {
+      "$ref": "memory.page.schema.json#/$defs/path"
+    },
+    "partition_name": {
+      "$ref": "memory.page.schema.json#/$defs/partition_name"
+    },
+    "principal": {
+      "$ref": "memory.page.schema.json#/$defs/principal"
+    },
+    "utc_datetime": {
+      "$ref": "memory.page.schema.json#/$defs/utc_datetime"
+    },
+    "actor_at": {
+      "$ref": "memory.page.schema.json#/$defs/actor_at"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "cursor": {
+      "type": "string",
+      "maxLength": 512,
+      "description": "Opaque pagination cursor from a previous result."
+    },
+    "frontmatter_input": {
+      "description": "Frontmatter supplied by a client. title is required; server-stamped keys, including all of review, are ignored (SPEC §5.2.3).",
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "allOf": [
+        {
+          "$ref": "memory.page.schema.json#/$defs/page_keys"
+        }
+      ]
+    },
+    "page_summary": {
+      "type": "object",
+      "required": [
+        "path",
+        "title",
+        "updated"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "type": {
+          "enum": [
+            "episodic",
+            "semantic",
+            "procedural"
+          ]
+        },
+        "partition": {
+          "$ref": "#/$defs/partition_name"
+        },
+        "sensitivity": {
+          "enum": [
+            "normal",
+            "sensitive"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "active",
+            "validated",
+            "stale",
+            "archived"
+          ]
+        },
+        "review_state": {
+          "enum": [
+            "proposed",
+            "approved",
+            "rejected"
+          ]
+        },
+        "valid_from": {
+          "type": "string"
+        },
+        "valid_until": {
+          "type": "string"
+        }
+      }
+    },
+    "error": {
+      "description": "structuredContent of an isError result (SPEC §6.3).",
+      "type": "object",
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "enum": [
+                "invalid_input",
+                "not_found",
+                "forbidden",
+                "conflict",
+                "too_large",
+                "rate_limited",
+                "locked",
+                "unsupported",
+                "internal"
+              ]
+            },
+            "message": {
+              "type": "string"
+            },
+            "required_scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "violations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "profile_get_input": {
+      "type": "object",
+      "properties": {
+        "namespaces": {
+          "type": "array",
+          "description": "Extension namespaces to include. Default: every namespace the token's scopes cover.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "profile_get_output": {
+      "type": "object",
+      "required": [
+        "profile_type",
+        "profile"
+      ],
+      "properties": {
+        "profile_type": {
+          "enum": [
+            "core",
+            "team",
+            "none"
+          ]
+        },
+        "profile": {
+          "description": "The profile.core or profile.team document, or null when the context has none yet (SPEC §4.4).",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "profile.core.schema.json"
+            },
+            {
+              "$ref": "profile.team.schema.json"
+            }
+          ]
+        },
+        "extensions": {
+          "type": "object",
+          "description": "Extension documents keyed by namespace, only those the token covers.",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "profile_update_input": {
+      "type": "object",
+      "required": [
+        "patch"
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "description": "core, team, or an extension namespace. Default: the context's profile type."
+        },
+        "patch": {
+          "type": "object",
+          "description": "An RFC 7396 JSON Merge Patch (SPEC §4.3)."
+        }
+      }
+    },
+    "profile_update_output": {
+      "type": "object",
+      "required": [
+        "namespace",
+        "updated",
+        "changed"
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "updated": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "changed": {
+          "type": "array",
+          "description": "JSON Pointers (RFC 6901) of the members the patch changed.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "memory_search_input": {
+      "type": "object",
+      "required": [
+        "query"
+      ],
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "limit": {
+          "$ref": "#/$defs/limit",
+          "default": 10
+        },
+        "type": {
+          "enum": [
+            "episodic",
+            "semantic",
+            "procedural"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "partitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partition_name"
+          }
+        },
+        "include_stale": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_review": {
+          "type": "array",
+          "description": "Also return pages in these review states, where the caller may see them.",
+          "items": {
+            "enum": [
+              "proposed",
+              "rejected"
+            ]
+          }
+        },
+        "as_of": {
+          "$ref": "#/$defs/utc_datetime",
+          "description": "Answer as the context stood at this instant (SPEC §5.5)."
+        },
+        "cursor": {
+          "$ref": "#/$defs/cursor"
+        },
+        "include_archived": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "memory_search_output": {
+      "type": "object",
+      "required": [
+        "results"
+      ],
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/page_summary"
+              }
+            ],
+            "properties": {
+              "snippet": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "as_of_exact": {
+          "type": "boolean",
+          "description": "false when the server evaluated as_of against current page versions only."
+        },
+        "next_cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    },
+    "memory_read_input": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string",
+          "description": "Read a pending revision instead of the approved version (SPEC §5.4)."
+        }
+      },
+      "description": "Exactly one of path or id (SPEC §6.2)."
+    },
+    "memory_read_output": {
+      "type": "object",
+      "required": [
+        "path",
+        "frontmatter",
+        "body"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "frontmatter": {
+          "$ref": "memory.page.schema.json"
+        },
+        "body": {
+          "type": "string",
+          "description": "Markdown, without the frontmatter block."
+        },
+        "pending_revisions": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Proposed revisions of this page the caller may see (SPEC §5.4)."
+        }
+      }
+    },
+    "memory_list_input": {
+      "type": "object",
+      "properties": {
+        "prefix": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Only pages whose path starts with this string."
+        },
+        "partition": {
+          "$ref": "#/$defs/partition_name"
+        },
+        "include_archived": {
+          "type": "boolean",
+          "default": false
+        },
+        "limit": {
+          "$ref": "#/$defs/limit",
+          "default": 50
+        },
+        "cursor": {
+          "$ref": "#/$defs/cursor"
+        },
+        "type": {
+          "enum": [
+            "episodic",
+            "semantic",
+            "procedural"
+          ]
+        },
+        "include_stale": {
+          "type": "boolean",
+          "default": true,
+          "description": "memory_list returns stale pages unless this is false."
+        },
+        "include_review": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "proposed",
+              "rejected"
+            ]
+          }
+        }
+      }
+    },
+    "memory_list_output": {
+      "type": "object",
+      "required": [
+        "pages"
+      ],
+      "properties": {
+        "pages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/page_summary"
+          }
+        },
+        "next_cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    },
+    "memory_write_input": {
+      "type": "object",
+      "required": [
+        "path",
+        "body"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "body": {
+          "type": "string",
+          "description": "Markdown. If it starts with a YAML frontmatter block and frontmatter is absent, the server parses that block as the frontmatter (SPEC §5.2.2)."
+        },
+        "frontmatter": {
+          "$ref": "#/$defs/frontmatter_input"
+        },
+        "expected_updated": {
+          "$ref": "#/$defs/utc_datetime",
+          "description": "Optimistic concurrency: fail with conflict unless the page's updated equals this."
+        }
+      }
+    },
+    "memory_write_output": {
+      "type": "object",
+      "required": [
+        "path",
+        "applied"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "id": {
+          "type": "string"
+        },
+        "applied": {
+          "type": "boolean",
+          "description": "true when the page itself changed. false when the server stored the write as a proposal instead (SPEC §5.4)."
+        },
+        "updated": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "review_state": {
+          "enum": [
+            "proposed",
+            "approved"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "description": "Proposal id, when applied is false."
+        }
+      }
+    },
+    "memory_propose_input": {
+      "type": "object",
+      "required": [
+        "path",
+        "body"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "body": {
+          "type": "string"
+        },
+        "frontmatter": {
+          "$ref": "#/$defs/frontmatter_input"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Why the change is proposed, for the reviewer."
+        }
+      }
+    },
+    "memory_propose_output": {
+      "type": "object",
+      "required": [
+        "path",
+        "revision",
+        "review_state",
+        "target_exists"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "review_state": {
+          "const": "proposed"
+        },
+        "target_exists": {
+          "type": "boolean",
+          "description": "true when the proposal would change an existing approved page."
+        }
+      }
+    },
+    "review_list_input": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "proposed",
+            "rejected"
+          ],
+          "default": "proposed"
+        },
+        "partition": {
+          "$ref": "#/$defs/partition_name"
+        },
+        "limit": {
+          "$ref": "#/$defs/limit",
+          "default": 20
+        },
+        "cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    },
+    "review_list_output": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "revision",
+              "title",
+              "state",
+              "generated",
+              "target_exists"
+            ],
+            "properties": {
+              "path": {
+                "$ref": "#/$defs/path"
+              },
+              "revision": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "proposed",
+                  "rejected"
+                ]
+              },
+              "partition": {
+                "$ref": "#/$defs/partition_name"
+              },
+              "generated": {
+                "$ref": "#/$defs/actor_at"
+              },
+              "target_exists": {
+                "type": "boolean"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "next_cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    },
+    "review_resolve_input": {
+      "type": "object",
+      "required": [
+        "path",
+        "revision",
+        "verb"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "verb": {
+          "type": "string",
+          "description": "approve or reject, or a namespaced verb the server documents (SPEC §5.4).",
+          "pattern": "^(approve|reject|[a-z][a-z0-9-]*:[a-z][a-z0-9_-]*)$"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      }
+    },
+    "review_resolve_output": {
+      "type": "object",
+      "required": [
+        "path",
+        "revision",
+        "state"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "approved",
+            "rejected",
+            "proposed"
+          ]
+        },
+        "updated": {
+          "$ref": "#/$defs/utc_datetime"
+        }
+      }
+    },
+    "partition_list_input": {
+      "type": "object",
+      "properties": {}
+    },
+    "partition_list_output": {
+      "type": "object",
+      "required": [
+        "partitions"
+      ],
+      "properties": {
+        "partitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "access"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/partition_name"
+              },
+              "label": {
+                "type": "string"
+              },
+              "access": {
+                "type": "array",
+                "description": "The caller's effective rights here: scope intersected with ACL (SPEC §7.3).",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "read",
+                    "propose",
+                    "write",
+                    "review"
+                  ]
+                }
+              },
+              "review_required": {
+                "type": "boolean",
+                "description": "true when the caller's writes here become proposals."
+              }
+            }
+          }
+        }
+      }
+    },
+    "context_brief_input": {
+      "type": "object",
+      "properties": {
+        "focus": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "What the conversation is about, to rank memory."
+        },
+        "token_budget": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 50000
+        }
+      }
+    },
+    "context_brief_output": {
+      "type": "object",
+      "required": [
+        "kind",
+        "profile_type",
+        "memory",
+        "omitted"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "personal",
+            "work",
+            "team"
+          ]
+        },
+        "profile_type": {
+          "enum": [
+            "core",
+            "team",
+            "none"
+          ]
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "profile.core.schema.json"
+            },
+            {
+              "$ref": "profile.team.schema.json"
+            }
+          ]
+        },
+        "memory": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/page_summary"
+              }
+            ],
+            "properties": {
+              "excerpt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "partitions": {
+          "$ref": "#/$defs/partition_list_output/properties/partitions"
+        },
+        "omitted": {
+          "type": "array",
+          "description": "Parts left out because the token's scopes do not cover them, for example profile.core or memory.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "audit_list_input": {
+      "type": "object",
+      "properties": {
+        "since": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "until": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "principal": {
+          "$ref": "#/$defs/principal"
+        },
+        "category": {
+          "type": "string"
+        },
+        "limit": {
+          "$ref": "#/$defs/limit",
+          "default": 50
+        },
+        "cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    },
+    "audit_list_output": {
+      "type": "object",
+      "required": [
+        "entries"
+      ],
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "audit.entry.schema.json"
+          }
+        },
+        "next_cursor": {
+          "$ref": "#/$defs/cursor"
+        }
+      }
+    }
+  }
+}

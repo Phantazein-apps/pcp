@@ -1,0 +1,6 @@
+{
+  "partitions": [
+    { "name": "platform", "label": "Platform", "access": ["read", "propose"], "review_required": true },
+    { "name": "agent-falcon", "access": ["read", "write"], "review_required": false }
+  ]
+}

@@ -1,0 +1,2 @@
+{"id":"a-9","at":"2026-10-19T07:31:02Z","principal":"human:dana","channel":"mcp","action":"memory_search","categories":["memory"],"outcome":"ok","query":"diabetes medication"}
+{"id":"a-10","at":"2026-10-19T07:31:02Z","principal":"human:dana","channel":"mcp","action":"memory_read","categories":["memory"],"outcome":"ok","object_ids":["health/diabetes"]}

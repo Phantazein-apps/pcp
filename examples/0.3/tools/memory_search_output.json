@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "path": "procedures/release-checklist",
+      "title": "Release checklist",
+      "updated": "2026-09-02T10:00:00Z",
+      "type": "procedural",
+      "partition": "platform",
+      "lifecycle": "validated",
+      "snippet": "Tag the release, then run the smoke suite against staging...",
+      "score": 0.82
+    }
+  ],
+  "as_of_exact": false
+}

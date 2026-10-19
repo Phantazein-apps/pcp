@@ -1,0 +1,10 @@
+{
+  "kind": "team",
+  "profile_type": "team",
+  "profile": { "pcp_version": "0.3", "name": "Platform team", "purpose": "Runs the checkout and payments platform." },
+  "memory": [
+    { "path": "procedures/release-checklist", "title": "Release checklist", "updated": "2026-09-02T10:00:00Z", "type": "procedural", "excerpt": "Tag the release, then run the smoke suite." }
+  ],
+  "omitted": ["audit"],
+  "truncated": false
+}

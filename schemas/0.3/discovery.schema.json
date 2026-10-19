@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/discovery.schema.json",
+  "title": "PCP discovery document",
+  "description": "The JSON served at /.well-known/pcp.json (SPEC §2). A context document describes one context and carries its MCP endpoint. A root document describes a multi-context host and carries a context URL template instead. Authorization fields are specified in SPEC §3.",
+  "type": "object",
+  "required": [
+    "pcp_version"
+  ],
+  "properties": {
+    "pcp_version": {
+      "type": "string",
+      "description": "The PCP version the server implements. A v0.3 server emits \"0.3\".",
+      "enum": [
+        "0.3"
+      ]
+    },
+    "multi_context": {
+      "type": "boolean",
+      "description": "true in the root document of a multi-context host (SPEC §2.2). Absent or false in a context document."
+    },
+    "context_url_template": {
+      "type": "string",
+      "description": "Root documents only. An RFC 6570 level 1 URI Template with exactly one variable, {context}, that expands to a context's base URL. The context document is at <base>/.well-known/pcp.json.",
+      "pattern": "^https?://[^{}]*\\{context\\}[^{}]*$"
+    },
+    "kind": {
+      "description": "Context documents only. What the context is (SPEC §1.2).",
+      "enum": [
+        "personal",
+        "work",
+        "team"
+      ]
+    },
+    "mcp_endpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "Context documents only. The context's MCP Streamable HTTP endpoint."
+    },
+    "authorization_server": {
+      "type": "string",
+      "format": "uri",
+      "description": "Issuer URL of the authorization server. Kept from v0.2; SPEC §3 (v0.3 Phase 4) defines discovery through protected resource metadata."
+    },
+    "server_card": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of the MCP server card for this context's endpoint, when the server publishes one."
+    },
+    "profile": {
+      "description": "Which profile document the context has (SPEC §4). Defaults: \"core\" for personal and work contexts, \"team\" for team contexts.",
+      "enum": [
+        "core",
+        "team",
+        "none"
+      ]
+    },
+    "profile_extensions": {
+      "type": "array",
+      "description": "Profile extension namespaces present in this context (SPEC §4.5).",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+$"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "description": "Connection ids available in this context (SPEC §6.4).",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]{0,15}$"
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "description": "Tool extensions the server implements, by reverse-DNS id (SPEC §6.5).",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$"
+      }
+    },
+    "features": {
+      "type": "array",
+      "description": "Optional parts of the model this context uses (SPEC §1.4).",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "partitions",
+          "review",
+          "delegation"
+        ]
+      }
+    },
+    "conformance": {
+      "type": "array",
+      "description": "Conformance profiles the server claims for this context (SPEC §10). A claim is a statement the conformance suite can check, not a description.",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "personal",
+          "team"
+        ]
+      }
+    },
+    "export": {
+      "type": "boolean",
+      "description": "true is a claim that the server meets SPEC §8 for this context: a full export and an import of its own format. Servers MUST NOT emit true otherwise."
+    },
+    "encryption": {
+      "$ref": "#/$defs/encryption"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "multi_context": {
+            "const": true
+          }
+        },
+        "required": [
+          "multi_context"
+        ]
+      },
+      "then": {
+        "required": [
+          "context_url_template"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "mcp_endpoint"
+              ]
+            },
+            {
+              "required": [
+                "kind"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "kind",
+          "mcp_endpoint",
+          "encryption"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "encryption": {
+      "type": "object",
+      "description": "Who holds the keys and who can read plaintext (SPEC §2.4). Indexes, embeddings, caches and other derived data count as content and are covered by the same declaration.",
+      "required": [
+        "key_custody",
+        "readable_by"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key_custody": {
+          "description": "host: the host holds keys that decrypt the context without any principal's involvement. user: keys are wrapped by secrets only principals hold; the host decrypts only while serving a request a principal authorized, and keeps neither keys nor plaintext afterwards. device: plaintext and keys exist only on principals' devices; the host stores ciphertext.",
+          "enum": [
+            "host",
+            "user",
+            "device"
+          ]
+        },
+        "readable_by": {
+          "type": "array",
+          "description": "Every party that can obtain plaintext. principals: authorized principals through their clients (always listed). host_in_request: the host, only while serving an authorized request. host: the host, at any time. escrow: a third party holding a recovery share.",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "principals",
+              "host_in_request",
+              "host",
+              "escrow"
+            ]
+          },
+          "contains": {
+            "const": "principals"
+          }
+        },
+        "e2e": {
+          "type": "boolean",
+          "description": "End-to-end encrypted. MAY be true only when key_custody is device. Defaults to false."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "key_custody": {
+                "const": "host"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readable_by": {
+                "contains": {
+                  "const": "host"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "key_custody": {
+                "const": "user"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readable_by": {
+                "contains": {
+                  "const": "host_in_request"
+                },
+                "not": {
+                  "contains": {
+                    "const": "host"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "key_custody": {
+                "const": "device"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readable_by": {
+                "not": {
+                  "contains": {
+                    "enum": [
+                      "host",
+                      "host_in_request"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "e2e": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
