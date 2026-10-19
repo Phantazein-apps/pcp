@@ -3,7 +3,7 @@
 <img src="assets/banner.svg" alt="PCP — Portable Context Protocol: portable personal AI context behind one URL you control" width="100%">
 
 <p>
-  <img src="https://img.shields.io/badge/spec-v0.1--draft-ff0018?style=flat-square&labelColor=000000" alt="Spec v0.1-draft">
+  <img src="https://img.shields.io/badge/spec-v0.3--draft%20(in%20progress)-ff0018?style=flat-square&labelColor=000000" alt="Spec v0.3-draft, in progress">
   <img src="https://img.shields.io/badge/status-request%20for%20comments-f4f2ee?style=flat-square&labelColor=000000" alt="Request for comments">
   <img src="https://img.shields.io/badge/built%20on-MCP%20·%20OAuth%202.1-ff0018?style=flat-square&labelColor=000000" alt="MCP · OAuth 2.1">
   <img src="https://img.shields.io/badge/license-Apache%202.0-a8a5a0?style=flat-square&labelColor=000000" alt="Apache 2.0">
@@ -49,15 +49,17 @@ PCP inverts that ownership:
 
 | Path | Contents |
 |---|---|
-| [`SPEC.md`](SPEC.md) | The protocol specification (v0.1-draft) |
-| [`schemas/`](schemas/) | JSON Schemas: profile core + extension namespaces |
+| [`SPEC.md`](SPEC.md) | The protocol specification (v0.3-draft, in progress; pin tag `v0.2-draft` for a stable text) |
+| [`schemas/0.3/`](schemas/0.3/) | JSON Schemas: discovery, profiles, memory page frontmatter, tools, audit entries, extension namespaces |
+| [`examples/0.3/`](examples/0.3/) | Examples that validate against the schemas (`invalid/` ones must fail) |
+| [`scripts/validate_schemas.py`](scripts/validate_schemas.py) | Checks every schema and example (`pip install jsonschema pyyaml`) |
 | [`extensions/`](extensions/) | Extension namespace registry and authoring guide |
 | [`SECURITY.md`](SECURITY.md) | Threat model + best practices for self-hosters and hosts |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to propose changes (spec is versioned, changes via PR) |
 
 ## Status
 
-**v0.1-draft — request for comments.** Nothing here is stable yet. The reference implementation (runtime + connectors) is being built at Phantazein; this repo is the protocol only and is implementation-neutral by design.
+**v0.3-draft, in progress: request for comments.** Nothing here is stable yet; v0.3 is being written in phases ([`docs/v0.3-plan.md`](docs/v0.3-plan.md)). The reference implementation (runtime + connectors) is being built at Phantazein; this repo is the protocol only and is implementation-neutral by design.
 
 ## License
 

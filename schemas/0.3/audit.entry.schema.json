@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/audit.entry.schema.json",
+  "title": "PCP audit entry",
+  "description": "One access-log entry (SPEC §7.5). Entries record who touched which categories of a context, never the content: no page text, titles, paths, queries, profile values, or unkeyed hashes of any of them.",
+  "type": "object",
+  "required": [
+    "id",
+    "at",
+    "channel",
+    "action",
+    "categories",
+    "outcome"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+    },
+    "at": {
+      "type": "string",
+      "description": "RFC 3339 date-time in UTC.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$"
+    },
+    "principal": {
+      "$ref": "memory.page.schema.json#/$defs/principal",
+      "description": "The authenticated principal. Absent only for unauthenticated attempts."
+    },
+    "on_behalf_of": {
+      "$ref": "memory.page.schema.json#/$defs/principal",
+      "description": "The human an agent acted for, when delegated (SPEC §7.4)."
+    },
+    "client": {
+      "type": "string",
+      "maxLength": 512,
+      "description": "OAuth client_id or client name."
+    },
+    "grant": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Stable grant id (token family) that survives refresh."
+    },
+    "channel": {
+      "description": "mcp: a tool call. management: the owner or admin surface. import, export: portability operations. system: server-side jobs such as consolidation or retention.",
+      "enum": [
+        "mcp",
+        "management",
+        "import",
+        "export",
+        "system"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "description": "The tool name (for example memory_search) or a management action (for example grant.revoke).",
+      "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
+    },
+    "categories": {
+      "type": "array",
+      "description": "The categories the action touched (SPEC §7.5).",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(profile\\.[a-z][a-z0-9_.]*|memory|memory\\.sensitive|review|audit|export|grant|partition|conn\\.[a-z][a-z0-9]{0,15}|ext\\.[a-z][a-z0-9_]*)$"
+      }
+    },
+    "partitions": {
+      "type": "array",
+      "description": "Partitions the action touched.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "memory.page.schema.json#/$defs/partition_name"
+      }
+    },
+    "outcome": {
+      "description": "ok, or the SPEC §6.3 error code.",
+      "enum": [
+        "ok",
+        "invalid_input",
+        "not_found",
+        "forbidden",
+        "conflict",
+        "too_large",
+        "rate_limited",
+        "locked",
+        "unsupported",
+        "internal"
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "matched": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "returned": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "written": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "object_ids": {
+      "type": "array",
+      "description": "Opaque ids (page id, grant id) of the objects touched. Never paths.",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+      }
+    },
+    "review_verb": {
+      "description": "For review resolutions: the verb applied.",
+      "type": "string",
+      "pattern": "^(approve|reject|[a-z][a-z0-9-]*:[a-z][a-z0-9_-]*)$"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "patternProperties": {
+    "^x[_-][A-Za-z0-9_-]+$": {
+      "description": "Implementation keys. The no-content rule applies to them too."
+    }
+  },
+  "additionalProperties": false
+}

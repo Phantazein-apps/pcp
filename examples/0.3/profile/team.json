@@ -1,0 +1,14 @@
+{
+  "pcp_version": "0.3",
+  "name": "Platform team",
+  "purpose": "Runs the checkout and payments platform.",
+  "controller": "org:example-co",
+  "members": [
+    { "principal": "human:roger", "display_name": "Roger", "role": "curator" },
+    { "principal": "agent:falcon", "display_name": "Falcon", "role": "agent" }
+  ],
+  "languages": ["en"],
+  "timezone": "UTC",
+  "ai_instructions": "Search team memory before answering questions about our systems.",
+  "updated": "2026-10-01T00:00:00Z"
+}

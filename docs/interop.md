@@ -45,8 +45,8 @@ the original in `tags`:
 ## Transport
 
 All three ride **MCP**. OMP exposes `omp_remember`/`omp_recall`/…; Remnic exposes
-`remnic.recall`/`remnic.memory_store`/…; PCP exposes `memory.search`/`memory.read`/
-`memory.write` (§6). A PCP server bridging another tool's memory MAY expose the
+`remnic.recall`/`remnic.memory_store`/…; PCP exposes `memory_search`/`memory_read`/
+`memory_write` (§6). A PCP server bridging another tool's memory MAY expose the
 foreign tools directly *or* re-index the imported pages under the PCP surface.
 
 ## Import contract

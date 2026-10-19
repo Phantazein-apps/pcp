@@ -1,0 +1,5 @@
+{"id":"a-1","at":"2026-10-19T07:31:02.114Z","principal":"agent:falcon","on_behalf_of":"human:roger","client":"claude-code","grant":"g-7f3a","channel":"mcp","action":"memory_search","categories":["memory"],"partitions":["platform","agent-falcon"],"outcome":"ok","counts":{"matched":12,"returned":5},"duration_ms":41}
+{"id":"a-2","at":"2026-10-19T07:40:00Z","principal":"human:roger","channel":"mcp","action":"review_resolve","categories":["review","memory"],"partitions":["platform"],"outcome":"ok","object_ids":["ab-knowledge-412"],"review_verb":"approve"}
+{"id":"a-3","at":"2026-10-19T08:00:00Z","principal":"human:dana","client":"https://claude.ai/oauth/client.json","grant":"g-19","channel":"mcp","action":"memory_read","categories":["memory","memory.sensitive"],"outcome":"not_found"}
+{"id":"a-4","at":"2026-10-19T08:05:00Z","principal":"human:dana","channel":"management","action":"grant.revoke","categories":["grant"],"outcome":"ok","object_ids":["g-19"]}
+{"id":"a-5","at":"2026-10-19T03:00:00Z","principal":"service:retention","channel":"system","action":"retention.expire","categories":["memory"],"outcome":"ok","counts":{"written":3}}

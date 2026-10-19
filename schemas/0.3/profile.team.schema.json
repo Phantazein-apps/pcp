@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/profile.team.schema.json",
+  "title": "PCP Team Profile",
+  "description": "Optional profile of a team context (SPEC §4.2): what the team is and who is in it. Facts about individual people belong in their own contexts, not here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pcp_version", "name"],
+  "properties": {
+    "pcp_version": { "enum": ["0.3"] },
+    "name": { "type": "string", "minLength": 1, "description": "The team's name." },
+    "purpose": { "type": "string", "description": "What the team works on, in a sentence or two." },
+    "controller": {
+      "$ref": "memory.page.schema.json#/$defs/principal",
+      "description": "The context's controller (SPEC §1.2)."
+    },
+    "members": {
+      "type": "array",
+      "description": "Principals with access to the context. Servers MAY list only the members the caller can see.",
+      "items": {
+        "type": "object",
+        "required": ["principal"],
+        "additionalProperties": false,
+        "properties": {
+          "principal": { "$ref": "memory.page.schema.json#/$defs/principal" },
+          "display_name": { "type": "string" },
+          "role": { "type": "string", "description": "Server-defined role label, for example agent or curator." }
+        }
+      }
+    },
+    "languages": {
+      "type": "array",
+      "description": "Working languages, ordered by preference (BCP 47).",
+      "items": { "type": "string" }
+    },
+    "timezone": { "type": "string", "description": "IANA, e.g. 'Europe/Madrid'" },
+    "ai_instructions": {
+      "type": "string",
+      "description": "Standing instructions to any assistant working in this context."
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$"
+    }
+  }
+}

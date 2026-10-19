@@ -1,0 +1,7 @@
+{
+  "pcp_version": "0.1",
+  "mcp_endpoint": "https://ctx.example.com/mcp",
+  "sse_endpoint": "https://ctx.example.com/sse",
+  "export": true,
+  "encryption": { "at_rest": true, "e2e": false }
+}

@@ -1,0 +1,6 @@
+{
+  "entries": [
+    { "id": "a-2", "at": "2026-10-19T07:40:00Z", "principal": "human:roger", "channel": "mcp", "action": "review_resolve", "categories": ["review", "memory"], "partitions": ["platform"], "outcome": "ok", "object_ids": ["ab-knowledge-412"], "review_verb": "approve" }
+  ],
+  "next_cursor": "c2"
+}

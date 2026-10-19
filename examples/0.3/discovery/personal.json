@@ -1,0 +1,16 @@
+{
+  "pcp_version": "0.3",
+  "kind": "personal",
+  "mcp_endpoint": "https://host.example/pcp/dana/mcp",
+  "authorization_server": "https://host.example",
+  "profile": "core",
+  "profile_extensions": ["pcp.health"],
+  "connections": ["notion"],
+  "conformance": ["personal"],
+  "export": true,
+  "encryption": {
+    "key_custody": "user",
+    "readable_by": ["principals", "host_in_request"],
+    "e2e": false
+  }
+}

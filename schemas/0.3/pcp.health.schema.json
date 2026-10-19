@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/pcp.health.schema.json",
+  "title": "PCP Extension: pcp.health",
+  "description": "Special-category health data. Requires scope profile.health:read|write. SHOULD be stored encrypted with a key separate from the rest of the context (SPEC §4.6). This schema is the reference example for extension authors.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "pcp_version": {
+      "enum": [
+        "0.1",
+        "0.2",
+        "0.3"
+      ],
+      "description": "The PCP version the document was written for. Servers accept every listed version."
+    },
+    "blood_type": {
+      "type": "string"
+    },
+    "allergies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "substance"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "substance": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "mild",
+              "moderate",
+              "severe",
+              "anaphylactic"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "managed",
+              "resolved"
+            ]
+          },
+          "diagnosed": {
+            "type": "string",
+            "format": "date"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "medications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dose": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "string"
+          },
+          "prescriber": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "specialty": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "insurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "member_reference": {
+          "type": "string",
+          "description": "Reference only, never full policy credentials."
+        }
+      }
+    },
+    "emergency_notes": {
+      "type": "string",
+      "description": "Free text an assistant should surface in an emergency context."
+    },
+    "updated": {
+      "type": "string",
+      "description": "RFC 3339 date-time in UTC.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$"
+    }
+  }
+}

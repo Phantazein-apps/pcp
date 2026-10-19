@@ -35,7 +35,7 @@ authenticated by the host's owner session. JSON in, JSON out.
 | Method & path | Behavior |
 |---|---|
 | `GET /api/me` | Owner identity + profile document + connections + summary counts. The panel's boot call. SHOULD include `profile_gaps` (recommended-but-empty fields) and `profile_provenance` (per-field: which actor last set it, when) per [profile-bootstrap.md](profile-bootstrap.md). |
-| `PUT /api/profile` | Replace the `profile.core` document. Server MUST validate against `profile.core.schema.json` and reject non-conforming documents (400 with a list of violations). Server MUST append a change-log entry (§6 `profile.update` semantics). |
+| `PUT /api/profile` | Replace the `profile.core` document. Server MUST validate against `profile.core.schema.json` and reject non-conforming documents (400 with a list of violations). Server MUST append a change-log entry (§6 `profile_update` semantics). |
 | `GET /api/profile/changes` | The profile change log, newest first. |
 | `GET /api/connections` | List connection configs: `{ id, type, label, enabled, created }`. |
 | `POST /api/connections` | Add a connection config `{ type, label? }`. Returns the created config. Linking/authorizing the third-party source is host-defined and MAY be a separate step. |
@@ -55,6 +55,6 @@ extensions SHOULD be individually audited like any MCP access.
 
 - Standard error envelope, pagination, and rate-limit headers.
 - Whether `PUT /api/profile` should accept patch semantics to mirror the MCP
-  `profile.update` tool exactly.
+  `profile_update` tool exactly (an RFC 7396 merge patch, SPEC §4.3).
 - Management of extension namespaces (enable/disable per §4.3) — likely
   `PATCH /api/extensions/{ns}`.

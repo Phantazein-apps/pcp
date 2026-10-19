@@ -1,0 +1,16 @@
+{
+  "pcp_version": "0.3",
+  "kind": "team",
+  "mcp_endpoint": "https://brain.team.example/wp-json/pcp/v1/mcp",
+  "authorization_server": "https://brain.team.example",
+  "server_card": "https://brain.team.example/wp-json/pcp/v1/mcp/server-card",
+  "profile": "team",
+  "features": ["partitions", "review", "delegation"],
+  "extensions": ["org.example.documents", "org.example.handoffs"],
+  "conformance": ["team"],
+  "export": false,
+  "encryption": {
+    "key_custody": "host",
+    "readable_by": ["principals", "host"]
+  }
+}

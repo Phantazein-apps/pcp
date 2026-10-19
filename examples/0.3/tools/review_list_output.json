@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "path": "procedures/release-checklist",
+      "revision": "rev-88",
+      "title": "Release checklist",
+      "state": "proposed",
+      "partition": "platform",
+      "generated": { "by": "agent:falcon", "at": "2026-10-19T07:35:00Z" },
+      "target_exists": true,
+      "note": "Adds the Friday freeze rule."
+    }
+  ]
+}

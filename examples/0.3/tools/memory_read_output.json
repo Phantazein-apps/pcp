@@ -1,0 +1,12 @@
+{
+  "path": "procedures/release-checklist",
+  "frontmatter": {
+    "title": "Release checklist",
+    "updated": "2026-09-02T10:00:00Z",
+    "type": "procedural",
+    "partition": "platform",
+    "review": { "state": "approved", "verified": [{ "by": "human:roger", "at": "2026-09-02T10:00:00Z" }] }
+  },
+  "body": "1. Tag the release.\n2. Run the smoke suite against staging.\n",
+  "pending_revisions": 1
+}
