@@ -102,6 +102,10 @@
         "written": {
           "type": "integer",
           "minimum": 0
+        },
+        "deleted": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },

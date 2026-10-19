@@ -336,7 +336,7 @@
     },
     "import_report": {
       "type": "object",
-      "description": "What an import did (SPEC §8.7.5). Returned to the requester; the audit entry for the import carries the counts only.",
+      "description": "What an import did (SPEC §8.7.4). Returned to the requester; the audit entry for the import carries the counts only.",
       "additionalProperties": false,
       "required": ["mode", "status", "counts"],
       "properties": {
