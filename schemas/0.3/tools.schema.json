@@ -828,6 +828,135 @@
           "$ref": "#/$defs/cursor"
         }
       }
+    },
+    "export_create_input": {
+      "type": "object",
+      "description": "Optional tool (SPEC §8.1). Bundles what the token can read into an archive.",
+      "properties": {
+        "encrypt_to": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "description": "Recipient public keys for archive-level encryption (SPEC §8.4). Absent: the server's documented default."
+        },
+        "include_audit": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "export_create_output": {
+      "type": "object",
+      "required": [
+        "export_id",
+        "status",
+        "coverage"
+      ],
+      "properties": {
+        "export_id": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "ready",
+            "failed"
+          ]
+        },
+        "coverage": {
+          "enum": [
+            "full",
+            "partial"
+          ]
+        },
+        "download_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Short-lived URL of the archive, when ready. Also returned as a resource_link content block."
+        },
+        "expires_at": {
+          "$ref": "#/$defs/utc_datetime"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 of the archive file."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "page_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "erase_request_input": {
+      "type": "object",
+      "description": "Optional tool (SPEC §8.9.4). Exactly one of subject, paths or ids; the server enforces it and reports invalid_input. dry_run defaults to true, so a first call never deletes.",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Erase everything matching this subject, by the server's documented matching."
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/path"
+          }
+        },
+        "ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "include_derived": {
+          "type": "boolean",
+          "default": true,
+          "description": "Also erase pages derived from the targets (derived_from, consolidation output)."
+        },
+        "dry_run": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report counts of what would be erased and delete nothing."
+        }
+      }
+    },
+    "erase_request_output": {
+      "type": "object",
+      "required": [
+        "dry_run"
+      ],
+      "properties": {
+        "dry_run": {
+          "type": "boolean"
+        },
+        "would_erase": {
+          "type": "object",
+          "description": "For a dry run: items per store that the erasure would remove.",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "receipt": {
+          "$ref": "erasure.receipt.schema.json",
+          "description": "For a real run: the receipt."
+        }
+      }
     }
   }
 }

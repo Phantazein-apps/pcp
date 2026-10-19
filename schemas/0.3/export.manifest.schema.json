@@ -1,0 +1,401 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/export.manifest.schema.json",
+  "title": "PCP export manifest",
+  "description": "manifest.json at the root of a PCP archive (SPEC §8.3). It states what the archive holds so an importer can check that it received all of it before writing anything. Every other file is listed with its SHA-256 and size, both directions; counts must match the files; anything the exporter could not include is declared in omitted. The manifest is the only file not listed in files.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pcp_version",
+    "manifest_version",
+    "exported_at",
+    "exporter",
+    "context",
+    "coverage",
+    "profile",
+    "memory",
+    "audit",
+    "credentials_included",
+    "files"
+  ],
+  "properties": {
+    "pcp_version": {
+      "description": "The PCP version whose rules the archive's content follows (frontmatter, profile, audit entries). An exporter writes the version it implements (SPEC §8.6).",
+      "enum": ["0.3"]
+    },
+    "manifest_version": {
+      "description": "Version of the archive layout and this manifest. \"2\" is the v0.3 layout. \"1\" was the unreleased v0.2 draft on the export branch.",
+      "const": "2"
+    },
+    "exported_at": { "$ref": "#/$defs/utc_datetime" },
+    "exporter": {
+      "type": "object",
+      "description": "The implementation that wrote the archive. Import bugs are usually specific to a pair of implementations, so this is recorded.",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "version": { "type": "string", "maxLength": 50 },
+        "url": { "type": "string", "format": "uri", "description": "Homepage or repository of the implementation." }
+      }
+    },
+    "requested_by": {
+      "$ref": "memory.page.schema.json#/$defs/principal",
+      "description": "The principal that requested the export."
+    },
+    "context": {
+      "type": "object",
+      "description": "Which context this is (SPEC §1.2). Deliberately thin: no account, billing or host identifiers.",
+      "additionalProperties": false,
+      "required": ["kind", "controller", "path", "encryption"],
+      "properties": {
+        "kind": { "enum": ["personal", "work", "team"] },
+        "controller": { "$ref": "memory.page.schema.json#/$defs/principal" },
+        "handle": { "type": "string", "maxLength": 128, "description": "The context's handle on the exporting host, if it had one." },
+        "created_at": { "$ref": "#/$defs/utc_datetime" },
+        "discovery": { "type": "string", "format": "uri", "description": "URL of the context document at export time (SPEC §2)." },
+        "features": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["partitions", "review", "delegation"] }
+        },
+        "path": {
+          "const": "context.json",
+          "description": "The context descriptor: principals, partitions and access lists (export.context.schema.json)."
+        },
+        "encryption": {
+          "$ref": "discovery.schema.json#/$defs/encryption",
+          "description": "The context's discovery encryption declaration at export time (SPEC §2.4). Tells an importer what the data was promised, so it can warn before importing into a context that more parties can read (SPEC §8.4)."
+        }
+      }
+    },
+    "coverage": {
+      "description": "full: everything in the context (requested by the controller). partial: what the requesting principal can read (SPEC §8.1). A partial archive cannot be restored (SPEC §8.7.2).",
+      "enum": ["full", "partial"]
+    },
+    "profile": {
+      "type": "object",
+      "description": "Profile documents (SPEC §4).",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["core", "team", "none"] },
+        "path": {
+          "enum": ["profile/core.json", "profile/team.json"],
+          "description": "Absent when type is none or when the profile is empty (SPEC §4.4)."
+        },
+        "changes": {
+          "const": "profile/changes.jsonl",
+          "description": "The profile change log (SPEC §4.3), one $defs/profile_change per line, when the server keeps one."
+        },
+        "extensions": {
+          "type": "array",
+          "description": "One entry per extension namespace that holds data.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace", "path"],
+            "properties": {
+              "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+$" },
+              "path": { "$ref": "#/$defs/file_path" },
+              "schema": { "type": "string", "format": "uri", "description": "$id of the schema the document conforms to." },
+              "special_category": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "none" } } },
+          "then": { "not": { "required": ["path"] } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "core" } }, "required": ["path"] },
+          "then": { "properties": { "path": { "const": "profile/core.json" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "team" } }, "required": ["path"] },
+          "then": { "properties": { "path": { "const": "profile/team.json" } } }
+        }
+      ]
+    },
+    "memory": {
+      "type": "object",
+      "description": "Memory pages (SPEC §5), one file per page at memory/<path>.md, travelling as stored.",
+      "additionalProperties": false,
+      "required": ["path", "page_count", "sensitive_page_count", "index_included"],
+      "properties": {
+        "path": { "const": "memory/" },
+        "page_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of page files under memory/. Proposed and rejected pages count; revisions and history do not."
+        },
+        "sensitive_page_count": { "type": "integer", "minimum": 0 },
+        "review_counts": {
+          "type": "object",
+          "description": "Pages under memory/ by review state. Absent review counts as approved.",
+          "additionalProperties": false,
+          "properties": {
+            "approved": { "type": "integer", "minimum": 0 },
+            "proposed": { "type": "integer", "minimum": 0 },
+            "rejected": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "partition_counts": {
+          "type": "object",
+          "description": "Pages under memory/ per partition. Absent partition counts as default.",
+          "propertyNames": { "$ref": "memory.page.schema.json#/$defs/partition_name" },
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "revisions": {
+          "type": "array",
+          "description": "Pending and rejected revisions of existing pages (SPEC §5.4), at revisions/<page path>/<n>.md.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["file", "page", "revision"],
+            "properties": {
+              "file": { "$ref": "#/$defs/file_path" },
+              "page": { "$ref": "memory.page.schema.json#/$defs/path" },
+              "revision": { "type": "string", "minLength": 1, "maxLength": 128, "description": "The server's revision id." },
+              "base_updated": { "$ref": "#/$defs/utc_datetime", "description": "updated of the version the revision was proposed against." }
+            }
+          }
+        },
+        "history": {
+          "type": "array",
+          "description": "Earlier versions of pages, for servers that keep page history, at history/<page path>/<n>.md (n = 1 is the oldest).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["file", "page"],
+            "properties": {
+              "file": { "$ref": "#/$defs/file_path" },
+              "page": { "$ref": "memory.page.schema.json#/$defs/path" }
+            }
+          }
+        },
+        "index_included": {
+          "const": false,
+          "description": "Always false. Indexes, embeddings and caches are derived content, rebuilt on import, never exported (SPEC §5.5 item 5)."
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "description": "The access log (SPEC §7.5), one audit.entry.schema.json object per line.",
+      "additionalProperties": false,
+      "required": ["path", "entries", "truncated"],
+      "properties": {
+        "path": { "const": "audit/log.jsonl" },
+        "entries": { "type": "integer", "minimum": 0 },
+        "from": { "$ref": "#/$defs/utc_datetime" },
+        "to": { "$ref": "#/$defs/utc_datetime" },
+        "truncated": {
+          "type": "boolean",
+          "description": "true when retention or size limits cut the log. A cut log is acceptable; an undeclared cut is not."
+        }
+      }
+    },
+    "erasures": {
+      "type": "object",
+      "description": "Erasure receipts (SPEC §8.9), one erasure.receipt.schema.json object per line.",
+      "additionalProperties": false,
+      "required": ["path", "receipts"],
+      "properties": {
+        "path": { "const": "erasures/receipts.jsonl" },
+        "receipts": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "description": "Tool extension data (SPEC §6.5, §8.5), each under extensions/<id>/.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path", "items"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$" },
+          "path": { "type": "string", "pattern": "^extensions/[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+/$" },
+          "slot": { "enum": ["doc", "handoff"], "description": "The reserved slot the extension fills, if any." },
+          "version": { "type": "string", "maxLength": 50, "description": "Version of the extension's export layout." },
+          "registration": { "type": "string", "format": "uri", "description": "Where the extension and its export layout are registered." },
+          "items": { "type": "integer", "minimum": 0, "description": "Number of records, as the extension counts them." }
+        }
+      }
+    },
+    "connections": {
+      "type": "array",
+      "description": "Connection configuration only (SPEC §8.5). Credentials never travel; the new host obtains its own consent.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "credentials_included"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9]{0,15}$" },
+          "path": { "$ref": "#/$defs/file_path" },
+          "credentials_included": { "const": false }
+        }
+      }
+    },
+    "credentials_included": {
+      "const": false,
+      "description": "Always false: no OAuth tokens, application passwords, API keys, refresh tokens or key material for the context are in the archive (SPEC §8.2)."
+    },
+    "archive_encryption": {
+      "$ref": "#/$defs/encryption",
+      "description": "Present when the whole archive was encrypted as one envelope (SPEC §8.4). The manifest repeats the envelope's declaration so a restored copy keeps it on record."
+    },
+    "files": {
+      "type": "array",
+      "description": "Every file in the archive except manifest.json. Every listed file must be present with this hash and size, and every present file must be listed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "$ref": "#/$defs/file_path" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 of the bytes in the archive (ciphertext, for an encrypted file)." },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "encryption": { "$ref": "#/$defs/encryption", "description": "Present when this file is ciphertext (SPEC §8.4)." }
+        }
+      }
+    },
+    "omitted": {
+      "type": "array",
+      "description": "Data that exists in the context and is not in the archive, with the reason. Data that does not exist is not listed. Absent or empty asserts that the archive holds everything its coverage promises.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["what", "reason"],
+        "properties": {
+          "what": { "type": "string", "minLength": 1, "maxLength": 200, "description": "A category, never content: for example memory.sensitive, profile.health, ext.doc, or audit before 2026-01-01." },
+          "reason": {
+            "description": "not_authorized: a partial export left out what the requester cannot read (no names or counts of what it cannot see). encrypted_key_unavailable: the host cannot produce plaintext and the ciphertext is not exportable. unsupported, size_limit, error: the exporter failed to include data it holds.",
+            "enum": ["not_authorized", "encrypted_key_unavailable", "unsupported", "size_limit", "error"]
+          },
+          "count": { "type": "integer", "minimum": 0, "description": "How many items, when the requester may know." },
+          "detail": { "type": "string", "maxLength": 1000 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "utc_datetime": { "$ref": "memory.page.schema.json#/$defs/utc_datetime" },
+    "file_path": {
+      "type": "string",
+      "description": "A path relative to the archive root: segments of [A-Za-z0-9._-] separated by /, no segment starting with a dot (so never . or ..), no leading /, no backslash.",
+      "maxLength": 512,
+      "pattern": "^[A-Za-z0-9_][A-Za-z0-9._-]{0,127}(/[A-Za-z0-9_][A-Za-z0-9._-]{0,127})*$"
+    },
+    "encryption": {
+      "type": "object",
+      "description": "How an archive or a file in it is encrypted, in the SPEC §2.4 vocabulary. Never the key itself. Host custody is not allowed: an export only its host can decrypt is not portable.",
+      "additionalProperties": false,
+      "required": ["scheme", "key_source", "key_custody", "readable_by"],
+      "properties": {
+        "scheme": { "type": "string", "minLength": 1, "maxLength": 50, "description": "A self-describing format, for example age, jwe (RFC 7516 compact) or openpgp." },
+        "key_source": {
+          "description": "user_passphrase: a passphrase the controller holds. recipient_public_key: a public key named in recipients. principal_key: a key held by a principal, as with user key custody. device_key: a key that exists only on principals' devices.",
+          "enum": ["user_passphrase", "recipient_public_key", "principal_key", "device_key"]
+        },
+        "key_id": { "type": "string", "maxLength": 200, "description": "An identifier for the key, so the holder knows which one to use. Not the key." },
+        "recipients": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 1000 },
+          "description": "Public keys or recipient identifiers, for recipient_public_key."
+        },
+        "key_custody": { "enum": ["user", "device"] },
+        "readable_by": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["principals", "escrow"] },
+          "contains": { "const": "principals" },
+          "description": "Who can decrypt. escrow: a declared third party holds a recovery share."
+        }
+      }
+    },
+    "profile_change": {
+      "type": "object",
+      "description": "One line of profile/changes.jsonl (SPEC §4.3).",
+      "additionalProperties": false,
+      "required": ["at", "document", "changed"],
+      "properties": {
+        "at": { "$ref": "#/$defs/utc_datetime" },
+        "document": { "type": "string", "pattern": "^(core|team|[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+)$" },
+        "principal": { "$ref": "memory.page.schema.json#/$defs/principal" },
+        "client": { "type": "string", "maxLength": 512 },
+        "changed": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(/[^/]*)*$" },
+          "description": "JSON Pointers of the changed members. Previous values are not exported."
+        }
+      }
+    },
+    "import_report": {
+      "type": "object",
+      "description": "What an import did (SPEC §8.7.5). Returned to the requester; the audit entry for the import carries the counts only.",
+      "additionalProperties": false,
+      "required": ["mode", "status", "counts"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "mode": { "enum": ["restore", "import"] },
+        "dry_run": { "type": "boolean" },
+        "status": {
+          "description": "complete: every item was applied or deliberately skipped. partial: some items were invalid. rejected: the archive failed a check and nothing was written.",
+          "enum": ["complete", "partial", "rejected"]
+        },
+        "rejected_reason": { "type": "string", "maxLength": 1000 },
+        "format": { "type": "string", "maxLength": 50, "description": "pcp, or the foreign format imported (docs/interop.md)." },
+        "archive": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exporter": { "type": "string", "maxLength": 100 },
+            "exported_at": { "$ref": "#/$defs/utc_datetime" },
+            "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        },
+        "started_at": { "$ref": "#/$defs/utc_datetime" },
+        "completed_at": { "$ref": "#/$defs/utc_datetime" },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "created": { "type": "integer", "minimum": 0 },
+            "revised": { "type": "integer", "minimum": 0 },
+            "renamed": { "type": "integer", "minimum": 0 },
+            "replaced": { "type": "integer", "minimum": 0 },
+            "skipped_duplicate": { "type": "integer", "minimum": 0 },
+            "skipped_conflict": { "type": "integer", "minimum": 0 },
+            "skipped_review_state": { "type": "integer", "minimum": 0 },
+            "skipped_expired": { "type": "integer", "minimum": 0 },
+            "skipped_erased": { "type": "integer", "minimum": 0 },
+            "invalid": { "type": "integer", "minimum": 0 },
+            "extensions_kept": { "type": "integer", "minimum": 0 },
+            "extensions_not_imported": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "items": {
+          "type": "array",
+          "description": "Per item outcomes. Paths appear here because the report goes only to the requester, never into the audit log.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "outcome"],
+            "properties": {
+              "source": { "type": "string", "maxLength": 512, "description": "The file or record in the archive or foreign export." },
+              "path": { "$ref": "memory.page.schema.json#/$defs/path", "description": "Where it landed, if anywhere." },
+              "outcome": {
+                "enum": ["created", "revised", "renamed", "replaced", "skipped_duplicate", "skipped_conflict", "skipped_review_state", "skipped_expired", "skipped_erased", "invalid"]
+              },
+              "message": { "type": "string", "maxLength": 1000 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/erasure.receipt.schema.json",
+  "title": "PCP erasure receipt",
+  "description": "The record an erasure leaves (SPEC §8.9): what kind of erasure ran, who asked, how many items each store lost, what residue the check found, and whether the result is complete. It never contains the subject, matched paths, titles or content, nor an unkeyed hash of any of them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "requested_by", "requested_at", "counts", "residue", "status"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
+    "kind": {
+      "description": "subject: everything matching a subject string, with what was derived from it. pages: named pages, with what was derived from them. context: the whole context.",
+      "enum": ["subject", "pages", "context"]
+    },
+    "requested_by": { "$ref": "memory.page.schema.json#/$defs/principal" },
+    "requested_at": { "$ref": "memory.page.schema.json#/$defs/utc_datetime" },
+    "completed_at": { "$ref": "memory.page.schema.json#/$defs/utc_datetime" },
+    "subject_digest": {
+      "type": "object",
+      "description": "For kind subject: a keyed digest of the normalized subject, so the server can later confirm whether a given subject was erased without storing it. Receipts made before keyed digests omit it.",
+      "additionalProperties": false,
+      "required": ["alg", "key_id", "value"],
+      "properties": {
+        "alg": { "const": "hmac-sha256" },
+        "key_id": { "type": "string", "maxLength": 128, "description": "Which server-held key was used. The key is never exported." },
+        "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "include_derived": { "type": "boolean", "description": "Whether pages derived from the targets were erased too. Default true." },
+    "counts": {
+      "type": "object",
+      "description": "Items removed per store: pages, revisions, history, derived, index, extension:<id>, exports, backups, or a server-defined store.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_.:-]{0,63}$" },
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "residue": {
+      "type": "object",
+      "description": "Items the post-erasure check still found, per store. All zero for a complete erasure.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_.:-]{0,63}$" },
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "propagation": {
+      "type": "array",
+      "description": "Stores the server does not delete from directly (backups, replicas, workers), and what each reported.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["store", "status"],
+        "properties": {
+          "store": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{0,63}$" },
+          "status": { "enum": ["ok", "failed", "pending"] },
+          "due_by": { "$ref": "memory.page.schema.json#/$defs/utc_datetime", "description": "For pending: when the store will have removed the data, for example the end of a backup retention window." },
+          "detail": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "status": {
+      "description": "complete: no residue and every propagation ok. pending_propagation: no residue, some propagation pending. residue_found: residue, or a propagation failed.",
+      "enum": ["complete", "pending_propagation", "residue_found"]
+    },
+    "audit_ids": {
+      "type": "array",
+      "description": "Ids of the audit entries for the request and the completion.",
+      "items": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "complete" } } },
+      "then": {
+        "required": ["completed_at"],
+        "properties": { "residue": { "additionalProperties": { "const": 0 } } }
+      }
+    }
+  ]
+}
