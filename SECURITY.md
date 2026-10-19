@@ -45,4 +45,6 @@ A PCP context is among the most sensitive datasets a person has: health, legal, 
 
 ## Reporting
 
-Vulnerabilities in the spec or reference schemas: security@phantazein.com. Please do not open public issues for exploitable findings.
+Report vulnerabilities in the spec or schemas privately through GitHub's [private vulnerability reporting](../../security/advisories/new). Please do not open public issues for exploitable findings.
+
+Vulnerabilities in a specific implementation belong with that implementation's maintainers.

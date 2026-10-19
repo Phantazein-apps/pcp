@@ -1,6 +1,6 @@
 # Contributing to PCP
 
-PCP is an open specification. Until v0.2, the process is deliberately lightweight:
+PCP is an open specification, and anyone can help shape it. While PCP is pre-1.0, the process is deliberately lightweight:
 
 - **Discussion** → GitHub Issues. One topic per issue. Design questions welcome — see SPEC §11 for the open list.
 - **Changes** → PRs against `SPEC.md` / schemas. Normative changes must state: what breaks, who's affected, migration path.
@@ -17,3 +17,10 @@ PCP is an open specification. Until v0.2, the process is deliberately lightweigh
 - Implementation-neutral: nothing in the spec may require a specific cloud, database, or vendor.
 - Privacy first: any proposal that weakens consent granularity, export rights, or the audit log needs extraordinary justification.
 - Rough consensus, running code: proposals accompanied by a working implementation (in any codebase) carry more weight.
+- Vendor-neutral: no company, product or implementation gets special standing. Product names stay out of normative text; informative mappings to open implementations are welcome.
+
+## Openness
+
+- The specification, schemas and examples are Apache 2.0 and free to implement for any purpose, with no fees and no permission needed.
+- Decisions are made in public, on issues and pull requests, on technical merit.
+- Anyone who implements the spec may say so. Conformance claims are checked against the spec and its test suite, not granted by any organization.

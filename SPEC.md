@@ -909,8 +909,7 @@ Extensions and connections are optional; if present they MUST follow §4.5,
 
 This appendix maps Agent Brain, an open-source WordPress plugin that gives a
 team's agents shared, partitioned, reviewed memory, onto PCP v0.3. It is
-built from [`docs/v0.3-audit.md`](docs/v0.3-audit.md) §5.2 and re-checked
-against the plugin source (portakey `4f24875`, plugin 1.0.0 with
+built from the plugin source (commit `4f24875`, plugin 1.0.0 with
 `wordpress/mcp-adapter` 0.6.1) on 2026-10-19. It is a guide for that
 project's maintainers and for any similar server, not a requirement.
 
