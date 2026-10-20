@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/discovery.schema.json",
   "title": "PCP discovery document",
-  "description": "The JSON served at /.well-known/pcp.json (SPEC §2). A context document describes one context and carries its MCP endpoint. A root document describes a multi-context host and carries a context URL template instead. Authorization fields are specified in SPEC §3.",
+  "description": "The JSON served at /.well-known/pcp.json (SPEC §2). A context document describes one context, carries its MCP endpoint and points at its OAuth protected resource metadata (SPEC §2.5, §3.2). A root document describes a multi-context host and carries a context URL template instead.",
   "type": "object",
   "required": [
     "pcp_version"
@@ -32,15 +32,39 @@
         "team"
       ]
     },
+    "controller_type": {
+      "description": "Context documents only. The type of the context's controller (SPEC §1.2, §9.2): human or org. REQUIRED for kind work; MUST be human for kind personal.",
+      "enum": [
+        "human",
+        "org"
+      ]
+    },
     "mcp_endpoint": {
       "type": "string",
       "format": "uri",
-      "description": "Context documents only. The context's MCP Streamable HTTP endpoint."
+      "description": "Context documents only. The context's MCP Streamable HTTP endpoint. It is also the context's OAuth resource identifier: the resource of its protected resource metadata, character for character (SPEC §3.2)."
+    },
+    "resource_metadata": {
+      "type": "string",
+      "format": "uri",
+      "description": "Context documents only. URL of the context's OAuth 2.0 Protected Resource Metadata (RFC 9728), normally the path-suffixed well-known URL of mcp_endpoint. The same URL appears in every WWW-Authenticate challenge of the endpoint (SPEC §3.2).",
+      "pattern": "^https?://"
+    },
+    "alternate_endpoints": {
+      "type": "array",
+      "description": "Context documents only. Other URLs at which the same context's MCP endpoint is served, each with its own context document and protected resource metadata (SPEC §9.8).",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https?://"
+      }
     },
     "authorization_server": {
       "type": "string",
       "format": "uri",
-      "description": "Issuer URL of the authorization server. Kept from v0.2; SPEC §3 (v0.3 Phase 4) defines discovery through protected resource metadata."
+      "description": "Deprecated. A hint kept from v0.2: if present it MUST equal the first entry of authorization_servers in the context's protected resource metadata. Clients discover the authorization server from that metadata (SPEC §2.3, §3.2), never from this field.",
+      "deprecated": true
     },
     "server_card": {
       "type": "string",
@@ -140,6 +164,21 @@
               "required": [
                 "kind"
               ]
+            },
+            {
+              "required": [
+                "resource_metadata"
+              ]
+            },
+            {
+              "required": [
+                "controller_type"
+              ]
+            },
+            {
+              "required": [
+                "alternate_endpoints"
+              ]
             }
           ]
         }
@@ -148,8 +187,45 @@
         "required": [
           "kind",
           "mcp_endpoint",
+          "resource_metadata",
           "encryption"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "work"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "controller_type"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "personal"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "controller_type": {
+            "const": "human"
+          }
+        }
       }
     }
   ],
@@ -164,7 +240,7 @@
       "additionalProperties": false,
       "properties": {
         "key_custody": {
-          "description": "host: the host holds keys that decrypt the context without any principal's involvement. user: keys are wrapped by secrets only principals hold; the host decrypts only while serving a request a principal authorized, and keeps neither keys nor plaintext afterwards. device: plaintext and keys exist only on principals' devices; the host stores ciphertext.",
+          "description": "host: the host holds keys that decrypt the context without any principal's involvement. user: keys are wrapped by secrets only principals, and clients they authorized, hold; the host decrypts only while serving a request a principal authorized, and keeps neither keys nor plaintext afterwards (SPEC §9.1.3). device: plaintext and keys exist only on principals' devices; the host stores ciphertext (SPEC §9.1.4).",
           "enum": [
             "host",
             "user",

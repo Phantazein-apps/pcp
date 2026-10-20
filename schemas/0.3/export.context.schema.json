@@ -84,5 +84,17 @@
     "^x[_-][A-Za-z0-9_-]+$": {
       "description": "Implementation keys, preserved on restore."
     }
-  }
+  },
+  "allOf": [
+    {
+      "description": "A personal context is controlled by the person and has no org principal (SPEC §9.2.1).",
+      "if": { "properties": { "kind": { "const": "personal" } } },
+      "then": {
+        "properties": {
+          "controller": { "pattern": "^human:" },
+          "principals": { "items": { "properties": { "id": { "not": { "pattern": "^org:" } } } } }
+        }
+      }
+    }
+  ]
 }

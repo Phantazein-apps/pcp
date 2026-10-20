@@ -1,7 +1,9 @@
 {
   "pcp_version": "0.3",
   "kind": "personal",
+  "controller_type": "human",
   "mcp_endpoint": "https://host.example/pcp/dana/mcp",
+  "resource_metadata": "https://host.example/.well-known/oauth-protected-resource/pcp/dana/mcp",
   "authorization_server": "https://host.example",
   "profile": "core",
   "profile_extensions": ["pcp.health"],

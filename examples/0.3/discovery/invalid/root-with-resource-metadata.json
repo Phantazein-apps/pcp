@@ -1,0 +1,6 @@
+{
+  "pcp_version": "0.3",
+  "multi_context": true,
+  "context_url_template": "https://host.example/pcp/{context}",
+  "resource_metadata": "https://host.example/.well-known/oauth-protected-resource"
+}

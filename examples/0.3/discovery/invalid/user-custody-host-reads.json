@@ -2,5 +2,6 @@
   "pcp_version": "0.3",
   "kind": "personal",
   "mcp_endpoint": "https://host.example/pcp/dana/mcp",
-  "encryption": { "key_custody": "user", "readable_by": ["principals", "host_in_request", "host"] }
+  "resource_metadata": "https://host.example/.well-known/oauth-protected-resource/pcp/dana/mcp",
+  "encryption": {"key_custody": "user", "readable_by": ["principals", "host_in_request", "host"]}
 }

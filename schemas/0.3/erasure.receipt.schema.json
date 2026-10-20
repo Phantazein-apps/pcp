@@ -9,8 +9,8 @@
   "properties": {
     "id": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
     "kind": {
-      "description": "subject: everything matching a subject string, with what was derived from it. pages: named pages, with what was derived from them. context: the whole context.",
-      "enum": ["subject", "pages", "context"]
+      "description": "subject: everything matching a subject string, with what was derived from it. pages: named pages, with what was derived from them. principal: what a former principal wrote or had written on their behalf (SPEC §9.2.4); no subject_digest. context: the whole context.",
+      "enum": ["subject", "pages", "principal", "context"]
     },
     "requested_by": { "$ref": "memory.page.schema.json#/$defs/principal" },
     "requested_at": { "$ref": "memory.page.schema.json#/$defs/utc_datetime" },
@@ -49,6 +49,7 @@
         "properties": {
           "store": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{0,63}$" },
           "status": { "enum": ["ok", "failed", "pending"] },
+          "method": { "enum": ["deleted", "shredded"], "description": "How the store was cleared: deleted, or shredded when the keys that decrypt its copies were destroyed (SPEC §9.1.8)." },
           "due_by": { "$ref": "memory.page.schema.json#/$defs/utc_datetime", "description": "For pending: when the store will have removed the data, for example the end of a backup retention window." },
           "detail": { "type": "string", "maxLength": 500 }
         }
