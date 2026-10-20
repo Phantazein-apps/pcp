@@ -38,10 +38,10 @@ that need more say so and are skipped. Widen it with:
 |---|---|
 | `--interactive` | Run OAuth in your browser: the suite prints an authorization URL and catches the redirect on a loopback port. Each scope set the checks need is one approval. |
 | `--token T [--token-scopes "a b"]` | Use an access token you already have, instead of OAuth. Checks that need other scopes are skipped. |
-| `--allow-register` | Register OAuth clients (DCR) and probe the CIMD fetcher with addresses it must refuse. |
-| `--allow-writes` | Write test pages. Every page lives under `pcp-conformance/<run id>/` and carries a unique canary string. **Use a throwaway context**: PCP has no tool to delete pages, so remove them with erasure afterwards. |
+| `--allow-register` | Register OAuth clients and check the DCR rules, and probe the CIMD fetcher with addresses it must refuse (it should never fetch them). `--interactive` and `--allow-writes` also register the one client they need, but only this flag runs the registration and CIMD checks. |
+| `--allow-writes` | Write test pages. Every page lives under `pcp-conformance/<run id>/` (one under `style/`, for the §5.7 default) and carries a unique canary string. **Use a throwaway context**: PCP has no tool to delete pages, so remove them with erasure afterwards. |
 | `--allow-load` | Send a burst of bad token requests to check rate limiting (SEC-01). Only against a test deployment. |
-| `--other-endpoint URL` | A second context of the same person, for audience binding (AUTH-25) and separation (CTX-06). |
+| `--other-endpoint URL` | A second context of the same person, for audience binding (AUTH-25) and separation (CTX-06). With `--allow-writes` the suite writes one canary page into it too, so it must also be a throwaway context. |
 | `--second-token T` or `--second-login NAME`, `--private-partition P` | A second principal and a partition it cannot read, for the team checks. |
 | `--delegated-token T` | An agent token acting for a human, for the delegation checks. |
 | `--scan-path DIR` | The server's data directory. Under `user` custody the suite writes a canary and searches every file for it (KEY-05). |
@@ -49,7 +49,9 @@ that need more say so and are skipped. Widen it with:
 | `--only IDS` | Run only the checks that cite these ids. |
 | `--json`, `--report FILE` | A JSON report. |
 
-The exit status is 1 if any MUST failed. A failed SHOULD is a warning.
+The exit status is 1 if any MUST failed. A failed SHOULD is a warning. A
+skipped check is not a pass: SPEC §10.3 says how skipped requirements count
+toward a claim.
 
 ### Archives
 
@@ -80,7 +82,8 @@ conformance/run-reference.sh .venv/bin/python
 runs the self-check, the suite against all three contexts, and then the
 suite against four deliberately broken builds of the server
 (`--break sensitive-leak`, `audience`, `origin`, `framing`), each of which
-must make the suite fail. CI runs the same script.
+must make the suite fail on the requirement it breaks. CI runs the same
+script.
 
 ## Coverage rules
 

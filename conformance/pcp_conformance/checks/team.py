@@ -67,7 +67,7 @@ def partitions(t, rec):
     b.call("memory_write", {"path": mine, "body": "move me", "frontmatter": {"title": "move"}})
     mv = b.call("memory_write", {"path": mine, "body": "move me", "frontmatter": {"title": "move", "partition": private}})
     rec.expect("MEM-12", mv.is_tool_error(), "a page moved into a partition the writer has no write right on")
-    al = b.call("audit_list", {"limit": 50})
+    al = b.call("audit_list", {"since": t.started, "limit": 100})
     if al.is_tool_error():
         rec.skip("AUD-06", "the second principal cannot call audit_list")
     else:

@@ -50,7 +50,7 @@ GET /.well-known/pcp.json
   "kind": "personal",
   "mcp_endpoint": "https://ctx.example.com/mcp",
   "profile_extensions": ["pcp.health"],
-  "connections": ["notion"],
+  "connections": ["notes"],
   "export": true,
   "encryption": { "key_custody": "user", "readable_by": ["principals", "host_in_request"] }
 }

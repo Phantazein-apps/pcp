@@ -26,13 +26,13 @@ cd "$HERE"
 "$PY" -m pcp_conformance self-check
 echo "== personal context"
 "$PY" -m pcp_conformance run --endpoint "$BASE/dana/mcp" --other-endpoint "$BASE/acme-dana/mcp" \
-  --allow-writes --revocation-wait 10
+  --allow-writes --allow-register --revocation-wait 10
 echo "== work context"
 "$PY" -m pcp_conformance run --endpoint "$BASE/acme-dana/mcp" --other-endpoint "$BASE/dana/mcp" \
   --allow-writes --revocation-wait 10
 echo "== team context"
 "$PY" -m pcp_conformance run --endpoint "$BASE/crew/mcp" --second-login scout --private-partition private \
-  --allow-writes --allow-load --revocation-wait 10
+  --allow-writes --allow-register --allow-load --revocation-wait 10
 kill $SERVER; wait $SERVER 2>/dev/null || true
 
 # Each deliberate violation must make the suite fail.
@@ -45,7 +45,7 @@ for case in "sensitive-leak SCOPE-02" "audience AUTH-25" "origin AUTH-06" "frami
       --allow-writes --only "$2" >"$OUT" 2>&1; then
     cat "$OUT"; echo "the suite did not catch --break $1"; exit 1
   fi
-  grep "^FAIL" "$OUT"
+  grep "^FAIL *$2 " "$OUT" || { cat "$OUT"; echo "--break $1 did not fail $2"; exit 1; }
   kill $SERVER; wait $SERVER 2>/dev/null || true
 done
 echo "all mutation cases caught"

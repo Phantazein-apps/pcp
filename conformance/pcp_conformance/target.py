@@ -43,6 +43,8 @@ class Target:
         self.opts, self.out = opts, out
         self.http = Http(timeout=opts.timeout, insecure=opts.insecure)
         self.run_id = secrets.token_hex(4)
+        import datetime as _dt
+        self.started = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
         self._cache = {}
         self._tokens = {}
         self._oauth = None
@@ -63,8 +65,11 @@ class Target:
     def tool_schema_errors(self, tool, kind, instance):
         return self.schema_errors("tools.schema.json", instance, f"/$defs/{tool}_{kind}")
 
-    def need_register(self):
+    def need_register(self, strict=False):
+        """strict: only --allow-register (DCR rule checks and CIMD probes); otherwise any flag that implies a client."""
         o = self.opts
+        if strict and not o.allow_register:
+            raise Skip("registers clients and probes the CIMD fetcher; run with --allow-register")
         if not (o.allow_register or o.allow_writes or o.interactive or o.client_id):
             raise Skip("registers OAuth clients; run with --allow-register (or --interactive, --allow-writes)")
 
@@ -214,6 +219,7 @@ class Target:
             tok = self.oauth.get_token(scopes, resource)
         except AuthError as e:
             raise Skip(f"no token for {' '.join(scopes)}: {e}")
+        tok["_requested"] = scopes
         if not fresh:
             self._tokens[key] = tok
         return tok

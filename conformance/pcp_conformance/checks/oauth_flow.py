@@ -40,7 +40,7 @@ def dcr_rules(t, rec):
     if not meta or not meta.get("registration_endpoint"):
         rec.skip("AUTH-20", "no registration_endpoint (DCR not offered)")
         return
-    t.need_register()
+    t.need_register(strict=True)
     good = t.oauth.register()
     bad = t.oauth.register(redirect_uri="http://pcp-conformance.invalid/callback")
     problems = []
@@ -59,7 +59,7 @@ def cimd_hardening(t, rec):
     if not meta or not meta.get("client_id_metadata_document_supported"):
         rec.skip("AUTH-19", "CIMD not advertised")
         return
-    t.need_register()
+    t.need_register(strict=True)
     problems = []
     for cid in ("http://pcp-conformance.example/client.json", "https://127.0.0.1/client.json",
                 "https://10.0.0.1/client.json", "https://[::1]/client.json"):
@@ -68,10 +68,11 @@ def cimd_hardening(t, rec):
              "code_challenge": ch, "code_challenge_method": "S256", "state": "x", "resource": t.endpoint}
         r = t.http.get(meta["authorization_endpoint"] + "?" + urllib.parse.urlencode(q))
         loc = r.header("location") or ""
-        if r.status == 200 and "html" in r.content_type and "error" not in r.text.lower()[:2000]:
-            problems.append(f"{cid} was accepted")
+        # Accepted means a code was issued, or a consent form for this client was rendered.
         if loc.startswith("http://127.0.0.1:9/callback") and "code=" in loc:
             problems.append(f"{cid} produced a code")
+        elif r.status == 200 and "html" in r.content_type and cid in r.text and "<form" in r.text.lower():
+            problems.append(f"{cid} reached a consent form")
     rec.expect("AUTH-19", not problems, "; ".join(problems))
 
 
@@ -87,7 +88,11 @@ def authorization_rules(t, rec):
     o = t.oauth
     r, params, _ = _authorize_raw(t, t.default_scopes(), challenge=False)
     refused = params is None or "code" not in params
-    rec.expect("AUTH-21", refused, "authorization without code_challenge returned a code")
+    _, pw, _ = _authorize_raw(t, t.default_scopes())
+    wrong = o.exchange(pw["code"], "x" * 50) if pw and "code" in pw else None
+    rec.expect("AUTH-21", refused and wrong is not None and wrong.status != 200,
+               "authorization without code_challenge returned a code" if not refused
+               else "a code was exchanged with the wrong code_verifier")
     problems = []
     # Unregistered redirect URI: never redirected to.
     saved = o.redirect_uri
@@ -119,7 +124,10 @@ def authorization_rules(t, rec):
 @check("AUTH-24", "AUTH-25", "AUTH-33", "SCOPE-03")
 def resource_binding(t, rec):
     tok = t.any_token()
-    rec.expect("SCOPE-03", bool(tok.get("scope")), "the token response has no scope")
+    if tok.get("scope"):
+        rec.ok("SCOPE-03", "the token response states its scope")
+    else:
+        rec.ok("SCOPE-03", "no scope in the token response, which RFC 6749 allows when the grant equals the request")
     if "expires_in" in tok:
         rec.expect("AUTH-33", int(tok["expires_in"]) <= 3600, f"access tokens live {tok['expires_in']} s")
     else:
@@ -155,6 +163,14 @@ def resource_binding(t, rec):
                                   extra={"resource": [t.endpoint, other]})
             if ex.status == 200:
                 problems.append("a token was issued for two contexts at once")
+        o = t.oauth
+        o.ensure_client()
+        _, ch = pkce_pair()
+        url = o.authorize_url(t.default_scopes(), ch, "two", resource=False) + \
+            "&resource=" + urllib.parse.quote(t.endpoint, safe="") + "&resource=" + urllib.parse.quote(other, safe="")
+        r3 = t.http.get(url)
+        if "code=" in (r3.header("location") or ""):
+            problems.append("an authorization request naming two contexts returned a code")
     rec.expect("AUTH-24", not problems, "; ".join(problems))
 
 

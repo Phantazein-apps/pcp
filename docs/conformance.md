@@ -32,7 +32,7 @@ it as a warning.
 - `S+`: the suite checks it but needs more than one token, a second context,
   or permission to write test data (`--allow-writes`).
 - `A`: the archive checker checks it on an export archive
-  (`python3 -m conformance archive <file>`, or `scripts/validate_schemas.py`
+  (`python3 -m pcp_conformance archive <file>` from `conformance/`, or `scripts/validate_schemas.py`
   for the examples).
 - `M`: a person checks it on the management surface or the consent screen,
   following the note.
@@ -56,6 +56,7 @@ it as a warning.
 | DISC-11 | MUST | `authorization_server`, if present, equals the metadata's one authorization server | 2.3, 2.5 | all | S |
 | DISC-12 | SHOULD | `sse_endpoint` is not emitted | 2.3 | all | S |
 | DISC-13 | MUST | Each alternate endpoint has its own context document and metadata, whose `resource` is that endpoint | 2.5, 9.8 | routes | S |
+| DISC-14 | MUST | `conformance` lists a profile only when `export` is `true` and the claim rules of §10.3 hold | 10.3 | all | S |
 
 ## AUTH: Transport and authorization (SPEC §3)
 
@@ -73,7 +74,7 @@ it as a warning.
 | AUTH-10 | MUST | An unauthenticated MCP request gets 401 with `WWW-Authenticate: Bearer resource_metadata="..."`; never a redirect, login page, 200 or JSON-RPC error | 3.2 | all | S |
 | AUTH-11 | SHOULD | The 401 challenge carries `scope` with the default grant | 3.2 | all | S |
 | AUTH-12 | MUST | An invalid, expired, revoked or wrong-audience token gets 401 with `error="invalid_token"` | 3.2, 3.4 | all | S |
-| AUTH-13 | MUST | Authorization server metadata (RFC 8414 or OIDC) at the probed location, `issuer` identical to the metadata's entry, `code_challenge_methods_supported` includes `S256`, auth methods and registration mechanisms advertised | 3.2 | all | S |
+| AUTH-13 | MUST | Authorization server metadata (RFC 8414 or OIDC) at the probed location, `issuer` identical to the metadata's entry, `code_challenge_methods_supported: ["S256"]`, `token_endpoint_auth_methods_supported` including `none`, registration mechanisms advertised | 3.2 | all | S |
 | AUTH-14 | MUST | Discovery and metadata documents: HTTP 200, `application/json`, no authentication, no redirects | 3.2 | all | S |
 | AUTH-15 | SHOULD | Metadata allows cross-origin reads | 3.2 | all | S |
 | AUTH-16 | MUST | Unknown paths under `/.well-known/` and `<context-base>/.well-known/` get HTTP 404 with a JSON body | 3.2 | all | S |
@@ -82,7 +83,7 @@ it as a warning.
 | AUTH-19 | MUST | CIMD fetch hardening: https only, public addresses only, no redirects, size cap, `client_id` equals the URL, redirect URIs matched, fails closed | 3.3 | all | S+ |
 | AUTH-20 | MUST | DCR, if offered: public clients, redirect URIs limited to https, loopback (any port) and optional private-use schemes | 3.3 | all | S |
 | AUTH-21 | MUST | PKCE `S256` required for every client; authorization without a code challenge is refused | 3.4 | all | S |
-| AUTH-22 | MUST | Exact redirect URI matching, except loopback ports; single-use authorization codes | 3.4 | all | S |
+| AUTH-22 | MUST | Exact redirect URI matching, except loopback ports; single-use authorization codes that expire within minutes | 3.4 | all | S |
 | AUTH-23 | MUST | Tokens only in the `Authorization` header, never accepted from the URL | 3.4 | all | S |
 | AUTH-24 | MUST | The `resource` parameter is accepted and each token is bound to exactly one context; unknown or multiple resources get `invalid_target` | 3.4 | all | S |
 | AUTH-25 | MUST | A token for another context is rejected with 401 `invalid_token` | 3.4 | all | S+ |
@@ -99,11 +100,13 @@ it as a warning.
 | AUTH-36 | SHOULD | A call the token can never make gets 403 `insufficient_scope` naming every needed scope (or a `forbidden` result with `required_scopes`) | 3.5 | all | S+ |
 | AUTH-37 | MUST | A missing right that depends on the object is never a 403 challenge | 3.5 | all | S+ |
 | AUTH-38 | MUST | A tool left out of `tools/list` still gets the step-up answer when called, never "unknown tool" | 3.5 | all | S+ |
-| AUTH-39 | MUST | The consent screen shows the client and the source of its name, the context with its kind and controller, the account, each scope in plain language and individually declinable, and what sensitive categories are not requested | 3.6 | all | M |
+| AUTH-39 | MUST | The consent screen shows the client and the source of its name, the context with its kind and controller, the account, each scope in plain language and individually declinable, and what sensitive categories are not requested; declined scopes are never granted. With partitions it names the principal's partitions (SHOULD); under `user` custody it says what approving and revoking mean | 3.6 | all | M |
 | AUTH-40 | MUST | No new grant without explicit approval, except organization policy for org-controlled contexts | 3.6, 3.7 | all | M |
 | AUTH-41 | MUST | The consent page cannot be framed and is protected against CSRF | 3.6 | all | S |
 | AUTH-42 | MUST | Organization policy never replaces consent for a personal context or a person-controlled work context | 3.7 | org | M |
 | AUTH-43 | MUST | Over stdio, a runtime grants a configured scope set, records it as a grant and audits every call | 3.1 | local | M |
+| AUTH-44 | MUST | An MCP request to an unknown context gets HTTP 404 with a JSON body, not a challenge | 3.2 | multi | S |
+| AUTH-45 | SHOULD | The refresh-token lifetime is documented, and grants unused for a documented period (at most 90 days) end | 3.4 | all | R |
 
 ## PROF: Profile (SPEC §4)
 
@@ -144,6 +147,8 @@ it as a warning.
 | MEM-18 | MUST | Retrieval honors lifecycle and validity; `archived` excluded by default; pages past `expires` never returned | 5.5 | all | S+ |
 | MEM-19 | MUST | `memory_search` accepts `as_of`, and reports `as_of_exact: false` when it cannot answer exactly | 5.5 | all | S |
 | MEM-20 | MUST | No persistent derived structure readable outside `readable_by` | 5.5, 9.1 | all | R |
+| MEM-21 | MUST | A page created under `style/` without `sensitivity` is stored as sensitive, with `sensitivity: sensitive` in its frontmatter | 5.7 | all | S+ |
+| MEM-22 | MUST | Creating a new sensitive page needs only `memory:write` (or `memory:propose`) | 5.2.2 | all | S+ |
 
 ## TOOL: Tool surface and MCP mechanics (SPEC §6)
 
@@ -168,6 +173,7 @@ it as a warning.
 | TOOL-17 | SHOULD | Server instructions name the context's kind (and controller for work and team) and never contain stored content | 6.6, 9.2.3 | all | S |
 | TOOL-18 | MUST | `erase_request` defaults to a dry run, is annotated destructive, and offers only `subject` and `pages` | 8.9.4 | erase_request | S |
 | TOOL-19 | MUST | `export_create` bundles only what the token can read and returns a status and download link | 8.1 | export_create | S+ |
+| TOOL-20 | MUST | Only the controller, or a role it appointed for erasure, can use `erase_request` | 8.9.4 | erase_request | M |
 
 ## SCOPE: Scopes, partitions and delegation (SPEC §7.1 to §7.4)
 
@@ -179,7 +185,7 @@ it as a warning.
 | SCOPE-04 | MUST | Effective rights are the intersection of token scopes and the access list; access lists default to deny with `partitions` | 7.3 | partitions | S+ |
 | SCOPE-05 | MUST | The access list is enforced in the data query itself | 7.3 | partitions | R |
 | SCOPE-06 | MUST | Delegated reads use the intersection of the agent's and the human's access; delegation is decided from the token | 7.4 | delegation | S+ |
-| SCOPE-07 | MUST | Delegated writes are stamped with `source.principal` and `source.on_behalf_of` | 7.4 | delegation | S+ |
+| SCOPE-07 | MUST | Delegated writes are stamped with `source.principal` and `source.on_behalf_of`, and their audit entries carry both | 7.4 | delegation | S+ |
 
 ## AUD: Grants and audit (SPEC §7.5)
 
@@ -210,6 +216,8 @@ it as a warning.
 | EXP-12 | SHOULD | Under `user` or `device` custody the archive is encrypted to a controller key unless plaintext is requested | 8.4 | user, device | A |
 | EXP-13 | MUST | Extension data under `extensions/<id>/`, listed in the manifest; connections carry configuration only | 8.5 | extensions, connections | A |
 | EXP-14 | MUST | An exporter writes the version it implements; an importer checks both versions before writing | 8.6 | all | A |
+| EXP-15 | MUST | A server that keeps earlier versions of pages exports them under `history/` and lists them | 8.2 | all | A |
+| EXP-16 | MUST | An archive-level envelope uses a self-describing format, and the manifest inside repeats the declaration | 8.4 | all | A |
 
 ## IMP: Restore, import and round trip (SPEC §8.7, §8.8)
 
@@ -223,6 +231,8 @@ it as a warning.
 | IMP-06 | MUST | Importers warn before importing into a context with a wider `readable_by` or another controller | 8.4, 9.2.3 | all | M |
 | IMP-07 | MUST | Same-implementation round trip: files byte-identical after export, restore, export | 8.8 | all | A |
 | IMP-08 | MUST | Cross-implementation round trip: bodies byte-identical, frontmatter equal as data | 8.8 | all | A |
+| IMP-09 | MUST | Importers accept zip, tar and tar.gz | 8.2 | all | M |
+| IMP-10 | MUST | Extension data the importer does not implement is never dropped silently | 8.5 | extensions | M |
 
 ## ERA: Erasure and retention (SPEC §8.9, §8.10)
 
@@ -255,18 +265,22 @@ it as a warning.
 | KEY-12 | MUST | Wrapping-key changes delete old wrapped copies; context-key rotation after removal (MUST for `device`, SHOULD for `user`) | 9.1.7 | user, device | R |
 | KEY-13 | MUST | Under `user` and `device` custody the host cannot recover lost keys, and says so at setup | 9.1.7 | user, device | M |
 | KEY-14 | MUST | Archives kept under `user` custody are encrypted to a controller key; the erasure digest key is content key material | 9.1.8 | user | R |
+| KEY-15 | SHOULD | A server with `user` custody states what it does not protect against | 9.1.3 | user | R |
 
 ## CTX: Work, personal and organization control (SPEC §9.2)
 
 | Id | Level | Requirement | § | Profile | Check |
 |---|---|---|---|---|---|
-| CTX-01 | MUST | A personal context has no `org` principal, and no organization holds a role, key, escrow share, or export or erasure right | 9.2.1 | P | A |
+| CTX-01 | MUST | A personal context has no `org` principal, and no organization holds a role, key, escrow share, or export or erasure right | 9.2.1 | all | A |
 | CTX-02 | MUST | Under `user` custody, a person in an org-controlled context is told the organization can read it | 9.2.1 | org | M |
 | CTX-03 | MUST | A context's kind never changes once it holds data; controller transfers need both sides and are audited | 9.2.1 | all | M |
-| CTX-04 | MUST | A personal context's controller can always add a sign-in not delegated to an external identity provider | 9.2.2 | P | M |
+| CTX-04 | MUST | A personal context's controller can always add a sign-in not delegated to an external identity provider | 9.2.2 | all | M |
 | CTX-05 | MUST | Contexts of one person share no keys, grants, logs or partitions; derived wrapping keys use distinct inputs | 9.2.3 | all | R |
 | CTX-06 | MUST | No context reveals another of the same person through tools, management views, audit entries, exports or errors | 9.2.3 | all | S+ |
 | CTX-07 | MUST | Offboarding removes the principal at once: grants revoked, key copies deleted, delegation ended, status `removed`, id never reused | 9.2.4 | org | M |
+| CTX-08 | MUST | Work and personal context are never mixed in one context | 1.2 | all | R |
+| CTX-09 | SHOULD | A server bound to an identity provider removes or suspends principals the provider deprovisions | 9.2.4 | org | R |
+| CTX-10 | SHOULD | The leaver export is offered as one step of offboarding | 9.2.4 | org | M |
 
 ## SEC: Security baseline (SPEC §9.3 to §9.8)
 

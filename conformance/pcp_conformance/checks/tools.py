@@ -12,12 +12,27 @@ STANDARD = {"profile_get", "profile_update", "memory_search", "memory_read", "me
             "export_create", "erase_request"}
 
 
+def broad_token(t):
+    """A token holding every scope the required tools need, so a server that hides tools a token
+    cannot call (§3.5 item 4) still lists them. Falls back to the default token."""
+    kind = t.kind()
+    scopes = ["memory:read", "memory:write", "audit:read"]
+    if kind == "team":
+        scopes += ["memory:propose", "memory:review", "profile.team:read", "profile.team:write"]
+    else:
+        scopes += ["profile.core:read", "profile.core:write"]
+    try:
+        return t.token(scopes)
+    except Skip:
+        return t.any_token()
+
+
 def tools_of(t):
     if "tools" not in t._cache:
-        tok = t.any_token()
+        tok = broad_token(t)
         r, tools = t.mcp(tok).list_tools()
-        t._cache["tools"] = (r, tools or [])
-    return t._cache["tools"]
+        t._cache["tools"] = (r, tools or [], tok)
+    return t._cache["tools"][:2]
 
 
 @check("AUTH-01", "AUTH-02", "AUTH-03", "AUTH-04", "AUTH-06")
@@ -78,7 +93,7 @@ def tool_list(t, rec):
         required |= {"memory_propose", "review_list"}
     if "partitions" in feats:
         required.add("partition_list")
-    granted = t.granted(t.any_token())
+    granted = t.granted(t._cache["tools"][2])
     missing = sorted(required - set(names))
     note = "" if not missing else f" (the token holds {sorted(granted)}; a server may hide tools a token cannot call)"
     rec.expect("TOOL-03", not missing, f"missing tools: {missing}{note}")
@@ -110,9 +125,11 @@ def tool_list(t, rec):
         rec.skip("TOOL-02", "no connections")
         rec.skip("TOOL-14", "no connections")
     exts = doc.get("extensions") or []
-    ext_tools = [x["name"] for x in tools if x["name"] not in STANDARD and x["name"].split("_")[0] not in conns]
-    if ext_tools:
-        rec.expect("TOOL-15", bool(exts), f"extension tools {ext_tools} but no extensions in discovery")
+    other = [x["name"] for x in tools if x["name"] not in STANDARD and x["name"].split("_")[0] not in conns]
+    if other:
+        # Without a connections list a connection tool looks like an extension tool, so either list will do.
+        rec.expect("TOOL-15", bool(exts) or bool(conns),
+                   f"tools {other} are neither standard nor declared as an extension or connection")
     else:
         rec.skip("TOOL-15", "no extension tools")
 
@@ -130,13 +147,17 @@ def tool_results(t, rec):
     if kind != "team":
         calls.append(("profile_get", {}))
     results = {}
+    needs = {"memory_list": "memory:read", "memory_search": "memory:read", "profile_get": "profile.core:read"}
     for name, args in calls:
+        if needs.get(name) and needs[name] not in granted:
+            continue
         r = c.call(name, args)
         results[name] = r
         if r.result is None:
             problems.append(f"{name}: {r.error or r.rpc_error}")
             continue
         if r.is_tool_error():
+            problems.append(f"{name} failed: {r.tool_text()[:80]}")
             continue
         sc = r.structured()
         if sc is None:
@@ -178,7 +199,15 @@ def tool_results(t, rec):
         rec.expect("PROF-05", "profile" in sc, "profile_get output has no profile member")
         bad = c.call("profile_get", {"namespaces": ["pcp.legal"]})
         leaked = ((bad.structured() or {}).get("extensions") or {}).get("pcp.legal")
-        rec.expect("PROF-08", not leaked, "pcp.legal returned data, but it has no published schema")
+        if leaked:
+            rec.fail("PROF-08", "pcp.legal returned data, but it has no published schema")
+        elif not t.opts.allow_writes:
+            rec.skip("PROF-08", "the write half (profile_update into pcp.legal) needs --allow-writes")
+        else:
+            rec.ok("PROF-08", "nothing returned for pcp.legal; the write half runs in profile_rules")
+    elif kind == "team" and (t.context_doc or {}).get("profile", "team") == "none":
+        for rid in ("PROF-01", "PROF-02", "PROF-05", "PROF-08"):
+            rec.skip(rid, "the team context has no profile (profile: none)")
     elif kind == "team":
         tg = c.call("profile_get", {})
         sc = tg.structured() or {}

@@ -50,7 +50,7 @@ def export_create(t, rec):
     sc = r.structured() or {}
     rec.expect("TOOL-19", not r.is_tool_error() and sc.get("status") and sc.get("coverage") in ("full", "partial"),
                f"export_create gave {r.tool_text()[:100]!r}")
-    log = c.call("audit_list", {"limit": 20})
+    log = c.call("audit_list", {"since": t.started, "limit": 100})
     rec.expect("EXP-04", '"export"' in json.dumps(log.structured() or {}), "no audit entry with channel export")
 
 

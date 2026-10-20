@@ -34,7 +34,9 @@ def page_rules(t, rec):
     t.need_writes()
     c = t.mcp(_full(t))
     bad = []
-    for p in ("../x", "/abs", "a//b", ".hidden/x", "a/./b", "a\\b", "x" * 300):
+    pre = t.test_path("")
+    for p in (pre + "../x", "/" + pre + "abs", pre + "a//b", pre + ".hidden/x", pre + "a/./b", pre + "a\\b",
+              pre + "x" * 300):
         r = c.call("memory_write", {"path": p, "body": "x", "frontmatter": {"title": "x"}})
         if r.error_code() != "invalid_input":
             bad.append(f"{p[:20]!r} gave {r.error_code()!r}")
@@ -85,7 +87,7 @@ def page_rules(t, rec):
                f"stale expected_updated gave {stale.error_code()!r}; current gave {fresh.error_code()!r}")
 
 
-@check("SCOPE-02", "MEM-06", "MEM-07", "MEM-08", "MEM-17", "AUTH-37", "TOOL-11",
+@check("SCOPE-02", "MEM-06", "MEM-07", "MEM-08", "MEM-17", "MEM-21", "MEM-22", "AUD-06", "AUTH-37", "TOOL-11",
        tools=("memory_write", "memory_read", "memory_search", "memory_list", "context_brief"), writes=True)
 def sensitive_pages(t, rec):
     t.need_writes()
@@ -126,6 +128,22 @@ def sensitive_pages(t, rec):
     fm = (full.call("memory_read", {"path": path}).structured() or {}).get("frontmatter", {})
     rec.expect("MEM-06", not keep.is_tool_error() and fm.get("sensitivity") == "sensitive",
                f"an update without sensitivity left {fm.get('sensitivity')!r}")
+    created = _write(plain, t.test_path("plain-sensitive-" + canary[-6:]), "handed over", sensitivity="sensitive")
+    rec.expect("MEM-22", not created.is_tool_error(),
+               f"creating a sensitive page with memory:write alone gave {created.error_code()!r}")
+    style = "style/pcp-conformance-" + t.run_id
+    _write(full, style, "Writes short sentences.")
+    sfm = (full.call("memory_read", {"path": style}).structured() or {}).get("frontmatter", {})
+    rec.expect("MEM-21", sfm.get("sensitivity") == "sensitive",
+               f"a style/ page created without sensitivity is stored as {sfm.get('sensitivity')!r}")
+    if (t.context_doc or {}).get("controller_type") == "org" and t.kind() != "team":
+        aud = t.mcp(t.token(["memory:read", "memory:write", "audit:read"]))
+        aud.call("memory_read", {"path": path})
+        log = aud.call("audit_list", {"since": t.started, "limit": 100})
+        rec.expect("AUD-06", "memory.sensitive" not in _blob(log),
+                   "audit_list told a principal without memory.sensitive:read that a read touched a sensitive page")
+    else:
+        rec.skip("AUD-06", "needs a principal who is not the controller: run on a work or team context")
     brief = t.mcp(t.token(["profile.core:read"])).call("context_brief", {})
     sc = brief.structured() or {}
     rec.expect("TOOL-11", not brief.is_tool_error() and "memory" in " ".join(sc.get("omitted", [])),
@@ -199,15 +217,15 @@ def step_up(t, rec):
     if "memory_search" in names:
         rec.ok("AUTH-38", "memory_search stays listed for a narrow token")
     else:
-        unknown = r.rpc_error is not None and r.http_status == 200
-        rec.expect("AUTH-38", not unknown, "an unlisted tool answered as unknown instead of a step-up")
+        rec.expect("AUTH-38", challenged or forbidden,
+                   "a tool hidden from tools/list did not answer with a step-up (403 insufficient_scope or forbidden)")
     wo = t.mcp(t.token(["memory:write"]))
     s = wo.call("memory_search", {"query": "pcp conformance"})
     blocked = s.http_status == 403 or s.error_code() == "forbidden"
     rec.expect("SCOPE-01", blocked, "memory:write alone could search memory")
 
 
-@check("PROF-03", "PROF-06", tools=("profile_update", "profile_get"), writes=True)
+@check("PROF-03", "PROF-06", "PROF-08", tools=("profile_update", "profile_get"), writes=True)
 def profile_rules(t, rec):
     if t.kind() == "team":
         rec.skip("PROF-03", "checked on personal and work contexts")
@@ -221,6 +239,9 @@ def profile_rules(t, rec):
     viol = ((bad.structured() or {}).get("error") or {}).get("violations")
     rec.expect("PROF-03", bad.error_code() == "invalid_input" and bool(viol) and before == after,
                f"an invalid patch gave {bad.error_code()!r}, violations {viol!r}, changed: {before != after}")
+    legal = c.call("profile_update", {"namespace": "pcp.legal", "patch": {"pcp-conformance": t.run_id}})
+    rec.expect("PROF-08", legal.http_status == 403 or legal.is_tool_error(),
+               "profile_update stored data in pcp.legal, which has no published schema")
     exts = (t.context_doc or {}).get("profile_extensions") or []
     if not exts:
         rec.skip("PROF-06", "no profile extensions in this context")
@@ -240,7 +261,7 @@ def audit(t, rec):
     _write(c, path, f"Audit {canary}", title=f"Title {canary}")
     c.call("memory_search", {"query": canary})
     c.call("memory_read", {"path": t.test_path("missing-" + canary[-6:])})
-    r = c.call("audit_list", {"limit": 50})
+    r = c.call("audit_list", {"since": t.started, "limit": 100})
     entries = (r.structured() or {}).get("entries")
     if not rec.expect("AUD-02", isinstance(entries, list) and not r.is_tool_error(),
                       f"audit_list failed: {r.tool_text()[:100]}"):
@@ -304,7 +325,7 @@ def context_separation(t, rec):
     c = t.mcp(_full(t))
     seen = []
     for name, args in (("memory_search", {"query": canary}), ("memory_list", {"prefix": t.test_path("")}),
-                       ("context_brief", {}), ("audit_list", {"limit": 50})):
+                       ("context_brief", {}), ("audit_list", {"since": t.started, "limit": 100})):
         r = c.call(name, args)
         if canary in _blob(r) or other in _blob(r):
             seen.append(name)

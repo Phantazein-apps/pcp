@@ -6,7 +6,7 @@ from ..net import is_loopback, origin_of, parse_www_authenticate, well_known_suf
 from ..registry import Skip, check
 
 
-@check("DISC-01", "DISC-02", "DISC-03", "DISC-04", "DISC-12")
+@check("DISC-01", "DISC-02", "DISC-03", "DISC-04", "DISC-12", "DISC-14")
 def context_document(t, rec):
     doc = t.context_doc
     if not rec.expect("DISC-01", doc is not None,
@@ -20,14 +20,22 @@ def context_document(t, rec):
     ok = (kind != "work" or ct in ("human", "org")) and (kind != "personal" or ct in (None, "human"))
     rec.expect("DISC-04", ok, f"kind {kind!r} with controller_type {ct!r}")
     rec.expect("DISC-12", "sse_endpoint" not in doc, "sse_endpoint is emitted")
+    claims = doc.get("conformance") or []
+    rec.expect("DISC-14", not claims or doc.get("export") is True,
+               f"claims {claims} with export {doc.get('export')!r}; a claim needs export: true (§10.3)")
 
 
 @check("DISC-07", "DISC-08")
 def root_document(t, rec):
     r, doc = t.root_doc
     if not (doc and doc.get("multi_context")):
-        rec.skip("DISC-07", "not a multi-context host (no root document with multi_context: true)")
-        rec.skip("DISC-08", "not a multi-context host")
+        base_path = urllib.parse.urlsplit(t.context_base or "").path.strip("/")
+        if base_path:
+            rec.fail("DISC-07", f"the context lives under /{base_path}, so this is a multi-context host, "
+                                "but the origin has no root document with multi_context: true")
+        else:
+            rec.skip("DISC-07", "single-context server at the origin root")
+        rec.skip("DISC-08", "no root document")
         return
     errors = t.schema_errors("discovery.schema.json", doc)
     bad = [k for k in ("mcp_endpoint", "resource_metadata", "kind", "controller_type", "alternate_endpoints") if k in doc]
@@ -107,6 +115,20 @@ def unauthenticated_challenge(t, rec):
         rec.skip("SEC-08", "not a loopback server")
 
 
+@check("AUTH-44")
+def unknown_context_endpoint(t, rec):
+    from ..mcp import McpClient
+    if not t.multi_context:
+        rec.skip("AUTH-44", "not a multi-context host")
+        return
+    r, doc = t.root_doc
+    base = doc["context_url_template"].replace("{context}", "pcp-conformance-no-such-context-" + t.run_id)
+    rel = t.endpoint[len(t.context_base):] if t.context_base and t.endpoint.startswith(t.context_base) else ""
+    resp = McpClient(t.http, base + rel).request("tools/list").response
+    rec.expect("AUTH-44", resp.status == 404 and resp.is_json(),
+               f"an MCP request to an unknown context gave HTTP {resp.status} {resp.content_type}")
+
+
 @check("AUTH-12", "AUTH-23")
 def invalid_tokens(t, rec):
     from ..mcp import McpClient
@@ -114,8 +136,11 @@ def invalid_tokens(t, rec):
     params = parse_www_authenticate(r.response.header("www-authenticate")) or {}
     rec.expect("AUTH-12", r.http_status == 401 and params.get("error") == "invalid_token",
                f"an invalid token gave HTTP {r.http_status}, error={params.get('error')!r}")
+    if t.opts.token:
+        rec.skip("AUTH-23", "would put your --token into a URL, where logs keep it; runs with OAuth instead")
+        return
     try:
-        tok = t.any_token()["access_token"]
+        tok = t.token(fresh=True)["access_token"]     # a throwaway token: it ends up in server logs
     except Skip as e:
         rec.skip("AUTH-23", str(e))
         return
@@ -123,6 +148,7 @@ def invalid_tokens(t, rec):
     c = McpClient(t.http, t.endpoint + sep + "access_token=" + urllib.parse.quote(tok), None, t.revision(tok))
     r2 = c.request("tools/list")
     rec.expect("AUTH-23", r2.http_status == 401, f"a token in the query string was accepted (HTTP {r2.http_status})")
+    t.oauth.revoke(tok)
 
 
 @check("AUTH-13", "AUTH-17", "AUTH-18", "AUTH-29", "AUTH-34")
@@ -139,10 +165,10 @@ def authorization_server_metadata(t, rec):
     problems = []
     if meta.get("issuer") != issuer:
         problems.append(f"issuer {meta.get('issuer')!r} is not {issuer!r}")
-    if "S256" not in (meta.get("code_challenge_methods_supported") or []):
-        problems.append("code_challenge_methods_supported lacks S256")
-    if not meta.get("token_endpoint_auth_methods_supported"):
-        problems.append("no token_endpoint_auth_methods_supported")
+    if meta.get("code_challenge_methods_supported") != ["S256"]:
+        problems.append(f"code_challenge_methods_supported is {meta.get('code_challenge_methods_supported')!r}, not [\"S256\"]")
+    if "none" not in (meta.get("token_endpoint_auth_methods_supported") or []):
+        problems.append("token_endpoint_auth_methods_supported does not include none")
     if r.header("location") or r.status != 200:
         problems.append(f"metadata answered HTTP {r.status}")
     rec.expect("AUTH-13", not problems, "; ".join(problems))
