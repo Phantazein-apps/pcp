@@ -1,8 +1,9 @@
 {
   "pcp_version": "0.3",
   "kind": "team",
+  "controller_type": "org",
   "mcp_endpoint": "https://brain.team.example/wp-json/pcp/v1/mcp",
-  "authorization_server": "https://brain.team.example",
+  "resource_metadata": "https://brain.team.example/.well-known/oauth-protected-resource/wp-json/pcp/v1/mcp",
   "server_card": "https://brain.team.example/wp-json/pcp/v1/mcp/server-card",
   "profile": "team",
   "features": ["partitions", "review", "delegation"],

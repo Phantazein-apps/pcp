@@ -1,0 +1,14 @@
+{
+  "pcp_version": "0.3",
+  "kind": "personal",
+  "mcp_endpoint": "https://dana.relay.example/mcp",
+  "resource_metadata": "https://dana.relay.example/.well-known/oauth-protected-resource/mcp",
+  "alternate_endpoints": ["https://dana-laptop.overlay.example/mcp"],
+  "conformance": ["personal"],
+  "export": true,
+  "encryption": {
+    "key_custody": "device",
+    "readable_by": ["principals"],
+    "e2e": true
+  }
+}

@@ -2,7 +2,8 @@
 
 Status: DRAFT. Informative: a host that offers the same functions through a
 UI only, or through a differently shaped API, still conforms. Updated
-2026-10-19 for SPEC v0.3 §7.5 and §8.
+2026-10-19 for SPEC v0.3 §7.5 and §8, and 2026-10-20 for §3.4 (grants),
+§9.1 (keys) and §9.2 (offboarding).
 
 ## Why this document exists
 
@@ -52,8 +53,10 @@ JSON in and out unless noted. Lists take `limit` and `cursor` and return
 
 | Method and path | Behavior |
 |---|---|
-| `GET /principals` | Principals as in `context.json` (SPEC §8.2 item 5), with `bound: boolean` after a restore (SPEC §8.7.2 item 3). |
+| `GET /principals` | Principals as in `context.json` (SPEC §8.2 item 5), with `bound: boolean` after a restore (SPEC §8.7.2 item 3) and, for principals bound to an identity provider, the provider's issuer. |
 | `POST /principals/{id}/bind` | Bind an unbound principal to an account or credential on this host. |
+| `POST /principals/{id}/leaver-export` | Organization-controlled contexts: a partial export of the pages the controller lets a departing principal take (SPEC §9.2.4 item 3). Body: `{ "paths"?, "ids"?, "partition"? }`. Returns an export as `POST /exports` does, readable by that principal. |
+| `DELETE /principals/{id}` | Remove the principal (SPEC §9.2.4 item 1): revoke its grants, delete its key copies, rotate keys as SPEC §9.1.7 says, end delegations, set `status: "removed"`. Returns which grants must be re-established after a rotation. Audited with `categories: ["principal"]`. |
 | `GET /partitions` | Partitions and their access lists. |
 | `PUT /partitions/{name}/access` | Replace one partition's access list. Audited with `categories: ["partition"]`. |
 
@@ -68,8 +71,21 @@ the controller can see what a grant did and revoke it.
 |---|---|
 | `GET /grants` | Active grants: `{ id, client: { id, name, uri? }, principal, device?, scopes, created, last_used, expires? }`. `device` is a label the controller or the client gave, for recognizing the grant; it has no protocol meaning. |
 | `PATCH /grants/{id}` | Rename the `device` label. |
-| `DELETE /grants/{id}` | Revoke the grant: every access and refresh token of the family stops working at once, and no refresh can produce a new one. |
+| `DELETE /grants/{id}` | Revoke the grant: every access and refresh token of the family stops working (at the MCP endpoint within 5 minutes at most, SPEC §3.4 item 5), no refresh can produce a new one, and under `user` custody the grant's wrapped key is deleted (SPEC §9.1.3 U6). |
 | `GET /audit` | The access log (SPEC §7.5), newest first, filterable by `category`, `principal`, `grant`, `since`, `until`. |
+
+### Keys
+
+For contexts with `user` or `device` custody (SPEC §9.1). Key material never
+passes through these endpoints in usable form: the browser or device wraps
+and unwraps, and the host stores wrapped copies.
+
+| Method and path | Behavior |
+|---|---|
+| `GET /keys` | The wrapped copies the host holds, by slot (`passkey:<id>`, `recovery`, `grant:<grant id>`, `escrow:<id>`), with `created` and `last_used`, never the copies themselves. A reviewer checks SPEC §9.1.3 U1 against this list. |
+| `POST /keys/slots`, `DELETE /keys/slots/{slot}` | Add a wrapped copy made on the client, or delete one. Deleting the last slot a principal can open asks for confirmation (SPEC §9.1.7 item 3). |
+| `POST /keys/lock`, `POST /keys/unlock` | Lock the context (SPEC §9.1.5): grants' wrapped copies are suspended and tools return `locked` until the controller unlocks with a principal secret. |
+| `POST /keys/rotate` | Start a context-key rotation (SPEC §9.1.7 item 2). Returns its progress and the grants to re-establish. |
 
 ### Export
 
@@ -92,7 +108,7 @@ the controller can see what a grant did and revoke it.
 
 | Method and path | Behavior |
 |---|---|
-| `POST /erasures` | Body: `{ "kind": "subject" \| "pages" \| "context", "subject"?, "paths"?, "ids"?, "include_derived"?: true, "dry_run"?: false }`. A dry run returns `{ "dry_run": true, "would_erase": { store: count } }`. A real run follows SPEC §8.9.2 and returns the receipt (`erasure.receipt.schema.json`), or 202 and an id while stores propagate. If the audit entry cannot be written first, 500 `internal` and nothing is deleted. `kind: "context"` also revokes every grant and ends the context; the host SHOULD require the controller to confirm by re-authenticating. |
+| `POST /erasures` | Body: `{ "kind": "subject" \| "pages" \| "principal" \| "context", "subject"?, "paths"?, "ids"?, "principal"?, "include_derived"?: true, "dry_run"?: false }`. A dry run returns `{ "dry_run": true, "would_erase": { store: count } }`. A real run follows SPEC §8.9.2 and returns the receipt (`erasure.receipt.schema.json`), or 202 and an id while stores propagate. If the audit entry cannot be written first, 500 `internal` and nothing is deleted. `kind: "context"` also revokes every grant and ends the context; the host SHOULD require the controller to confirm by re-authenticating. |
 | `GET /erasures`, `GET /erasures/{id}` | Receipts, newest first. A pending receipt updates as stores report. |
 | `POST /erasures/{id}/verify` | Body `{ "subject" }`. Answers `{ "match": boolean }` by computing the keyed digest (SPEC §8.9.3). Rate limited, and audited without the subject. |
 

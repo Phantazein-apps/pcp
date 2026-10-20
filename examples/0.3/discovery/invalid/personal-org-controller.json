@@ -1,0 +1,8 @@
+{
+  "pcp_version": "0.3",
+  "kind": "personal",
+  "controller_type": "org",
+  "mcp_endpoint": "https://host.example/pcp/dana/mcp",
+  "resource_metadata": "https://host.example/.well-known/oauth-protected-resource/pcp/dana/mcp",
+  "encryption": { "key_custody": "user", "readable_by": ["principals", "host_in_request"] }
+}

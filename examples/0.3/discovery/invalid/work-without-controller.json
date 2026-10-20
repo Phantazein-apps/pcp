@@ -1,0 +1,7 @@
+{
+  "pcp_version": "0.3",
+  "kind": "work",
+  "mcp_endpoint": "https://context.acme.example/mcp/dana",
+  "resource_metadata": "https://context.acme.example/.well-known/oauth-protected-resource/mcp/dana",
+  "encryption": { "key_custody": "host", "readable_by": ["principals", "host"] }
+}

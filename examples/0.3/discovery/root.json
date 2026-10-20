@@ -1,6 +1,5 @@
 {
   "pcp_version": "0.3",
   "multi_context": true,
-  "context_url_template": "https://host.example/pcp/{context}",
-  "authorization_server": "https://host.example"
+  "context_url_template": "https://host.example/pcp/{context}"
 }

@@ -1,0 +1,15 @@
+{
+  "pcp_version": "0.3",
+  "kind": "work",
+  "controller_type": "org",
+  "mcp_endpoint": "https://context.acme.example/mcp/dana",
+  "resource_metadata": "https://context.acme.example/.well-known/oauth-protected-resource/mcp/dana",
+  "alternate_endpoints": ["https://context-eu2.acme.example/mcp/dana"],
+  "profile": "core",
+  "conformance": ["personal"],
+  "export": true,
+  "encryption": {
+    "key_custody": "host",
+    "readable_by": ["principals", "host"]
+  }
+}
