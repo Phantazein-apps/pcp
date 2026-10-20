@@ -43,6 +43,14 @@ to check both. The MCP extension id of PCP is `io.github.pcp-protocol/pcp`.
 - New scopes `memory:propose`, `memory:review`, `memory.sensitive:write`,
   `profile.team:*` and `audit:read`, a written-out hierarchy, the partition
   ACL rule, delegated reads, and an audit entry schema without content (§7).
+- Export, import and erasure are specified (§8): an archive layout with a
+  checkable manifest (SHA-256 for every file, counts, declared omissions),
+  a context descriptor with principals, partitions and access lists,
+  archive-level and file-level encryption declarations, restore and import
+  modes with conflict, idempotency and mapping rules, a round-trip
+  guarantee, erasure with a receipt, and retention of expired pages. New
+  optional tools `export_create` and `erase_request`, and the scope
+  `erase:write`.
 - Appendix A maps a team memory server (Agent Brain) onto PCP.
 
 ---
@@ -227,7 +235,7 @@ Clients MUST ignore fields they do not understand.
 | `extensions` | OPTIONAL | absent | Tool extensions implemented, by reverse-DNS id (§6.5) |
 | `features` | OPTIONAL | absent | Optional features in use: `partitions`, `review`, `delegation` (§1.4) |
 | `conformance` | OPTIONAL | absent | Conformance profiles claimed: `personal`, `team` (§10) |
-| `export` | OPTIONAL | absent | `true` claims that §8 export and import work for this context. A server MUST NOT emit `true` otherwise |
+| `export` | OPTIONAL | absent | `true` claims the four commitments of §8.1: full export, a checkable archive, restore and import of the server's own archives, and no host-held archive keys. A server MUST NOT emit `true` otherwise |
 
 `sse_endpoint` is removed: the HTTP+SSE transport is deprecated in MCP.
 Servers SHOULD NOT emit it, and clients MUST ignore it.
@@ -431,6 +439,7 @@ REQUIRED: `title`, `updated`.
 | `derived_from` | array of paths | Pages this one was distilled from or supersedes. |
 | `relations` | `[{ rel, target, confidence? }]` | Typed edges. `rel` is `supersedes`, `contradicts`, `refines` or `about`, or a namespaced relation `<prefix>:<name>` (for example `x-bm:pairs_with`) kept so imports stay lossless. Clients resolve conflicts with them; the server needs no graph engine. |
 | `review` | object | Review state: `state`, `generated`, `verified`, `rejected` (§5.4). Absent means approved. |
+| `x_import` | object | Set by import mode (§8.7.3): the source format, context, id, file hash and every source value without a PCP key. |
 | `x_*`, `x-*` | any | Implementation or import keys. Preserved on round trip, never interpreted by other servers. |
 
 `source` members:
@@ -474,8 +483,10 @@ The server sets `updated`, `recorded_at` (on creation), `id`,
 `source.principal`, `source.on_behalf_of`, `source.client` and all of
 `review`. Values a client supplies for these keys MUST be ignored: a client
 makes a proposal with `memory_propose`, never by writing `review.state`, so a
-server without the `review` feature never holds a proposed page. Import (§8) is the exception: imported values are kept
-as they are, and the importer is recorded in the audit log.
+server without the `review` feature never holds a proposed page. Restore
+(§8.7.2) is the exception: archive values are kept as they are. Import
+(§8.7.3) sets these keys as it describes. Both are recorded in the audit
+log.
 
 #### 5.2.4 Time
 
@@ -541,7 +552,8 @@ Which partitions and principals need review is server policy.
 5. A server MAY resolve reviews only on its own management surface and not
    offer `review_resolve`. It MUST still keep the review fields.
 
-Imports into a team context land as `proposed` (§8, Phase 3).
+Imports into a context with the `review` feature land as `proposed`
+(§8.7.3 item 2).
 
 ### 5.5 Retrieval requirements
 
@@ -591,8 +603,9 @@ the artifact.*
 Pages under `style/` hold writing-style profiles
 ([`docs/style-profiles.md`](docs/style-profiles.md), informative). When a
 page is created under `style/` without `sensitivity`, the server MUST store it
-as `sensitive`. A write that sets `sensitivity: normal` explicitly is
-honored.
+as `sensitive` and write `sensitivity: sensitive` into the stored
+frontmatter, so the default travels with the page (§8.2 item 2). A write
+that sets `sensitivity: normal` explicitly is honored.
 
 ## 6. Tool surface *(v0.3: names and team tools; MCP mechanics in Phase 4)*
 
@@ -646,6 +659,8 @@ schema. `openWorldHint` is `false` for every standard tool.
 | `partition_list` | List partitions | `memory:read` | yes | no | yes | The `partitions` feature is used |
 | `context_brief` | Get context brief | Any of `profile.*:read`, `memory:read` | yes | no | yes | Always |
 | `audit_list` | List access log | `audit:read` | yes | no | yes | Always |
+| `export_create` | Export context | `export:read` | yes | no | no | Optional (§8.1 item 2) |
+| `erase_request` | Erase memory | `erase:write` | no | yes | yes | Optional (§8.9.4) |
 
 Behavior beyond the schemas:
 
@@ -670,7 +685,11 @@ Behavior beyond the schemas:
   default the controller sees all entries and other principals see their
   own.
 
-Erasure (`erase_*`) and export tools are specified in §8 (Phase 3).
+- **`export_create`** bundles what the token can read into an archive
+  (§8.1 item 2) and returns its status and, when ready, a short-lived
+  download URL, also as a `resource_link` content block.
+- **`erase_request`** erases by subject or by page (§8.9.4). It defaults
+  to a dry run.
 
 ### 6.3 Errors
 
@@ -727,7 +746,7 @@ PCP reserves two slots, for designs owned by the implementers who need them:
 
 A slot is filled by registering an extension in [`extensions/`](extensions/)
 with its id, its tools and schemas, and how its data appears in an export
-(§8). Until a slot is filled, a server MAY expose `doc_*` or `handoff_*`
+(§8.5). Until a slot is filled, a server MAY expose `doc_*` or `handoff_*`
 tools only if it lists its extension id in discovery. Data in an extension
 MUST still respect partitions, sensitivity and the audit rules.
 
@@ -745,6 +764,7 @@ conn.<id>:read         | conn.<id>:write             e.g. conn.notion:read
 ext.<part>:read        | ext.<part>:write            e.g. ext.doc:write
 audit:read
 export:read
+erase:write
 ```
 
 For a namespace `pcp.health` the scope uses its last label: `profile.health`.
@@ -761,7 +781,7 @@ The only implications are these:
 
 No `:write` scope implies the matching `:read`, so write-only clients (for
 example an ingestion connector) are possible. No scope implies `audit:read`,
-`export:read`, `conn.*`, `ext.*` or extension namespaces. A server SHOULD NOT
+`export:read`, `erase:write`, `conn.*`, `ext.*` or extension namespaces. A server SHOULD NOT
 grant a qualifier scope (`memory.sensitive:*`, `memory:review`) without its
 base scope.
 
@@ -777,8 +797,8 @@ The RECOMMENDED default grant for a new chat client:
   `memory:write`.
 - Team contexts: `profile.team:read`, `memory:read`, `memory:propose`.
 
-Sensitive scopes, `memory:review`, `audit:read` and `export:read` are opt-in
-per client.
+Sensitive scopes, `memory:review`, `audit:read`, `export:read` and
+`erase:write` are opt-in per client.
 
 ### 7.3 Partition access
 
@@ -834,7 +854,7 @@ or a management action), `categories`, `partitions`, `outcome`, `counts`,
 **Categories, never content.** An entry records which categories an action
 touched: `profile.core`, `profile.team`, `profile.<ns>` (named like its scope,
 so `profile.health` for `pcp.health`), `memory`,
-`memory.sensitive`, `review`, `partition`, `audit`, `export`, `grant`,
+`memory.sensitive`, `review`, `partition`, `audit`, `export`, `erasure`, `grant`,
 `conn.<id>` and `ext.<part>`. An entry MUST NOT contain page bodies, titles,
 paths, search queries, profile values, or unkeyed hashes of any of them.
 `object_ids` holds opaque ids, never paths. Partition names are recorded;
@@ -850,18 +870,547 @@ partitions and object ids that principal cannot currently read, so an entry
 for a `not_found` read does not reveal that the target was sensitive or where
 it lives.
 
-## 8. Portability: export and import *(pending, v0.2 text; rewritten in Phase 3)*
+## 8. Portability: export, import and erasure *(v0.3)*
 
-- `export:read` scope grants a full export: a tar or zip of all Markdown
-  memory pages, the profile and extension JSON documents, connection
-  *configuration* (never third-party credentials or tokens), and the audit
-  log. Format: the export manifest schema is not yet published; it is drafted
-  for v0.3 (see [`docs/v0.3-plan.md`](docs/v0.3-plan.md), Phase 3). Phase 3
-  also carries partitions, principals and review state, and adds erasure.
-- A conforming server MUST be able to **import** its own export format.
-  Migrating hosts means export, import, then re-grant connections.
-- Third-party credentials (Gmail OAuth tokens and so on) MUST NOT be included
-  in exports.
+The controller can take a whole context elsewhere (**export**), bring it
+into another server (**restore** or **import**), and remove data from it and
+from every copy the server controls (**erasure**). All three are core.
+
+### 8.1 Export
+
+1. **Full export.** A server MUST let the controller produce a full export
+   of the context at any time on its management surface, without the host's
+   approval and without contacting the host's staff. It MAY let roles the
+   controller appoints do the same. A full export has `coverage: "full"`.
+2. **Over MCP.** `export_create` (§6.2) is OPTIONAL and needs `export:read`.
+   `export:read` is the right to bundle, not to read: the archive holds what
+   the token could read with its other scopes, within the principal's access
+   list (§7.3), and, with `audit:read`, the entries `audit_list` would return
+   to it. It is `full` only when that is the whole context; otherwise it is
+   `partial`.
+3. **Partial exports.** A partial archive lists what it leaves out in
+   `omitted` with reason `not_authorized`, by category only. It MUST NOT
+   reveal names, counts or anything else about partitions or pages the
+   requester cannot read (§5.3 item 5). A partial archive can be imported
+   but not restored (§8.7).
+4. **Archives a server keeps** for download are content: the context's
+   encryption declaration covers them, they expire after a documented
+   period (RECOMMENDED at most 7 days), and erasure deletes them (§8.9.2).
+5. Every export writes an audit entry (`channel: "export"`, the categories
+   exported, counts).
+
+**What `export: true` commits a server to.** Discovery `export` (§2.3) is a
+claim with four parts:
+
+1. The controller can make a full export at any time (item 1), and its
+   manifest validates and checks (§8.3).
+2. A full archive holds everything the context holds, except what §8.2
+   item 8 excludes by rule. Anything else left out is declared in
+   `omitted`, and a server whose full exports routinely omit data with
+   reason `unsupported`, `size_limit` or `error` MUST NOT claim `export:
+   true`.
+3. The server can restore its own full archives into an empty context and
+   import its own archives into an existing one (§8.7).
+4. A full archive is readable without the exporting host: plaintext, or
+   encrypted to keys the controller holds (§8.4).
+
+Export is mandatory (§1.1), so a conforming server emits `export: true`. A
+server that emits `false` or omits the field says honestly that it is not
+yet conforming.
+
+### 8.2 Archive layout
+
+An archive is a **zip** file or a **POSIX tar** file (ustar or pax),
+optionally gzip-compressed. Importers MUST accept zip, tar and tar.gz.
+Entries are regular files and directories only: no links, devices or
+duplicate names. `manifest.json` is at the root, with no wrapper directory.
+File names follow the manifest's `file_path` grammar. Names like
+`<handle>-<date>.pcp.zip` are RECOMMENDED.
+
+```
+manifest.json                 the manifest (§8.3)
+context.json                  kind, controller, principals, partitions, access lists
+profile/core.json             or profile/team.json; absent when empty (§4.4) or none
+profile/changes.jsonl         the profile change log (§4.3), if the server keeps one
+profile/<namespace>.json      one per extension namespace with data, e.g. profile/pcp.health.json
+memory/<path>.md              one file per page, including proposed and rejected pages
+revisions/<path>/<n>.md       pending and rejected revisions of existing pages
+history/<path>/<n>.md         earlier versions of pages, if the server keeps them
+audit/log.jsonl               the access log
+erasures/receipts.jsonl       erasure receipts
+extensions/<id>/...           extension data (§8.5)
+connections/<id>.json         connection configuration (§8.5)
+```
+
+1. **Pages.** One file per page at `memory/<path>.md`, with the path of
+   §5.1. The file is the stored page: UTF-8 without a byte order mark, a
+   YAML frontmatter block between two `---` lines, then the body. The
+   frontmatter validates against the memory page schema (§5.2). A server
+   that stores fields rather than documents MUST serialize them
+   deterministically, so the same page always gives the same bytes (§8.8).
+2. **Defaults that change access are explicit.** A page the server stored
+   as `sensitive` by default (§5.7) says `sensitivity: sensitive` in its
+   file. An absent `partition` means `default`, an absent `review` means
+   approved.
+3. **Review.** Proposed and rejected pages are exported with their
+   `review` object. Pending and rejected revisions of an existing page
+   (§5.4) are complete page files under `revisions/<path>/`, numbered from 1
+   in the order they were proposed, and listed in `memory.revisions` with
+   the page path, the server's revision id and `base_updated`, the
+   `updated` of the version the revision was proposed against.
+4. **History.** A server that keeps earlier versions of pages (for example
+   to answer `as_of` exactly, §5.5 item 4) MUST export them under
+   `history/<path>/`, numbered from 1 for the oldest, and list them in
+   `memory.history`.
+5. **Context descriptor.** `context.json` conforms to
+   [`schemas/0.3/export.context.schema.json`](schemas/0.3/export.context.schema.json).
+   It lists every principal, including removed principals that any file in
+   the archive names, and every partition with its access list (§7.3). In a
+   context without the `partitions` feature it lists `default` with an empty
+   access list. Roles are informative.
+6. **Audit.** `audit/log.jsonl` holds one audit entry (§7.5) per line. A
+   full export includes every entry the server retains. A partial export
+   includes the entries `audit_list` would return to the requester, or none
+   without `audit:read`. If retention or limits cut the log,
+   `audit.truncated` is `true`.
+7. **Erasure receipts.** `erasures/receipts.jsonl` holds every receipt the
+   context has (§8.9.3), one per line.
+8. **Never in an archive**, and never listed in `omitted`:
+   - credentials and grants: OAuth access and refresh tokens, authorization
+     codes, application passwords, client secrets, connection tokens and API
+     keys (`credentials_included` is fixed to `false`);
+   - key material of the context, and the keys of the digests in §8.9;
+   - indexes, embeddings, caches, snippets and summaries derived from pages
+     (`index_included` is fixed to `false`; they are rebuilt on import);
+   - pages past `expires`, deleted pages and erased data (§8.9, §8.10);
+   - server configuration that is not context data, such as rate limits or
+     worker settings.
+
+   Grants are re-established after a move: export, restore, re-grant.
+
+### 8.3 Manifest
+
+Schema: [`schemas/0.3/export.manifest.schema.json`](schemas/0.3/export.manifest.schema.json).
+The manifest is the one file the archive does not list; it is the root of
+the checks. An exporter MUST produce, and an importer MUST verify before
+writing anything, all of the following:
+
+1. **Schema.** The manifest validates against the schema.
+2. **Files, both directions.** Every file in the archive except
+   `manifest.json` is listed in `files` with the SHA-256 of its bytes as
+   they are in the archive and its size in bytes. Every listed file is
+   present with that hash and size. No path is listed twice.
+3. **Counts.** `memory.page_count` is the number of files under `memory/`
+   (an encrypted page file counts). `memory.sensitive_page_count` is the
+   number of those with `sensitivity: sensitive`. `memory.review_counts`
+   and `memory.partition_counts`, when present, match the pages.
+   `audit.entries` and `erasures.receipts` are the number of lines in their
+   files. Every file named in `memory.revisions` and `memory.history`
+   exists.
+4. **Paths.** Every path matches the `file_path` grammar: relative, no
+   segment starting with a dot (so never `..`), no backslash. Every page
+   path under `memory/`, `revisions/` and `history/` is a valid §5.1 path.
+   No two paths in the archive differ only in case.
+5. **Documents.** Every page, revision and history file validates against
+   the memory page schema, every audit line against the audit entry
+   schema, every receipt against the receipt schema, `context.json`
+   against its schema, and each profile document against the schema its
+   manifest entry names.
+6. **References.** Every partition a page names is in `context.json`.
+   Every principal named in a page's `source` or `review`, in an audit
+   entry or in a receipt is listed in `context.json`.
+7. **Omissions.** `omitted` lists data that exists in the context and is
+   not in the archive, by category (never by content), with a reason and,
+   when the requester may know it, a count. It never lists data that does
+   not exist. A server MUST NOT drop data silently: an archive that leaves
+   something out without saying so is indistinguishable from a complete
+   one.
+8. **Constants.** `credentials_included` and `memory.index_included` are
+   `false`.
+
+[`scripts/validate_schemas.py`](scripts/validate_schemas.py) runs checks 1
+to 6 on the example archives in [`examples/0.3/export/`](examples/0.3/export/).
+Signed manifests are deferred to v0.4.
+
+### 8.4 Encryption
+
+Archives use the §2.4 vocabulary in two declarations.
+
+1. **What the data was promised.** `context.encryption` in the manifest is
+   the context's discovery `encryption` at export time. An importer SHOULD
+   show it to the controller, and MUST warn before importing into a context
+   whose `readable_by` includes a party the source's did not (for example
+   from `user` custody into `host` custody).
+2. **Archive level.** The whole archive is encrypted as one envelope, for
+   example `<name>.pcp.zip.age`. This hides paths and the manifest. The
+   envelope MUST use a self-describing format (age, OpenPGP or JWE, for
+   example), so its holder can open it without the exporting host, and the
+   manifest inside repeats the declaration as `archive_encryption`.
+3. **File level.** Single files inside a plaintext archive are ciphertext.
+   Such a file keeps its plaintext name plus the scheme's suffix
+   (`profile/pcp.health.json.jwe`, `memory/notes/visa.md.age`), its `files`
+   entry carries `encryption`, and its `sha256` is that of the ciphertext.
+   File-level encryption leaves paths and the manifest readable; use
+   archive-level encryption when paths themselves are sensitive.
+4. **Keys.** A declaration names the scheme, the `key_source`, an optional
+   `key_id` and `recipients`, the `key_custody` (`user` or `device`) and
+   `readable_by` (`principals`, and `escrow` when a third party holds a
+   recovery share). It never contains a key. `host` custody is not allowed:
+   an archive only the exporting host can decrypt is a backup, not an
+   export.
+5. **Defaults.** When the context's custody is `user` or `device`, the
+   exporter SHOULD encrypt the archive to a key the controller holds unless
+   the controller asks for plaintext. Under `device` custody the host holds
+   only ciphertext, so it exports page files with file-level declarations
+   (`key_source: "device_key"`) for the controller's devices to decrypt.
+   Ciphertext that the controller cannot decrypt with keys it holds is not
+   an export: it goes in `omitted` with reason `encrypted_key_unavailable`.
+   An exporter SHOULD offer file-level encryption for special-category
+   namespaces (§4.6 rule 4) in an otherwise plaintext archive.
+6. **Importers** verify hashes before decrypting. A file that fails to
+   decrypt fails the archive in restore mode and is `invalid` in import
+   mode.
+
+### 8.5 Extension data and connections
+
+1. Each tool extension (§6.5) that holds data in the context exports it
+   under `extensions/<id>/`, where `<id>` is its reverse-DNS id, and lists
+   it in the manifest's `extensions` with the number of records and, for
+   the reserved slots, `slot: "doc"` or `slot: "handoff"`. Its files are in
+   `files` like any other.
+2. The layout under `extensions/<id>/` is the extension's, and its
+   registration in [`extensions/`](extensions/) MUST describe it: the files
+   and their schemas, how records reference pages (by path or `id`, both of
+   which restore keeps), and how each record carries its partition and
+   provenance. RECOMMENDED: one file per record; Markdown with frontmatter
+   for prose (document sections, handoff bodies), using the §5.2 keys
+   `partition`, `source`, `review`, `updated` and `recorded_at` with their
+   §5.2 meanings; JSON otherwise.
+3. Extension data follows the same exclusions (§8.2 item 8) and coverage
+   (§8.1) as pages: a partial export includes only records the requester
+   may read.
+4. An importer that implements the extension imports its data under the
+   same restore and import rules. One that does not MUST NOT drop it
+   silently. In restore mode it SHOULD keep the files verbatim and include
+   them unchanged in its own later exports; otherwise it reports them as
+   `extensions_not_imported` and the controller decides. Kept but unserved
+   extension data is still content: the encryption declaration covers it
+   and erasure reaches it.
+5. **Connections.** Only configuration travels: `connections/<id>.json`
+   holds the connection's type, label, enabled state and settings without
+   secrets, and its manifest entry says `credentials_included: false`.
+   After a restore the controller authorizes each connection again on the
+   new server.
+
+### 8.6 Versioning
+
+1. `pcp_version` in the manifest is the PCP version whose rules the
+   content follows. An exporter writes the version it implements and does
+   not write older formats.
+2. `manifest_version` versions the archive layout: `"2"` for v0.3. Any
+   change to the layout or the manifest increments it.
+3. An importer MUST check both before writing anything, and MUST reject an
+   archive whose versions it does not support with a report that names
+   them. It SHOULD accept archives of the previous PCP version, converting
+   them as that version's migration notes say (Appendix B, Phase 5). v0.2
+   defined no archive, so a v0.3 importer has none to convert; v0.2 page
+   frontmatter found in other tools' folders is handled by §8.7.3 item 8.
+4. Schemas are versioned by path (`schemas/0.3/`), so an archive validates
+   against the schemas of its own `pcp_version`.
+
+### 8.7 Import
+
+An importer reads an archive in one of two modes:
+
+| Mode | Target | Requested by | Result |
+|---|---|---|---|
+| **restore** | An empty context | Its controller | The context as it was: paths, page bytes, server-stamped keys, principals, partitions, access lists, review state, audit log, receipts |
+| **import** | Any context | A principal with `propose` or `write` on the target partitions | The pages, marked as imported, and in a context with the `review` feature, as proposals |
+
+Restore is how a context moves between hosts (export, restore, re-grant).
+Import is how memory from another context or another tool joins an
+existing one.
+
+#### 8.7.1 Checks before writing
+
+1. **Unpack safely.** Reject the archive if an entry is absolute, has an
+   empty or `..` segment, a NUL byte or a backslash, is a link or a device,
+   repeats a name, or would land outside the target directory. Check sizes
+   against limits before unpacking.
+2. **Verify** every §8.3 check and the versions (§8.6). If any fails,
+   write nothing and return a report with `status: "rejected"`.
+3. **Check rights** on every target partition (§8.7.3 item 7) before
+   writing.
+4. A server SHOULD support `dry_run`: the report without any write.
+
+#### 8.7.2 Restore
+
+1. The target context MUST be empty: no pages, no profile document and no
+   extension data. The requester MUST be its controller, and the archive
+   MUST have `coverage: "full"`. The target takes the archive's `kind`.
+2. **Everything is kept as it is.** Page, revision and history files are
+   stored so that the server's own export of them meets §8.8: the same
+   bytes on the same implementation, the same data and body bytes on
+   another. Server-stamped keys keep their archive values (§5.2.3), and no
+   `x_import` is added.
+3. **Principals and partitions** are created from `context.json` with the
+   same ids, partitions and access lists. Each principal is **unbound**
+   until the controller binds it to an account or a credential on the new
+   server, and an unbound principal cannot authenticate. The archive's
+   controller becomes the target's controller, bound to the requester's
+   account.
+4. **Audit and receipts.** The audit entries and erasure receipts are
+   imported with their ids and times, and the server appends an entry for
+   the restore (`channel: "import"`, `action: "import.restore"`).
+5. **Grants and connections** are not restored. Clients are granted again
+   and connections authorized again.
+6. **All or nothing.** A restore that fails part way MUST leave the target
+   empty.
+
+#### 8.7.3 Import
+
+For each page in the archive, an importer in import mode:
+
+1. **Marks the page as imported.** It sets `source.origin: import`;
+   `source.principal` to the mapped author (item 7) or else the importing
+   principal; `source.client` to the importing client; keeps
+   `source.basis` and `source.session`; and sets `source.at` to the source's
+   `source.at`, or else its `recorded_at`. It sets `recorded_at` to the
+   import instant, so `as_of` stays true for this context. It keeps
+   `updated` (converted per item 8). It adds `x_import` (§5.2.1): `format:
+   "pcp"`, `at`, `exporter`, the source `context`, the source `id`, the
+   file's `sha256`, the source `recorded_at`, `source`, and `review` and
+   `partition` when it changed them.
+2. **Applies review.** In a context with the `review` feature every
+   imported page is a proposal: `review: {state: proposed, generated: {by,
+   at}}`, with `by` the stamped `source.principal` and `at` the import
+   instant; the source's review object moves to `x_import.review`. The
+   target's own reviewers approve it (§5.4). A server MAY let its
+   controller approve a whole import at once; the audit entry records it
+   and each page gets `verified` by the controller. In a context without
+   `review`, imported pages are approved, and source pages that are
+   proposed or rejected are skipped (`skipped_review_state`) unless the
+   requester asks for them as approved pages.
+3. **Imports pages only.** Revisions and history belong to the source's
+   review and versioning; they are reported, not imported. The source's
+   audit log and receipts describe another context and are not imported.
+   Profile documents are imported only on request, as an RFC 7396 merge
+   patch onto the target's document (§4.3), with the scopes `profile_update`
+   would need.
+4. **Keeps sensitivity.** A `sensitive` page stays
+   sensitive. Creating it needs `memory:write` or `memory:propose`;
+   replacing an existing sensitive page also needs `memory.sensitive:write`
+   (§5.2.2).
+5. **Resolves path conflicts.** When the path is free the page is created.
+   When it is taken:
+   - by a page with the same idempotency key (item 6): `skipped_duplicate`;
+   - by a page the importer cannot read: `skipped_conflict`, or `renamed`
+     under `on_conflict: rename`, revealing nothing else (§5.2.2);
+   - otherwise as the request's `on_conflict` says. `revise` (the default
+     with `review`) makes the incoming page a pending revision of the
+     existing one. `skip` (the default without `review`) reports
+     `skipped_conflict`. `rename` stores it at `<path>-imported-<n>`, with
+     the smallest free `n` and the last segment shortened to fit 64
+     characters, and records the source path in `x_import.path`.
+     `replace` overwrites the page; it needs `write` on the partition, and
+     `memory.sensitive:write` if either page is sensitive.
+
+   **Case collisions.** A path that differs only in case from an existing
+   page, or from an earlier page of the same import, counts as taken. An
+   archive with a case-only collision fails §8.3 check 4. For foreign
+   folders from case-sensitive file systems, the later of two such paths is
+   renamed.
+6. **Is idempotent.** The idempotency key is the source path
+   (`x_import.path`, or else the page's path) together with the SHA-256 of
+   the file as received (`x_import.sha256`). A page whose key matches is
+   skipped as a duplicate, so running an import twice changes nothing,
+   while an edited source page (a new hash) is imported again under
+   `on_conflict`.
+7. **Maps principals and partitions.** Principal ids are local to a
+   context (§1.3): `human:dana` in the source is not `human:dana` in the
+   target. The request MAY carry a `principal_map` from source ids to target
+   ids, set by the target's controller; mapped ids are written into
+   `source.principal`, `source.on_behalf_of` and `review.generated.by`, and
+   unmapped authors become the importing principal. `x_import.source`
+   always keeps the source ids. The request carries a target `partition`
+   for unmapped source partitions (default `default`) and MAY carry a
+   `partition_map`. Import never creates partitions or changes access
+   lists, and the importer needs `propose` or `write` on every target
+   partition; if it lacks one, the import is rejected before anything is
+   written.
+8. **Converts timestamps.** Server-stamped instants (`updated`,
+   `recorded_at`, `expires`, review `at`) become RFC 3339 UTC: values like
+   `YYYY-MM-DD HH:MM:SS` or `YYYY-MM-DDTHH:MM:SS` without an offset are
+   taken as UTC; values with an offset are converted; a date-only `updated`
+   becomes midnight UTC; Unix seconds or milliseconds are converted.
+   `valid_from` and `valid_until` keep their offsets. An unparseable value
+   makes the page `invalid`. A missing `updated` takes the best source time
+   the mapping names, or else the import instant; an importer never invents
+   an earlier time than the source states. A converted value is not stored
+   a second time in `x_import`.
+9. **Skips** pages whose `expires` has passed (`skipped_expired`) and pages
+   that match an erasure tombstone (`skipped_erased`, §8.9.5).
+10. **Keeps unknown keys one way (settles S19).** A PCP archive has no
+    unknown keys: every key is a §5.2 key or an `x_*` or `x-*` key, kept as
+    it is. For other formats, values that have a PCP key are mapped and
+    not repeated; values without one go once into `x_import.fields` under
+    their source names; derived values (hashes, scores, embeddings) are
+    dropped. The raw source frontmatter is not kept: it would restate
+    mapped values, and the two copies drift apart as soon as the page is
+    edited. An implementation that needs its own keys for its own round
+    trip keeps them under its own `x_<name>` key (for example
+    `x_agent_brain`).
+11. **Writes an audit entry** (`channel: "import"`, `action:
+    "import.merge"`, categories, counts; never paths).
+
+Extension data follows §8.5 item 4 in both modes.
+
+#### 8.7.4 Import report
+
+An import returns a report conforming to `$defs/import_report` in the
+manifest schema: mode, status (`complete`, `partial` or `rejected`), the
+archive's exporter, `exported_at` and manifest hash, counts per outcome,
+and per item outcomes with paths. The report goes only to the requester;
+the audit entry carries the counts.
+
+#### 8.7.5 Other formats
+
+Importers for other tools' exports use import mode with
+`x_import.format` naming the tool. The mappings for Agent Brain, Basic
+Memory, Mem0, supermemory, OMP, Remnic and DTI conversations are in
+[`docs/interop.md`](docs/interop.md) (informative). When a source has no
+hashes, the importer computes `x_import.sha256` over the record as received
+(for JSON records, over its RFC 8785 canonical form). An export produced by
+a model summarizing memory is lossy by design; an importer SHOULD use the
+source's lossless listing instead when one exists.
+
+### 8.8 Round trip
+
+The **body** of a page is the bytes after the line that closes its
+frontmatter block. The guarantee:
+
+1. **Same implementation.** Export a context (A), restore it into an empty
+   context on the same implementation, and export again (B). Every file
+   under `memory/`, `revisions/`, `history/`, `profile/` and `extensions/`,
+   and `context.json`, is byte-identical in A and B. B's audit log is A's
+   followed by the entries for the restore and the export.
+2. **Across implementations.** Export from X, restore on Y, export from Y.
+   For every page, revision and history file the body is byte-identical and
+   the frontmatter is equal as data (the same keys and values after a YAML
+   1.2 core-schema parse), including `updated`, `recorded_at`, `id`,
+   `source`, `review`, `relations` and every `x_*` key; key order and
+   quoting may differ. `context.json`, profile documents, audit entries and
+   receipts are equal as JSON.
+3. **Import is lossless but not a round trip.** It records the import
+   (`source.origin`, `recorded_at`, `review`, `x_import`), so the frontmatter
+   changes, but every source value is in the imported page or in its
+   `x_import`, and the body is byte-identical.
+
+So a server that stores fields rather than documents MUST keep, for every
+restored or imported page, each frontmatter key it has no column for and
+the body bytes as received.
+
+### 8.9 Erasure
+
+Erasure removes data from the context, from what was derived from it, and
+from every copy the server controls, and leaves a **receipt** that proves it
+ran without saying what was erased. Every conforming server MUST support it
+on its management surface.
+
+#### 8.9.1 Requests
+
+1. The controller requests erasure, or a role the controller appoints.
+   Kinds:
+   - `subject`: everything whose content matches a subject string, in every
+     partition;
+   - `pages`: pages named by path or `id`;
+   - `context`: the whole context, which also revokes every grant and ends
+     the context.
+2. `include_derived` (default `true`) extends the targets to pages whose
+   `derived_from` names a target, transitively, and to consolidation output
+   built from them.
+3. The server documents its matching for `subject`. It SHOULD match the
+   phrase case-insensitively in titles, bodies, tags and `x_*` values, and
+   MUST NOT widen a multi-word subject to its single words.
+4. A server SHOULD offer a dry run that returns counts per store and
+   deletes nothing.
+
+#### 8.9.2 Order of operations
+
+1. **Collect** every target: pages, their revisions and history, derived
+   pages, extension records, and their index, embedding and cache entries.
+   Also collect the stores the server does not delete from directly:
+   backups, replicas, workers and queues.
+2. **Audit first.** Write the audit entry for the request synchronously
+   (`action: "erase.request"`, `categories` including `erasure`, the
+   receipt id in `object_ids`). If it cannot be written, abort and delete
+   nothing.
+3. **Delete** the targets and their derived entries, and every archive the
+   server holds that was made before the erasure (§8.1 item 4), since any of
+   them may contain the targets. Then ask the other stores to delete, and
+   collect their results.
+4. **Check for residue.** Run the same matching again over the context and
+   the remaining archives, and record what it finds per store.
+5. **Write the receipt** and a completion audit entry (`action:
+   "erase.complete"`).
+6. Archives already downloaded are out of the server's reach. The
+   management surface SHOULD tell the controller that archives made before
+   the erasure still contain the erased data.
+
+#### 8.9.3 Receipt
+
+Schema: [`schemas/0.3/erasure.receipt.schema.json`](schemas/0.3/erasure.receipt.schema.json).
+A receipt holds the kind, the requester, the request and completion
+times, counts per store, residue per store, the propagation result per
+store and a status:
+
+- `complete`: no residue and every store confirmed;
+- `pending_propagation`: no residue, but a store will delete later, with
+  `due_by` (for example a backup that ages out at the end of its retention);
+- `residue_found`: residue remains, or a store failed.
+
+A receipt MUST NOT contain the subject, matched paths, titles or content,
+nor an unkeyed hash of any of them: a plain SHA-256 of a short name is
+reversed by guessing. For `subject` erasures it carries `subject_digest`, an
+HMAC-SHA-256 of the normalized subject under a per-context key the server
+keeps and never exports, so the management surface MAY confirm whether a
+given subject was erased. Receipts are kept for the life of the context,
+are readable by the controller, and travel in exports (§8.2 item 7).
+
+#### 8.9.4 The `erase_request` tool
+
+`erase_request` (§6.2) is OPTIONAL. It needs `erase:write`, and the
+principal MUST be the controller or hold a role the controller appointed
+for erasure: the scope is the upper bound, the server decides (§7.3). It
+offers kinds `subject` and `pages` only; whole-context erasure stays on the
+management surface. `dry_run` defaults to `true`, so a first call never
+deletes, and the tool is annotated destructive. A real run returns the
+receipt.
+
+#### 8.9.5 Tombstones
+
+An archive made before an erasure still holds the erased data. To keep an
+import from bringing it back, a server SHOULD keep, with each receipt, keyed
+digests (under the same key) of each erased page's file and of its path and
+body. When it does, import mode MUST skip pages that match
+(`skipped_erased`). Tombstones are keyed digests, not content, and are not
+exported, because their key is not.
+
+### 8.10 Retention and deleted pages
+
+1. After a page's `expires` (§5.2.1) it MUST NOT be returned (§5.5) or
+   exported, and SHOULD be deleted, with its revisions, history and derived
+   entries, within the server's documented retention interval
+   (RECOMMENDED 24 hours).
+2. Retention is not erasure. It removes the expired page, not pages
+   derived from it (they carry their own `expires`), and leaves no receipt.
+   It runs as a server principal (`service:retention`) and writes one audit
+   entry per run (`channel: "system"`, `action: "retention.sweep"`,
+   `counts.deleted`).
+3. A page a principal deleted is no longer part of the context. It MUST
+   NOT be returned or exported. A server that keeps deleted pages for undo
+   SHOULD purge them within a documented interval, and erasure reaches them.
+4. Archives a server keeps for download expire as §8.1 item 4 says.
 
 ## 9. Security baseline *(pending, v0.2 text; rewritten in Phase 4; see SECURITY.md)*
 
@@ -880,14 +1429,17 @@ v0.3 defines two claimable profiles, written out in Phase 5:
 
 - **Personal**: discovery (§2), transport and OAuth (§3), `profile.core`
   (§4.1, §4.3, §4.4), memory and the tools marked "Always" or "The context
-  has a profile" (§5, §6), scopes and audit (§7), export (§8). None of the
-  optional features in §1.4 is required.
+  has a profile" (§5, §6), scopes and audit (§7), export, import and
+  erasure (§8). None of the optional features in §1.4 is required.
 - **Team**: the same without `profile.core`, plus whichever of `partitions`,
   `review` and `delegation` the context declares, each with its tools and
   rules.
 
 Extensions and connections are optional; if present they MUST follow §4.5,
-§4.6 and §6.
+§4.6, §6 and §8.5.
+
+A v0.2 checklist from the export branch is in
+[`docs/conformance.md`](docs/conformance.md); Phase 5 rewrites it for v0.3.
 
 ## 11. Open questions *(pending; replaced by the v0.4 list in Phase 5)*
 
@@ -931,7 +1483,7 @@ project's maintainers and for any similar server, not a requirement.
 | `created` (`Y-m-d H:i:s` UTC), no `updated` | `recorded_at` and `updated` (RFC 3339 UTC); rows are immutable, so `updated` = `created` | Core; format conversion |
 | Working-memory `expires` (48 h) | `expires` (§5.2.1), not `valid_until` | Core |
 | Status `rolled_up` | `lifecycle: archived` plus `derived_from` on the roll-up | Core |
-| Status `deleted` | Not exported; erasure in §8 (Phase 3) | Phase 3 |
+| Status `deleted` | Not part of the context: not returned, not exported (§8.10 item 3); erasure reaches it | Core |
 | `importance` 0 to 100 | `importance` 0 to 1 | Core |
 | `agent_id`, `agent_written` | `source.principal`, `source.origin` | Core |
 | `client` column | `source.client` | Core |
@@ -951,8 +1503,9 @@ project's maintainers and for any similar server, not a requirement.
 | `memory-write` | `memory_write` into a partition with `write` | Core |
 | `<memory_data>` wrapper with provenance attributes | Untrusted-content framing, §9 (Phase 4) | Phase 4 |
 | `wp_ab_audit` | Audit entries (§7.5). Add `client`, `grant`, `categories`; `args_hash` must be keyed or left out of `audit_list` | Core; fields to add |
-| Forget with audit-first abort and receipt | Erasure with receipt (§8, Phase 3, D11) | Phase 3 |
-| Markdown export | §8 manifest and layout | Phase 3 |
+| Forget with audit-first abort and receipt | Erasure with receipt (§8.9), with a keyed `subject_digest` | Core |
+| Markdown export (`Modules/Forget/Exporter.php`) | §8 archive and manifest; every exporter field is mapped in [`docs/interop.md`](docs/interop.md) §2 | Core |
+| Backups (encrypted with a site key) | Not an export: host custody (§8.4 item 4). Erasure propagates to them (§8.9.2) | Out of scope |
 | Handoffs (`ab_handoff`, `handoff-read`, `handoff-request-review`) | Handoffs extension slot (§6.5) | Extension |
 | Artifacts, sections, leases, versions, stages, section review | Shared documents extension slot (§6.5) | Extension |
 | Publish gate (`public-grant`), `publish_blocked` | Out of scope: publishing outside the context | Out of scope |
@@ -973,6 +1526,8 @@ project's maintainers and for any similar server, not a requirement.
 | (none) | `partition_list`, `audit_list`: new |
 | `handoff-read`, `handoff-request-review` | `handoff_*` (extension) |
 | `artifact-*`, `section-*` | `doc_*` (extension) |
+| Forget (wp-admin) | Erasure on the management surface (§8.9); `erase_request` optional |
+| Export (wp-admin download) | Full export on the management surface (§8.1); `export_create` optional |
 
 ### A.3 Implementing on WordPress
 

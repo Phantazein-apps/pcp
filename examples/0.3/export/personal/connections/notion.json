@@ -1,0 +1,9 @@
+{
+  "id": "notion",
+  "type": "notion",
+  "label": "Notion (personal workspace)",
+  "enabled": true,
+  "settings": {
+    "read_only": true
+  }
+}

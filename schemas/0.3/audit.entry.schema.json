@@ -61,7 +61,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^(profile\\.[a-z][a-z0-9_.]*|memory|memory\\.sensitive|review|audit|export|grant|partition|conn\\.[a-z][a-z0-9]{0,15}|ext\\.[a-z][a-z0-9_]*)$"
+        "pattern": "^(profile\\.[a-z][a-z0-9_.]*|memory|memory\\.sensitive|review|audit|export|erasure|grant|partition|conn\\.[a-z][a-z0-9]{0,15}|ext\\.[a-z][a-z0-9_]*)$"
       }
     },
     "partitions": {
@@ -100,6 +100,10 @@
           "minimum": 0
         },
         "written": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deleted": {
           "type": "integer",
           "minimum": 0
         }

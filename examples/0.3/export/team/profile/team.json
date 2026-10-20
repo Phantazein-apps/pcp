@@ -1,0 +1,35 @@
+{
+  "pcp_version": "0.3",
+  "name": "Example Studio",
+  "purpose": "A two-person design studio and its agents, building client websites.",
+  "controller": "org:example-studio",
+  "members": [
+    {
+      "principal": "human:dana",
+      "display_name": "Dana",
+      "role": "curator"
+    },
+    {
+      "principal": "human:lee",
+      "display_name": "Lee",
+      "role": "curator"
+    },
+    {
+      "principal": "agent:scribe",
+      "display_name": "Scribe",
+      "role": "agent"
+    },
+    {
+      "principal": "agent:scout",
+      "display_name": "Scout",
+      "role": "agent"
+    }
+  ],
+  "languages": [
+    "en",
+    "es"
+  ],
+  "timezone": "Europe/Madrid",
+  "ai_instructions": "Write plainly. No em dashes. Credit both founders.",
+  "updated": "2026-10-02T08:00:00Z"
+}

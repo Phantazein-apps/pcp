@@ -1,0 +1,23 @@
+{
+  "pcp_version": "0.3",
+  "name": "Sam Example",
+  "preferred_name": "Sam",
+  "pronouns": "they/them",
+  "languages": [
+    {
+      "code": "en"
+    },
+    {
+      "code": "pt",
+      "contexts": [
+        "family"
+      ]
+    }
+  ],
+  "timezone": "Europe/Lisbon",
+  "communication": {
+    "tone": "friendly",
+    "verbosity": "concise"
+  },
+  "updated": "2026-10-11T07:45:00Z"
+}

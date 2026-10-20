@@ -228,6 +228,71 @@
               }
             }
           ]
+        },
+        "x_import": {
+          "type": "object",
+          "description": "Set by an importer in import mode (SPEC §8.7.3). Records where the page came from and keeps, once, every source value PCP has no key for. Restore never adds it. Kept on later exports and imports.",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "at"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,49}$",
+              "description": "pcp, or a foreign format named in docs/interop.md (agent-brain, basic-memory, mem0, supermemory, omp, remnic, dti-conversation)."
+            },
+            "at": {
+              "$ref": "#/$defs/utc_datetime",
+              "description": "When the import ran."
+            },
+            "exporter": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "exporter.name from the archive manifest, or the source tool."
+            },
+            "context": {
+              "type": "string",
+              "maxLength": 512,
+              "description": "The source context: its discovery URL or handle, when known."
+            },
+            "id": {
+              "type": "string",
+              "maxLength": 256,
+              "description": "The item's id in the source."
+            },
+            "path": {
+              "$ref": "#/$defs/path",
+              "description": "The page's path in the source, when the import renamed it or mapped it from another scheme."
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$",
+              "description": "SHA-256 of the source file or record as received. With the path, the idempotency key (SPEC §8.7.3)."
+            },
+            "recorded_at": {
+              "$ref": "#/$defs/utc_datetime",
+              "description": "recorded_at in the source, which import replaces with the import instant."
+            },
+            "source": {
+              "type": "object",
+              "description": "The source object as it was in the source context, with principal ids as they were there."
+            },
+            "review": {
+              "type": "object",
+              "description": "The review object as it was in the source context, when import reset it."
+            },
+            "partition": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "The partition in the source context, when import mapped it to another."
+            },
+            "fields": {
+              "type": "object",
+              "description": "Source values with no PCP key, under their source names. Values that only restate a mapped key, and derived values (hashes, scores, embeddings), are not kept."
+            }
+          }
         }
       },
       "patternProperties": {

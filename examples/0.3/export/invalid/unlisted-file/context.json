@@ -1,0 +1,17 @@
+{
+  "pcp_version": "0.3",
+  "kind": "personal",
+  "controller": "human:ana",
+  "principals": [
+    {
+      "id": "human:ana",
+      "status": "active"
+    }
+  ],
+  "partitions": [
+    {
+      "name": "default",
+      "access": []
+    }
+  ]
+}

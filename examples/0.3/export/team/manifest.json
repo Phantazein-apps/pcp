@@ -1,0 +1,157 @@
+{
+  "pcp_version": "0.3",
+  "manifest_version": "2",
+  "exported_at": "2026-10-19T09:30:00Z",
+  "exporter": {
+    "name": "example-team-server",
+    "version": "0.3.0",
+    "url": "https://github.com/pcp-protocol/pcp/tree/main/examples/0.3/export"
+  },
+  "requested_by": "human:dana",
+  "context": {
+    "kind": "team",
+    "controller": "org:example-studio",
+    "handle": "example-studio",
+    "created_at": "2026-08-01T09:00:00Z",
+    "discovery": "https://studio.example/.well-known/pcp.json",
+    "features": [
+      "partitions",
+      "review"
+    ],
+    "path": "context.json",
+    "encryption": {
+      "key_custody": "host",
+      "readable_by": [
+        "principals",
+        "host"
+      ]
+    }
+  },
+  "coverage": "full",
+  "profile": {
+    "type": "team",
+    "path": "profile/team.json"
+  },
+  "memory": {
+    "path": "memory/",
+    "page_count": 9,
+    "sensitive_page_count": 1,
+    "review_counts": {
+      "approved": 7,
+      "proposed": 1,
+      "rejected": 1
+    },
+    "partition_counts": {
+      "default": 5,
+      "site": 3,
+      "scribe-working": 1
+    },
+    "revisions": [
+      {
+        "file": "revisions/knowledge/estimates-not-advice/1.md",
+        "page": "knowledge/estimates-not-advice",
+        "revision": "rev-88",
+        "base_updated": "2026-09-20T11:00:00Z"
+      }
+    ],
+    "index_included": false
+  },
+  "audit": {
+    "path": "audit/log.jsonl",
+    "entries": 8,
+    "from": "2026-10-17T15:20:00Z",
+    "to": "2026-10-19T09:30:00Z",
+    "truncated": true
+  },
+  "erasures": {
+    "path": "erasures/receipts.jsonl",
+    "receipts": 1
+  },
+  "extensions": [
+    {
+      "id": "org.example.handoff",
+      "path": "extensions/org.example.handoff/",
+      "slot": "handoff",
+      "version": "1",
+      "items": 1
+    }
+  ],
+  "credentials_included": false,
+  "files": [
+    {
+      "path": "audit/log.jsonl",
+      "sha256": "f20b17b6fa3fce94f80e5ac795b329064199c7478931cbf36f8a4306a301f6fc",
+      "bytes": 2090
+    },
+    {
+      "path": "context.json",
+      "sha256": "0c9985383a9e93020a5194af556f00e823c637c95b8aac2c0b732f1513c03fda",
+      "bytes": 2611
+    },
+    {
+      "path": "erasures/receipts.jsonl",
+      "sha256": "ad0210f14c1bbb48218e435e262e1d7acda08e651b425582267b4f0c91577e40",
+      "bytes": 595
+    },
+    {
+      "path": "extensions/org.example.handoff/handoffs/7.json",
+      "sha256": "55ced2f365c3d77e06281755f0a1564ec8bdf93779cc574439f87a0421ac66f2",
+      "bytes": 393
+    },
+    {
+      "path": "memory/knowledge/contractor-rates.md",
+      "sha256": "a1e4dc8cff95257c85c1ad43d98db581057ba93e0d2b326ce04078180a729cca",
+      "bytes": 326
+    },
+    {
+      "path": "memory/knowledge/estimates-not-advice.md",
+      "sha256": "0c352d89828f0571c0bb7fc430449b09fa17899569c401cb06fa11f46d08f458",
+      "bytes": 597
+    },
+    {
+      "path": "memory/knowledge/launch-date.md",
+      "sha256": "74644752bfdb86a35c02f6dd38eedfc061fd0bfa90c45b4fa3de3d242a6790d7",
+      "bytes": 539
+    },
+    {
+      "path": "memory/knowledge/pricing-tier.md",
+      "sha256": "b01a1dbab34f992ed8792afb85bf7a16452b20896a63d3fac377cb48f5a66dd5",
+      "bytes": 448
+    },
+    {
+      "path": "memory/memory/episode/12.md",
+      "sha256": "245661323fd74b72f7162a296bf539f2da70eb63fe1fa4dded3bc282bcd4550e",
+      "bytes": 335
+    },
+    {
+      "path": "memory/memory/episode/37.md",
+      "sha256": "c7d31709b8e7430f1902068085d1b6fe79d8328d0d14b5f2166181553a2010e8",
+      "bytes": 458
+    },
+    {
+      "path": "memory/memory/episode/40.md",
+      "sha256": "bbe2a91e66d5d6dfb3e184cfd1ad8e80d45a9f67141e0b7f4ce902fdda11650d",
+      "bytes": 353
+    },
+    {
+      "path": "memory/memory/working/52.md",
+      "sha256": "4424751c13beba188754e0f8ac9810a9e58f77e4706d08c9f4f10696b01b03a4",
+      "bytes": 407
+    },
+    {
+      "path": "memory/procedures/release-notes.md",
+      "sha256": "9f347b7dd38e2f0cf32a19b76264da56bff24ed6e59490182da742e599a2fa6f",
+      "bytes": 621
+    },
+    {
+      "path": "profile/team.json",
+      "sha256": "1765be09905ca73dc96559ed07702136cef73a6b98af9b4320bd27c7520f3e80",
+      "bytes": 781
+    },
+    {
+      "path": "revisions/knowledge/estimates-not-advice/1.md",
+      "sha256": "3c85763294335ecf692554bc75802ac37657fc8531f066c1f27480d2bdc6894b",
+      "bytes": 530
+    }
+  ]
+}
