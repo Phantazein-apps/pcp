@@ -31,7 +31,7 @@
       {
         "namespace": "pcp.health",
         "path": "profile/pcp.health.json.jwe",
-        "schema": "https://phantazein-apps.github.io/pcp/schemas/0.3/pcp.health.schema.json",
+        "schema": "https://pcp-protocol.github.io/pcp/schemas/0.3/pcp.health.schema.json",
         "special_category": true
       }
     ]

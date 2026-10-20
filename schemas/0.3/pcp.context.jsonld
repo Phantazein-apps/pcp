@@ -1,7 +1,7 @@
 {
   "@context": {
     "@version": 1.1,
-    "pcp": "https://phantazein-apps.github.io/pcp/ns#",
+    "pcp": "https://pcp-protocol.github.io/pcp/ns#",
     "dcterms": "http://purl.org/dc/terms/",
     "prov": "http://www.w3.org/ns/prov#",
     "schema": "https://schema.org/",

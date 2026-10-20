@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/export.context.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/export.context.schema.json",
   "title": "PCP context descriptor",
   "description": "context.json in a PCP archive (SPEC §8.2): the context's kind and controller, its principals, its partitions and their access lists. A personal context has one human principal, the default partition and an empty access list. Grants, tokens and credentials are never part of it.",
   "type": "object",

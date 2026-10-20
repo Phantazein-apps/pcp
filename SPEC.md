@@ -1483,7 +1483,7 @@ project's maintainers and for any similar server, not a requirement.
 | `created` (`Y-m-d H:i:s` UTC), no `updated` | `recorded_at` and `updated` (RFC 3339 UTC); rows are immutable, so `updated` = `created` | Core; format conversion |
 | Working-memory `expires` (48 h) | `expires` (§5.2.1), not `valid_until` | Core |
 | Status `rolled_up` | `lifecycle: archived` plus `derived_from` on the roll-up | Core |
-| Status `deleted` | Not part of the context: not returned, not exported (§8.10 item 3); erasure reaches it | Core; the exporter must filter it |
+| Status `deleted` | Not part of the context: not returned, not exported (§8.10 item 3); erasure reaches it | Core |
 | `importance` 0 to 100 | `importance` 0 to 1 | Core |
 | `agent_id`, `agent_written` | `source.principal`, `source.origin` | Core |
 | `client` column | `source.client` | Core |
@@ -1503,8 +1503,8 @@ project's maintainers and for any similar server, not a requirement.
 | `memory-write` | `memory_write` into a partition with `write` | Core |
 | `<memory_data>` wrapper with provenance attributes | Untrusted-content framing, §9 (Phase 4) | Phase 4 |
 | `wp_ab_audit` | Audit entries (§7.5). Add `client`, `grant`, `categories`; `args_hash` must be keyed or left out of `audit_list` | Core; fields to add |
-| Forget with audit-first abort and receipt | Erasure with receipt (§8.9). The receipt's `subject_hash` must become a keyed `subject_digest` | Core; digest to change |
-| Markdown export (`Modules/Forget/Exporter.php`) | §8 archive and manifest; every exporter field is mapped in [`docs/interop.md`](docs/interop.md) §2 | Core; exporter to extend |
+| Forget with audit-first abort and receipt | Erasure with receipt (§8.9), with a keyed `subject_digest` | Core |
+| Markdown export (`Modules/Forget/Exporter.php`) | §8 archive and manifest; every exporter field is mapped in [`docs/interop.md`](docs/interop.md) §2 | Core |
 | Backups (encrypted with a site key) | Not an export: host custody (§8.4 item 4). Erasure propagates to them (§8.9.2) | Out of scope |
 | Handoffs (`ab_handoff`, `handoff-read`, `handoff-request-review`) | Handoffs extension slot (§6.5) | Extension |
 | Artifacts, sections, leases, versions, stages, section review | Shared documents extension slot (§6.5) | Extension |

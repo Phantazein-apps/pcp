@@ -42,12 +42,12 @@ In the tables, "fields" means `x_import.fields`, and "map" means the
 Agent Brain is a WordPress plugin that gives a team's agents shared,
 partitioned and reviewed memory. SPEC Appendix A maps its concepts. This
 section maps every field of its export, and the data its export does not
-yet carry, onto a PCP archive, checked against portakey `4f24875`
+yet carry, onto a PCP archive, checked against the plugin source at commit `4f24875`
 (`Modules/Forget/Exporter.php`, `Forgetter.php`, `Matcher.php`,
 `ReceiptRepository.php`, `Backup/Restore.php`, `TarReader.php`, and the
 memory and audit tables).
 
-### 2.1 Today's export, field by field
+### 2.1 The current export, field by field
 
 `Exporter::exportMarkdown()` writes one file per memory row
 (`memory-<id>.md`), knowledge post (`knowledge-<ID>.md`) and procedure post
@@ -68,7 +68,7 @@ manifest.
 | `status` | `active` | no `lifecycle` key (active) |
 | | `rolled_up` | `lifecycle: archived`; the roll-up names the row in `derived_from` |
 | | `proposed` | `review: {state: proposed, generated: {by: <agent>, at: <created>}}` |
-| | `deleted` | **not exported** (SPEC §8.10 item 3). Today's exporter selects every row, including deleted ones |
+| | `deleted` | not exported (SPEC §8.10 item 3) |
 | `source_ids` | JSON list of row ids | `derived_from`: `memory/<type>/<id>` for each |
 | (body) | `content` | body, the stored text as is (not the escaped `<memory_data>` framing that recall returns) |
 
@@ -109,32 +109,30 @@ manifest.
 | `ab_read_scopes`, `ab_write_scopes` user meta | `context.json` access: read gives `read`; write gives `propose` and `write`; curators get `review` |
 | Users with `ab_agent`, `ab_curator`, administrator | `context.json` principals with `roles`; deleted users that rows still name as `status: removed` |
 | Site | `controller`: `org:<site host>` or the administering human |
-| `wp_ab_audit` (`id`, `ts`, `actor_id`, `event`, `status`, `object_type`, `object_id`, `args_hash`, `meta`, `duration_ms`) | `audit/log.jsonl`: `id: ab-audit-<id>`, `at` from `ts`, `principal` from `actor_id`, `action` (PCP tool name for ability events), `channel` (`mcp` or `management`), `categories`, `outcome` from `status`, `object_ids: ab-<kind>-<id>`, counts from `meta`, `duration_ms`. Drop `args_hash`: it is an unkeyed hash of input (SPEC §7.5) |
-| `ab_forget_receipts` (`id`, `subject_hash`, `created`, `curator_id`, `counts`, `residue`, `status`) | `erasures/receipts.jsonl`: `id`, `kind: subject`, `requested_by`, `requested_at` and `completed_at` from `created`, `counts`, `residue`, `status` (`complete` or `residue_found`). `subject_hash` is an unkeyed SHA-256, so it is **not** exported; new receipts carry a keyed `subject_digest` (SPEC §8.9.3) |
+| `wp_ab_audit` (`id`, `ts`, `actor_id`, `event`, `status`, `object_type`, `object_id`, `args_hash`, `meta`, `duration_ms`) | `audit/log.jsonl`: `id: ab-audit-<id>`, `at` from `ts`, `principal` from `actor_id`, `action` (PCP tool name for ability events), `channel` (`mcp` or `management`), `categories`, `outcome` from `status`, `object_ids: ab-<kind>-<id>`, counts from `meta`, `duration_ms`. `args_hash` stays out unless it is keyed (SPEC §7.5) |
+| `ab_forget_receipts` (`id`, `subject_hash`, `created`, `curator_id`, `counts`, `residue`, `status`) | `erasures/receipts.jsonl`: `id`, `kind: subject`, `requested_by`, `requested_at` and `completed_at` from `created`, `counts`, `residue`, `status` (`complete` or `residue_found`). `subject_digest` only for a keyed digest (SPEC §8.9.3); any other subject hash stays out |
 | Handoffs (`ab_handoff`: title, content, `ab_handoff_to`, `ab_handoff_status`, `ab_handoff_action`, `ab_handoff_section`, `ab_source_memory_ids`) | `extensions/<handoff extension id>/`, slot `handoff` (SPEC §8.5); linked rows by page path |
 | Artifacts, sections, leases, versions, stages | `extensions/<doc extension id>/`, slot `doc` |
 | Application passwords, OAuth tokens and clients | Never exported (SPEC §8.2 item 8) |
 | Encrypted backups (`ab_backup_key`, a site key) | Not an export: host custody (SPEC §8.4 item 4). Erasure propagates to them |
 | Settings (`ab_proposal_threshold`, `ab_export_keep` and the like) | Not exported (server configuration) |
 
-### 2.3 What the exporter needs to change
+### 2.3 What a PCP exporter for Agent Brain produces
 
-1. Write the §8.2 layout and a `manifest.json` with every file's SHA-256
-   and size, counts, `omitted` and `credentials_included: false`.
-2. Emit partition slugs, principal ids from `user_login`, RFC 3339 UTC
-   times, `title` and `updated`.
-3. Filter `deleted` rows, rows past `expires`, and trashed posts.
-4. Emit frontmatter with a real YAML serializer. Today's `yamlScalar()`
-   quotes strings but escapes only `"`, and writes lists as `[a, b]`
-   unquoted, so a value with a comma, a backslash or a newline breaks. JSON
-   strings are valid YAML, so `wp_json_encode()` per value is enough.
-5. Add the data in §2.2, `context.json`, the audit log and the receipts.
-6. Keep the export-artifact handling as it is: protected directory, no
-   public URL, retention, and deletion of every artifact on forget all match
-   SPEC §8.1 item 4 and §8.9.2.
-7. Forget: key the subject digest (for example
-   `hash_hmac('sha256', $subject, <site secret>)`), and keep `Matcher`'s
-   phrase rule, which already meets SPEC §8.9.1 item 3.
+1. The §8.2 layout and a `manifest.json` with every file's SHA-256 and
+   size, counts, `omitted` and `credentials_included: false`.
+2. Partition slugs, principal ids from `user_login`, RFC 3339 UTC times,
+   `title` and `updated`.
+3. No `deleted` rows, rows past `expires`, or trashed posts.
+4. Frontmatter written by a YAML serializer. JSON strings are valid YAML
+   scalars, so `wp_json_encode()` per value is one simple way.
+5. The data in §2.2, `context.json`, the audit log and the receipts.
+6. Held export artifacts in a protected directory with no public URL, a
+   retention limit, and deletion on forget, as SPEC §8.1 item 4 and §8.9.2
+   ask; the plugin's export module already works this way.
+7. Receipts with a keyed subject digest (SPEC §8.9.3), for example
+   `hash_hmac('sha256', $subject, <site secret>)`. The plugin's phrase
+   matching for forget fits SPEC §8.9.1 item 3.
 
 ### 2.4 Importing into Agent Brain
 
@@ -153,11 +151,11 @@ manifest.
 `TarReader` already rejects absolute paths, `..`, NUL bytes, links and
 devices, which is most of SPEC §8.7.1 item 1. A PCP importer can reuse it.
 
-### 2.5 A round trip through the hosted demo brain
+### 2.5 A worked round trip
 
-The demo holds a real team brain (scope "MultiPass + Agent Brain (Dennis &
-Roger)": 11 memories, 3 procedures and 6 proposed decisions, as of
-2026-10-19). Reasoned through without copying its content:
+A small team brain, of the kind a team builds in its first weeks: one
+scope, an agent that writes episodes, two curators, 11 episodes, 3
+procedures and 6 decisions waiting for review.
 
 1. **Export.** One partition (the scope's slug). Principals: the agent
    that wrote the episodes (`agent:<login>`), the two curators
@@ -230,7 +228,7 @@ listing (`get_all` with pagination) and the history instead (SPEC §8.7.5).
 ## 5. supermemory
 
 [supermemory](https://supermemory.ai/docs) keeps versioned memory entries.
-Field names below are as read in the Phase 1 audit (2026-10-18); check them
+Field names below are as documented on 2026-10-18; check them
 against the API version you import from.
 
 | supermemory | PCP |
@@ -241,7 +239,7 @@ against the API version you import from.
 | `isStatic` | `type: semantic`, `lifecycle: validated` |
 | `isInference` | `source.basis: inferred` (and a proposal in a context with review) |
 | `isForgotten` | not imported (`skipped_erased`) |
-| `forgetAfter` | `expires`. (The Phase 1 audit suggested `valid_until`, before SPEC §5.2 separated retention from validity; forgetting is retention.) |
+| `forgetAfter` | `expires`. (An earlier draft mapped it to `valid_until`, before SPEC §5.2 separated retention from validity; forgetting is retention.) |
 | `temporalContext` dates | `valid_from`, `valid_until`; anything else in fields |
 | Relations `updates`, `extends`, `derives` | `supersedes`, `refines`, `derived_from` |
 | Container tags (namespaces) | `partition` via map; also `tags` |
@@ -339,14 +337,14 @@ sharing, one way and lossy, and never counts as an export.
 
 [`schemas/0.3/pcp.context.jsonld`](../schemas/0.3/pcp.context.jsonld) maps
 frontmatter keys to Dublin Core, PROV-O and schema.org terms, with PCP terms
-under `https://phantazein-apps.github.io/pcp/ns#` where nothing fits, so a
+under `https://pcp-protocol.github.io/pcp/ns#` where nothing fits, so a
 page lifts to RDF (for example into a Solid pod) without PCP requiring RDF.
 Page paths become `@id`s relative to the context's base URL. It is a draft:
 the terms may change before v0.3 is released, and the `ns#` terms are not
 yet documented at that URL.
 
 ```json
-{ "@context": "https://phantazein-apps.github.io/pcp/schemas/0.3/pcp.context.jsonld",
+{ "@context": "https://pcp-protocol.github.io/pcp/schemas/0.3/pcp.context.jsonld",
   "@id": "knowledge/estimates-not-advice",
   "title": "The calculator shows estimates, never advice",
   "type": "semantic",

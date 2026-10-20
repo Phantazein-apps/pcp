@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/erasure.receipt.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/erasure.receipt.schema.json",
   "title": "PCP erasure receipt",
   "description": "The record an erasure leaves (SPEC §8.9): what kind of erasure ran, who asked, how many items each store lost, what residue the check found, and whether the result is complete. It never contains the subject, matched paths, titles or content, nor an unkeyed hash of any of them.",
   "type": "object",

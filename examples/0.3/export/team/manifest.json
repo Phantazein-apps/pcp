@@ -5,7 +5,7 @@
   "exporter": {
     "name": "example-team-server",
     "version": "0.3.0",
-    "url": "https://github.com/Phantazein-apps/pcp/tree/main/examples/0.3/export"
+    "url": "https://github.com/pcp-protocol/pcp/tree/main/examples/0.3/export"
   },
   "requested_by": "human:dana",
   "context": {

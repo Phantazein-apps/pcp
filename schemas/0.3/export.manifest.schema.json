@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/export.manifest.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/export.manifest.schema.json",
   "title": "PCP export manifest",
   "description": "manifest.json at the root of a PCP archive (SPEC §8.3). It states what the archive holds so an importer can check that it received all of it before writing anything. Every other file is listed with its SHA-256 and size, both directions; counts must match the files; anything the exporter could not include is declared in omitted. The manifest is the only file not listed in files.",
   "type": "object",
