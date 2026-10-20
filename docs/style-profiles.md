@@ -1,4 +1,4 @@
-# Style profiles — draft (informative)
+# Style profiles: draft (informative)
 
 Status: DRAFT · Informative, except where it cites SPEC.md
 Prior art: this pattern generalizes ideas from Percona Lab's MYNAH (MIT),
@@ -6,9 +6,9 @@ rebuilt here as an open PCP convention.
 
 ## What this is
 
-A **style profile** teaches any AI client to write *as* the context owner —
+A **style profile** teaches any AI client to write *as* the context owner:
 their register, rhythm, greetings, sign-offs, even their consistent
-imperfections — per communication context and per language.
+imperfections, per communication context and per language.
 
 Voice is impersonation-adjacent, so the entire mechanism rides on two things
 the protocol already has: memory pages and the sensitivity gate. There is no
@@ -36,16 +36,16 @@ style/_guide                   optional: how-to-apply instructions, as data
   The taxonomy below is a starting vocabulary, not a closed list.
 - `{lang}` is a BCP 47 primary subtag (`pt`, `de`, `ja`). Clients fall back:
   exact variant → base context → `style/writing-profile`.
-- The page body is Markdown. Its internal structure (below) is convention —
+- The page body is Markdown. Its internal structure (below) is convention:
   servers MUST treat it as opaque content.
 
 ## Profile body (convention for authors and clients)
 
-Keep each profile compact — 8 to 15 bullet lines. Recommended fields:
+Keep each profile compact: 8 to 15 bullet lines. Recommended fields:
 
 | Field | Notes |
 |---|---|
-| **Tone** | e.g. "casual-collaborative — warm but efficient" |
+| **Tone** | e.g. "casual-collaborative, warm but efficient" |
 | **Formality** | 1–5 with a one-clause rationale |
 | **Sentence / message length** | typical rhythm and size |
 | **Greeting / Closing** | exact habitual forms, or "none" |
@@ -53,7 +53,7 @@ Keep each profile compact — 8 to 15 bullet lines. Recommended fields:
 | **Directness** | how asks, pushback, and no's are phrased |
 | **Signature moves** | 2–3 recurring patterns, quoted |
 | **Avoid** | what would instantly not sound like the owner |
-| *Imperfections* (optional) | consistent misspellings, casing, abbreviations — reproducible style unless the owner disables it |
+| *Imperfections* (optional) | consistent misspellings, casing, abbreviations; reproducible style unless the owner disables it |
 | *Formality markers* (optional, non-English) | tu/vous, du/Sie, honorifics |
 
 Header metadata (in the page body, below the frontmatter): last-updated,
@@ -85,10 +85,10 @@ Extends the rules in [profile-bootstrap.md](profile-bootstrap.md):
 1. Pick the profile by context (recipient relationship beats channel;
    audience size beats topic), then by target language, with the fallback
    chain above.
-2. Apply it closely — including imperfections unless disabled. Never fall
+2. Apply it closely, including imperfections unless disabled. Never fall
    back to generic assistant voice while claiming to write as the owner.
 3. **Fail loudly on the consent gate.** If style pages exist but the token
-   lacks `memory.sensitive:read`, say exactly that and stop impersonating —
+   lacks `memory.sensitive:read`, say exactly that and stop impersonating;
    never silently degrade to a generic voice the owner didn't approve.
 4. Drafting in another language means writing natively in that language's
    register, not translating an English draft.

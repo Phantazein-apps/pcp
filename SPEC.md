@@ -1,16 +1,13 @@
-# PCP Specification: v0.3-draft
+# PCP Specification: v0.3
 
 **Portable Context Protocol: format and server behavior**
 
-Status: DRAFT, in progress · License: Apache 2.0 · Last updated: 2026-10-20
+Status: v0.3, request for comments · License: Apache 2.0 · Last updated: 2026-10-20
 
-> **v0.3 is in progress.** This document is being rewritten in five phases
-> ([`docs/v0.3-plan.md`](docs/v0.3-plan.md)), and each phase merges here.
-> Sections marked *(v0.3)* are updated. Sections marked *(pending, v0.2 text)*
-> have not been rewritten yet; where they disagree with an updated section,
-> the updated section wins. If you need a stable text, pin the git tag
-> [`v0.2-draft`](https://github.com/pcp-protocol/pcp/tree/v0.2-draft).
-> A server implementing this draft emits `"pcp_version": "0.3"`.
+PCP is pre-1.0: a later v0.x may change what this version says, with
+migration notes (Appendix B). A server implementing this version emits
+`"pcp_version": "0.3"`. The previous text is the git tag
+[`v0.2-draft`](https://github.com/pcp-protocol/pcp/tree/v0.2-draft).
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 interpreted as in RFC 2119 and RFC 8174 when they appear in capitals.
@@ -22,7 +19,7 @@ versioned by path: every schema for this version has the `$id`
 [`examples/0.3/`](examples/0.3/); run `python3 scripts/validate_schemas.py`
 to check both. The MCP extension id of PCP is `io.github.pcp-protocol/pcp`.
 
-### Changes from v0.2 (so far)
+### Changes from v0.2
 
 - A context has a **kind** (`personal`, `work`, `team`), one **controller**,
   and typed **principals** (§1). A personal context is a team of one and
@@ -69,11 +66,16 @@ to check both. The MCP extension id of PCP is `io.github.pcp-protocol/pcp`.
   isolation, framing of returned content, and routes to a context including
   overlay networks (§9.3 to §9.8). MCP mechanics (extension declaration,
   instructions, caching) are in §6.6.
-- Appendix A maps a team memory server (Agent Brain) onto PCP.
+- Conformance has two profiles, Personal and Team, a requirements list with
+  stable ids ([`docs/conformance.md`](docs/conformance.md)) and a runnable
+  suite ([`conformance/`](conformance/)) (§10). §11 lists the questions left
+  for v0.4.
+- Appendix A maps an open-source team memory server onto PCP. Appendix B
+  says how to migrate from v0.2.
 
 ---
 
-## 1. Overview *(v0.3)*
+## 1. Overview
 
 A **PCP context** is a bounded body of AI context with one controller. It has
 up to three parts:
@@ -82,7 +84,7 @@ up to three parts:
 |---|---|---|
 | **Profile** | Structured facts about the person (core profile) or the team (team profile), plus consent-gated extension namespaces (health, legal, and so on) | §4 |
 | **Memory** | Long-term memory as Markdown pages with YAML frontmatter: lifecycle, validity, provenance, and for teams partitions and review state | §5 |
-| **Connections** | Live bridges to external sources (Notion, email, tasks) exposed as namespaced MCP tools | §6.4 |
+| **Connections** | Live bridges to external sources (notes, email, tasks) exposed as namespaced MCP tools | §6.4 |
 
 A **PCP server** is any server that stores one or more contexts and serves
 each over MCP per §3. It MAY be self-hosted (localhost, home server), run by
@@ -178,7 +180,7 @@ means `default`, absent `review` means approved, and every principal has
 personal contexts implements none of the optional features and is still
 conforming.
 
-## 2. Discovery *(v0.3)*
+## 2. Discovery
 
 ### 2.1 Single-context servers
 
@@ -196,7 +198,7 @@ GET /.well-known/pcp.json
   "mcp_endpoint": "https://ctx.example.com/mcp",
   "resource_metadata": "https://ctx.example.com/.well-known/oauth-protected-resource/mcp",
   "profile_extensions": ["pcp.health"],
-  "connections": ["notion"],
+  "connections": ["notes"],
   "conformance": ["personal"],
   "export": true,
   "encryption": {
@@ -311,7 +313,7 @@ endpoint URL alone (the common case: a person pastes one URL) never needs
 the context document to connect; it needs it to show the context's kind,
 custody and features before the person consents.
 
-## 3. Transport and authorization *(v0.3)*
+## 3. Transport and authorization
 
 PCP uses MCP's transport and authorization as they are and adds what a
 context needs on top: one token per context, grants that survive refresh,
@@ -615,7 +617,7 @@ contexts an organization controls (§9.2):
    a personal context or a work context the person controls.
 3. PCP does not define its own single sign-on or a new grant type.
 
-## 4. Profile *(v0.3)*
+## 4. Profile
 
 A context has at most one profile document: the **core profile** (personal
 and work contexts) or the **team profile** (team contexts). Discovery
@@ -710,7 +712,7 @@ for this registry.
    schema is not published in this repository. In v0.3 only `pcp.health` has
    one; the others get schemas in v0.4.
 
-## 5. Memory *(v0.3)*
+## 5. Memory
 
 Memory is long-term recall as **Markdown pages** with YAML frontmatter, one
 topic per page. The body is plain Markdown. The frontmatter carries
@@ -942,7 +944,7 @@ as `sensitive` and write `sensitivity: sensitive` into the stored
 frontmatter, so the default travels with the page (§8.2 item 2). A write
 that sets `sensitivity: normal` explicitly is honored.
 
-## 6. Tool surface *(v0.3)*
+## 6. Tool surface
 
 ### 6.1 Naming
 
@@ -1060,7 +1062,7 @@ SHOULD answer with HTTP 403 `insufficient_scope` instead of `forbidden`
 
 ### 6.4 Connection tools
 
-Connection tools are namespaced by connection id (`notion_search`,
+Connection tools are namespaced by connection id (`notes_search`,
 `email_search_threads`, `tasks_create`) and gated by `conn.<id>:read` and
 `conn.<id>:write`. Their annotations set `openWorldHint: true`. Connection
 tool schemas are out of scope for v0.3 (each connector documents its own),
@@ -1107,7 +1109,7 @@ MUST still respect partitions, sensitivity and the audit rules.
    (RECOMMENDED at most 60 seconds for `tools/list`).
 4. **Tool lists** follow §3.5 item 4.
 
-## 7. Scopes, consent and audit *(v0.3)*
+## 7. Scopes, consent and audit
 
 ### 7.1 Scope grammar and hierarchy
 
@@ -1117,7 +1119,7 @@ profile.team:read      | profile.team:write
 profile.<ns>:read      | profile.<ns>:write          e.g. profile.health:read
 memory:read            | memory:propose | memory:write | memory:review
 memory.sensitive:read  | memory.sensitive:write
-conn.<id>:read         | conn.<id>:write             e.g. conn.notion:read
+conn.<id>:read         | conn.<id>:write             e.g. conn.notes:read
 ext.<part>:read        | ext.<part>:write            e.g. ext.doc:write
 audit:read
 export:read
@@ -1230,7 +1232,7 @@ partitions and object ids that principal cannot currently read, so an entry
 for a `not_found` read does not reveal that the target was sensitive or where
 it lives.
 
-## 8. Portability: export, import and erasure *(v0.3)*
+## 8. Portability: export, import and erasure
 
 The controller can take a whole context elsewhere (**export**), bring it
 into another server (**restore** or **import**), and remove data from it and
@@ -1473,7 +1475,7 @@ Archives use the §2.4 vocabulary in two declarations.
 3. An importer MUST check both before writing anything, and MUST reject an
    archive whose versions it does not support with a report that names
    them. It SHOULD accept archives of the previous PCP version, converting
-   them as that version's migration notes say (Appendix B, Phase 5). v0.2
+   them as that version's migration notes say (Appendix B). v0.2
    defined no archive, so a v0.3 importer has none to convert; v0.2 page
    frontmatter found in other tools' folders is handled by §8.7.3 item 8.
 4. Schemas are versioned by path (`schemas/0.3/`), so an archive validates
@@ -1620,7 +1622,7 @@ For each page in the archive, an importer in import mode:
     mapped values, and the two copies drift apart as soon as the page is
     edited. An implementation that needs its own keys for its own round
     trip keeps them under its own `x_<name>` key (for example
-    `x_agent_brain`).
+    `x_example`).
 11. **Writes an audit entry** (`channel: "import"`, `action:
     "import.merge"`, categories, counts; never paths).
 
@@ -1637,8 +1639,8 @@ the audit entry carries the counts.
 #### 8.7.5 Other formats
 
 Importers for other tools' exports use import mode with
-`x_import.format` naming the tool. The mappings for Agent Brain, Basic
-Memory, Mem0, supermemory, OMP, Remnic and DTI conversations are in
+`x_import.format` naming the tool. Mappings for other memory tools and
+formats are in
 [`docs/interop.md`](docs/interop.md) (informative). When a source has no
 hashes, the importer computes `x_import.sha256` over the record as received
 (for JSON records, over its RFC 8785 canonical form). An export produced by
@@ -1781,7 +1783,7 @@ exported, because their key is not.
    SHOULD purge them within a documented interval, and erasure reaches them.
 4. Archives a server keeps for download expire as §8.1 item 4 says.
 
-## 9. Security baseline *(v0.3)*
+## 9. Security baseline
 
 This section states what a server's claims commit it to (§9.1, §9.2) and
 the protections every server needs (§9.3 to §9.8). Reporting
@@ -2316,37 +2318,110 @@ parts:
    terminate the encrypted session unless the declaration says the host
    reads requests.
 
-## 10. Conformance *(pending; profiles and suite in Phase 5)*
+## 10. Conformance
 
-v0.3 defines two claimable profiles, written out in Phase 5:
+### 10.1 Profiles
 
-- **Personal**: discovery (§2), transport and OAuth (§3), `profile.core`
-  (§4.1, §4.3, §4.4), memory and the tools marked "Always" or "The context
-  has a profile" (§5, §6), scopes and audit (§7), export, import and
-  erasure (§8). None of the optional features in §1.4 is required.
-- **Team**: the same without `profile.core`, plus whichever of `partitions`,
-  `review` and `delegation` the context declares, each with its tools and
-  rules.
+A server claims conformance per context, by profile:
 
-Extensions and connections are optional; if present they MUST follow §4.5,
-§4.6, §6 and §8.5.
+- **Personal**, for personal and work contexts: discovery (§2), transport
+  and authorization (§3), `profile.core` (§4.1, §4.3, §4.4, §4.6), memory
+  (§5), the tools marked "Always" or "The context has a profile" (§6), scopes
+  and audit (§7.1, §7.2, §7.5), export, import and erasure (§8), and the
+  security baseline (§9) for the custody the context declares. None of the
+  optional features of §1.4 is required.
+- **Team**, for team contexts: the same without `profile.core`; `profile.team`
+  when the context has one; and each optional feature the context declares in
+  `features` (`partitions`: §5.3, §7.3; `review`: §5.4; `delegation`: §7.4),
+  with its tools.
 
-A v0.2 checklist from the export branch is in
-[`docs/conformance.md`](docs/conformance.md); Phase 5 rewrites it for v0.3.
+Extensions, connections and the optional tools (`export_create`,
+`erase_request`, `review_resolve`) are not required; a server that offers
+them meets their requirements too (§4.5, §4.6, §6.4, §6.5, §8.5).
 
-## 11. Open questions *(pending; replaced by the v0.4 list in Phase 5)*
+### 10.2 Requirements and the suite
 
-- Push vs pull ingestion contract for connections.
-- Federation: can two PCP contexts share scoped context (family plans)?
-- Standardizing the management surface; see the informative draft in
+[`docs/conformance.md`](docs/conformance.md) lists the requirements of this
+specification that a server can be held to, each once, with a stable id, its level, the profile or feature it
+belongs to, and how it is checked:
+
+- `S` and `S+`: by the conformance suite in [`conformance/`](conformance/),
+  black-box. `S+` needs more than one token, a second context, or test data;
+- `A`: by the suite's archive checker on an export archive;
+- `M`: by a person, on the management surface or the consent screen;
+- `R`: by review evidence: documentation, code review or an operator's
+  statement, as §9.1 describes for key custody.
+
+The suite cites these ids in its report, and its own coverage check fails
+when a requirement marked `S` or `S+` has no check. Where
+`docs/conformance.md` and this specification disagree, this specification
+wins.
+
+### 10.3 Claiming conformance
+
+A server MAY list a profile in discovery `conformance` (§2.3) only when, for
+that context:
+
+1. every MUST of the profile that applies passes in a suite run against the
+   same build, including the `S+` checks run with test data against a
+   throwaway context. A check the suite skips because the server needs a
+   person to approve authorizations, or needs a capability the run did not
+   have, counts as an `M` requirement: it passes in a run that has it (for
+   example with `--interactive`), or a person checks it;
+2. every applicable `A` requirement passes on a full export of that context;
+3. the `M` and `R` requirements that apply have been checked; and
+4. discovery `export` is `true` (§8.1).
+
+A server MUST NOT claim a profile it fails: the claim is a statement the
+suite can check (§1.1 principle 6). A failed SHOULD does not prevent a claim.
+
+A published claim states the PCP version, the profile, the suite version and
+the date of the run, where the report can be read, how the `M` and `R`
+requirements were checked, and which SHOULD requirements are not met. For
+example:
+
+> *Implements PCP v0.3, Personal profile, for every context it hosts.
+> Conformance suite 0.3.0, run 2026-11-02 (report linked). Management and
+> review items checked by the maintainers; key custody evidence in
+> SECURITY.md. Not met: AUTH-18 (no CIMD yet). Round trip verified with
+> \<another implementation\>.*
+
+### 10.4 Portability
+
+Every other requirement tests that one implementation is consistent with
+itself. Only a cross-implementation round trip (§8.8 item 2, IMP-08) tests
+what PCP is for. A claim SHOULD name an independent implementation whose
+archives the server has restored, and that has restored the server's.
+
+## 11. Open questions for v0.4
+
+- **Federation:** can two contexts share scoped context with each other, for
+  example within a family?
+- **Connections:** a push or pull ingestion contract, and schemas for
+  connection tools.
+- **Reserved namespaces:** writing the schemas for `pcp.residency`,
+  `pcp.legal`, `pcp.family`, `pcp.finance` and `pcp.home`, which stay empty
+  until then (§4.6 rule 5).
+- **Memory conflicts:** whether client-side resolution through `relations`
+  (§5.2) is enough, or a server needs a normative merge and supersession rule.
+- **Pages in several partitions:** some team servers file one item under
+  several scopes, and a page has one partition today.
+- **Encryption:** searchable encryption, and a custody value for runtimes in
+  attested enclaves that the operator cannot read (§9.1.4).
+- **Tokens:** sender-constrained tokens (DPoP), and per-partition grants
+  carried in OAuth (RFC 9396 rich authorization requests).
+- **Archives:** signed manifests or detached signatures (§8.3).
+- **Management surface:** standardizing the informative draft in
   [`docs/management-api.md`](docs/management-api.md).
-- Memory conflict policy: is client-side resolution via `relations` (§5.2)
-  enough, or does a server need a normative merge and supersession rule?
-- Per-partition grants carried in OAuth (RFC 9396 rich authorization
-  requests).
-- Alignment target: if an MCP memory or profile extension or a live-serving
-  portability standard is ratified, map PCP's memory and export onto it
-  rather than maintain a parallel shape.
+- **Extensions:** registrations for the shared documents and handoffs slots
+  (§6.5), written by the implementers who need them.
+- **Alignment:** if an MCP memory or profile extension, or a live-serving
+  portability standard, is ratified, map PCP's memory and export onto it
+  rather than keep a parallel shape; and map PCP to the conformance profiles
+  of the W3C AI Agent Memory Interoperability Community Group and to Solid
+  pods.
+- **Schema registry:** publishing the schemas in a public schema registry in
+  addition to this repository's pages.
 
 ---
 
@@ -2467,3 +2542,100 @@ Checked against `wordpress/mcp-adapter` 0.6.1:
 - **Principal ids.** A deleted WordPress user's login can be taken by a new
   user. Keep removed principals' ids reserved (§9.2.4 item 1), for example
   by suspending rather than deleting users, or derive ids from the user ID.
+
+## Appendix B. Migrating from v0.2 (informative)
+
+v0.2-draft (git tag `v0.2-draft`) was written for one person's context,
+before current MCP authorization. This appendix lists what a v0.2 server and client change for
+v0.3, in the order that keeps a deployed server working.
+
+### B.1 Discovery
+
+| v0.2 | v0.3 |
+|---|---|
+| `"pcp_version": "0.1"` | `"0.3"` (§2.3) |
+| `mcp_endpoint` in every document | Context documents only; a multi-context root carries `multi_context: true` and `context_url_template` (§2.2) |
+| `sse_endpoint` | Removed (§3.1 item 3) |
+| `authorization_server` | Deprecated hint; add `resource_metadata` (REQUIRED) and serve protected resource metadata (§2.5, §3.2) |
+| (none) | `kind` (REQUIRED), `controller_type` (REQUIRED for `work`), optional `features`, `conformance`, `alternate_endpoints` |
+| `"encryption": {"at_rest", "e2e"}` | `{"key_custody", "readable_by", "e2e"?}` (§2.4). See below |
+
+Mapping the old encryption fields: storage encrypted with keys the host
+holds (`at_rest: true`), or plaintext, is `{"key_custody": "host",
+"readable_by": ["principals", "host"]}`. A server with user-held keys
+declares `user` only once it meets U1 to U6 (§9.1.3). `e2e: true` stays true
+only for `device` custody that meets V1 to V4 (§9.1.4); otherwise it becomes
+`false`.
+
+### B.2 Authorization
+
+| v0.2 | v0.3 |
+|---|---|
+| Dynamic Client Registration REQUIRED | CIMD SHOULD, DCR MAY (§3.3) |
+| (none) | Protected resource metadata per context, path-suffixed, `resource` equal to the MCP endpoint; the 401 challenge (§3.2) |
+| (none) | `resource` bound into every token: one context per token (§3.4 item 2) |
+| Tokens per client-device pair | Grants with stable ids that survive refresh (§3.4 item 4) |
+| Scope errors unspecified | 403 `insufficient_scope`, or a `forbidden` result with `required_scopes` (§3.5) |
+
+### B.3 Tools
+
+| v0.2 | v0.3 |
+|---|---|
+| `profile.get`, `profile.update` | `profile_get`, `profile_update` (RFC 7396 merge patch, §4.3) |
+| `memory.search`, `memory.read`, `memory.write`, `memory.list` | `memory_search`, `memory_read`, `memory_write`, `memory_list` |
+| `context.brief` (needed both scopes) | `context_brief` (never fails for a missing scope, §6.2) |
+| `audit.list` under `profile.core:read` | `audit_list` under `audit:read` |
+| `<connection>.<verb>` | `<connection>_<verb>`, connection ids `[a-z][a-z0-9]{0,15}` |
+| Results and errors unspecified | `title`, annotations, `outputSchema`, `structuredContent`; failures as `isError` results with a code prefix (§6.2, §6.3) |
+
+A v0.3 server MAY accept the dotted names in `tools/call` and MUST NOT list
+them (§6.1 item 3). New tools: `memory_propose`, `review_list`,
+`review_resolve`, `partition_list`, and the optional `export_create` and
+`erase_request`.
+
+### B.4 Scopes
+
+Unchanged: `profile.core:*`, `profile.<ns>:*`, `memory:read`,
+`memory:write`, `memory.sensitive:read`, `conn.<id>:*`. Changed:
+`export:read` granted a full export in v0.2; in v0.3 it is the right to
+bundle what the token can read with its other scopes (§8.1 item 2). New:
+`memory:propose`, `memory:review`, `memory.sensitive:write`,
+`profile.team:*`, `ext.<part>:*`, `audit:read`, `erase:write` (§7.1). A token
+that could overwrite sensitive pages with `memory:write` alone under v0.2
+needs `memory.sensitive:write` for that now (§5.2.2).
+
+### B.5 Memory pages
+
+1. `updated` and every server-stamped instant become RFC 3339 UTC with `Z`.
+   Convert stored `YYYY-MM-DD HH:MM:SS` values by assuming UTC (§5.2.4).
+2. Check stored paths against the grammar (§5.1). Paths that differ only in
+   case, or have empty or dot segments, need renaming before export.
+3. `sensitivity` comes from the frontmatter; a write never downgrades it by
+   omission (§5.2.2).
+4. New keys: `id`, `recorded_at`, `expires`, `importance`, `partition`,
+   `review`, `source.principal`, `source.on_behalf_of`, `source.basis`,
+   `x_import`, and the `source.origin` values `agent` and `consolidation`. Set
+   `recorded_at` to the best known creation time when migrating.
+5. `_index` is no longer maintained by the server (§5.1).
+
+### B.6 Export and security
+
+v0.2 described export only informally: a tar or zip of pages, profile
+documents, connection configuration and the audit log, without a manifest.
+A server that produced such archives imports them as a foreign format in
+import mode (§8.7.5). Implement §8, and claim `export: true` only when its
+four commitments hold. Erasure with
+receipts (§8.9) is new and required. Review the security baseline (§9),
+above all the Origin check, rate limits keyed beyond IP, and the framing of
+returned content (§9.6).
+
+### B.7 Order of work for a deployed server
+
+1. Serve protected resource metadata and the 401 challenge, and bind tokens
+   to the context (clients keep working; this is what current MCP clients
+   expect).
+2. Add the v0.3 tool names next to the dotted ones; list only the new names.
+3. Migrate stored pages (B.5) and add the new scopes.
+4. Publish the v0.3 discovery document.
+5. Implement export, import and erasure (§8), run the conformance suite, and
+   only then list a profile in `conformance`.
