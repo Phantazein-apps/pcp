@@ -2,7 +2,7 @@
 
 PCP is an open specification, and anyone can help shape it. While PCP is pre-1.0, the process is deliberately lightweight:
 
-- **Discussion** → GitHub Issues. One topic per issue. Design questions welcome — see SPEC §11 for the open list.
+- **Discussion** → GitHub Issues. One topic per issue. Design questions welcome; see SPEC §11 for the open list.
 - **Changes** → PRs against `SPEC.md` / schemas. Normative changes must state: what breaks, who's affected, migration path.
 - **New extension namespaces** → see [`extensions/README.md`](extensions/README.md).
 - **Security best practices** → PRs to `SECURITY.md` are the most community-owned part of this repo; field reports from self-hosters are explicitly wanted.

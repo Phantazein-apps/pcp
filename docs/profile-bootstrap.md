@@ -1,4 +1,4 @@
-# Bootstrapping a profile from connected sources — draft (informative)
+# Bootstrapping a profile from connected sources: draft (informative)
 
 Status: DRAFT · Informative
 
@@ -8,8 +8,8 @@ A person should not have to type their profile into a form. The natural flow:
 
 1. **Connect sources.** The owner connects tools (notes, email, calendar,
    documents) to their context. This is the only mandatory manual step.
-2. **An agent derives the profile.** Any AI client the owner trusts — a local
-   LLM, a hosted assistant — connects to the context over MCP with
+2. **An agent derives the profile.** Any AI client the owner trusts (a local
+   LLM, a hosted assistant) connects to the context over MCP with
    `profile.core:write` + `memory:write`, observes the owner's actual data
    (through the context's own `conn.*` tools, or through tool access it
    already has locally), and:
@@ -22,7 +22,7 @@ A person should not have to type their profile into a form. The natural flow:
 
 1. **Observe, don't invent.** Every derived field must trace to something the
    agent actually saw. If uncertain, leave the field empty and report it as a
-   gap — a wrong profile is worse than an empty one.
+   gap: a wrong profile is worse than an empty one.
 2. **Style lives in memory, marked sensitive.** The full writing-style
    analysis goes to the memory page **`style/writing-profile`** (this path is
    the convention; clients and servers should expect it there), written with
@@ -32,7 +32,7 @@ A person should not have to type their profile into a form. The natural flow:
    access is an explicit, per-client consent decision. Only the distilled
    preferences (tone, verbosity, formatting) go into `profile.communication`.
 3. **Core stays core.** Nothing sensitive goes into `profile.core` during
-   bootstrap — health, legal, family, residency observations belong in their
+   bootstrap: health, legal, family, residency observations belong in their
    extension namespaces (which require their own write scopes) or nowhere.
 4. **Report what's missing.** End by telling the owner which fields could not
    be derived, so the host UI's gap prompts make sense.

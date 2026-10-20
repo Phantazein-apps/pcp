@@ -1,0 +1,3 @@
+jsonschema>=4.18
+pyyaml>=6.0
+cryptography>=42   # optional: decrypts file-level JWE in example archives

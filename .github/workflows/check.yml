@@ -1,0 +1,30 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  schemas-and-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -r conformance/requirements.txt
+      - name: Schemas, examples and example archives
+        run: python3 scripts/validate_schemas.py
+      - name: No em dashes in Markdown
+        run: |
+          if LC_ALL=C.UTF-8 grep -rnP --include='*.md' --exclude-dir=.git '\x{2014}' .; then
+            echo "em dash found"; exit 1
+          fi
+      - name: Conformance suite against the reference server
+        run: conformance/run-reference.sh python3

@@ -38,7 +38,7 @@ from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = sys.argv[1] if len(sys.argv) > 1 else "0.3"
+VERSION = sys.argv[1] if __name__ == "__main__" and len(sys.argv) > 1 else "0.3"
 SCHEMAS = ROOT / "schemas" / VERSION
 EXAMPLES = ROOT / "examples" / VERSION
 

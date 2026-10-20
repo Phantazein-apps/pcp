@@ -1,9 +1,9 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="PCP — Portable Context Protocol: portable AI context behind one URL you control" width="100%">
+<img src="assets/banner.svg" alt="PCP, the Portable Context Protocol: portable AI context behind one URL you control" width="100%">
 
 <p>
-  <img src="https://img.shields.io/badge/spec-v0.3--draft%20(in%20progress)-ff0018?style=flat-square&labelColor=000000" alt="Spec v0.3-draft, in progress">
+  <img src="https://img.shields.io/badge/spec-v0.3-ff0018?style=flat-square&labelColor=000000" alt="Spec v0.3">
   <img src="https://img.shields.io/badge/status-request%20for%20comments-f4f2ee?style=flat-square&labelColor=000000" alt="Request for comments">
   <img src="https://img.shields.io/badge/built%20on-MCP%20·%20OAuth%202.1%20·%20Markdown-ff0018?style=flat-square&labelColor=000000" alt="MCP · OAuth 2.1 · Markdown">
   <img src="https://img.shields.io/badge/license-Apache%202.0-a8a5a0?style=flat-square&labelColor=000000" alt="Apache 2.0">
@@ -13,7 +13,7 @@
 
 **An open protocol for AI context you own.**
 
-Your profile, your memory, your connections — behind one URL you control,<br>usable by any AI assistant, on any device, from any vendor.
+Your profile, your memory, your connections, behind one URL you control,<br>usable by any AI assistant, on any device, from any vendor.
 
 </div>
 
@@ -27,7 +27,7 @@ Email solved this decades ago: open protocols meant you could pick any client an
 
 ## What PCP is
 
-PCP is a small, open specification built entirely on standards you already use — [MCP](https://modelcontextprotocol.io), OAuth 2.1 and plain Markdown. It defines two things:
+PCP is a small, open specification built entirely on standards you already use: [MCP](https://modelcontextprotocol.io), OAuth 2.1 and plain Markdown. It defines two things:
 
 1. **A format** for a context: a structured **profile**, long-term **memory** as Markdown pages with YAML frontmatter, and **connections** to live sources like email, notes and tasks.
 2. **A server behavior**: a single MCP endpoint that serves that context with per-category consent, a user-visible audit log, and full export.
@@ -36,7 +36,7 @@ A context can belong to one person (`personal`), to one person's working life (`
 
 ## How it works
 
-> Open any MCP-enabled assistant. Paste your context URL. Choose what to share on one consent screen. The assistant now knows your preferences and history — and you can revoke it, audit it, or take it elsewhere at any time.
+> Open any MCP-enabled assistant. Paste your context URL. Choose what to share on one consent screen. The assistant now knows your preferences and history, and you can revoke it, audit it, or take it elsewhere at any time.
 
 A PCP server announces itself at a well-known URL:
 
@@ -56,7 +56,7 @@ GET /.well-known/pcp.json
 }
 ```
 
-Any MCP client can then use the standard tools — `context_brief`, `profile_get`, `memory_search`, `memory_write` and more — limited to the scopes you granted. A coding assistant gets `memory:read`; it never sees `profile.health` unless you say so.
+Any MCP client can then use the standard tools (`context_brief`, `profile_get`, `memory_search`, `memory_write` and more), limited to the scopes you granted. A coding assistant gets `memory:read`; it never sees `profile.health` unless you say so.
 
 ## Principles
 
@@ -64,29 +64,29 @@ Any MCP client can then use the standard tools — `context_brief`, `profile_get
 - **Consent by category, not all-or-nothing.** Health, legal, family and financial data live in separate namespaces with their own OAuth scopes.
 - **One URL, any client.** If it speaks MCP, it can use your context. No SDK, no new transport.
 - **Run it anywhere.** Your laptop, a Raspberry Pi next to a local LLM, a home server, a hosting provider. The wire format is identical, so switching hosts is export + import.
-- **Honest claims.** Terms like "encrypted" and "exportable" are defined by the spec and checkable — not marketing.
+- **Honest claims.** Terms like "encrypted" and "exportable" are defined by the spec and checkable, not marketing.
 - **Vendor-neutral by design.** Nothing in the spec may require a specific cloud, database, model provider or company. No implementation is privileged.
 
 ## Status
 
-**v0.3-draft, in progress — request for comments.** Nothing is stable yet. v0.3 is being written in phases ([`docs/v0.3-plan.md`](docs/v0.3-plan.md)); the team context model has landed; export, authorization and conformance are next. For a frozen text, pin the [`v0.2-draft`](../../tree/v0.2-draft) tag.
+**v0.3, request for comments.** v0.3 is the first version independent implementations can build against and test each other with: a team context model, export and import with a checkable archive, authorization for current MCP, defined key custody, and a [conformance suite](conformance/). PCP is pre-1.0, so a later v0.x may still change things, with migration notes. For the previous text, pin the [`v0.2-draft`](../../tree/v0.2-draft) tag.
 
 This is the right time to shape the protocol. Early feedback changes the spec; later feedback changes v2.
 
 ## Get involved
 
-- **Read the spec** — [`SPEC.md`](SPEC.md). Section 11 lists open questions.
-- **Open an issue** — design questions, gaps, things that don't fit your use case.
-- **Build an implementation** — a server, a client, an importer, a conformance test. Running code carries the most weight. Open an issue so we can test interop together.
-- **Host it** — if you run a hosting platform, PCP is designed to be offered alongside email, storage and websites: one context per customer, standard export, no lock-in. We want to hear what you need from the spec.
-- **Write an extension** — new profile namespaces and connections: see [`extensions/`](extensions/).
-- **Harden it** — [`SECURITY.md`](SECURITY.md) is meant to be community-owned. Field reports from self-hosters are especially welcome.
+- **Read the spec**: [`SPEC.md`](SPEC.md). Section 11 lists open questions.
+- **Open an issue**: design questions, gaps, things that don't fit your use case.
+- **Build an implementation**: a server, a client, an importer, a conformance test. Running code carries the most weight. Open an issue so we can test interop together.
+- **Host it**: if you run a hosting platform, PCP is designed to be offered alongside email, storage and websites: one context per customer, standard export, no lock-in. We want to hear what you need from the spec.
+- **Write an extension**: new profile namespaces and connections: see [`extensions/`](extensions/).
+- **Harden it**: [`SECURITY.md`](SECURITY.md) is meant to be community-owned. Field reports from self-hosters are especially welcome.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how changes are made.
 
 ## Implementations
 
-No implementation claims v0.3 conformance yet; the conformance suite arrives in the final v0.3 phase. Listing is open to every implementation — open source or commercial, self-hosted or hosted — and is never an endorsement. Building one? Open a PR to add it.
+No implementation claims v0.3 conformance yet. The [conformance suite](conformance/) checks a server against every requirement in [`docs/conformance.md`](docs/conformance.md), and SPEC §10 says how to claim a profile. Listing is open to every implementation, open source or commercial, self-hosted or hosted, and is never an endorsement. Building one? Open a PR to add it.
 
 | Project | Role | License | Status |
 |---|---|---|---|
@@ -94,7 +94,7 @@ No implementation claims v0.3 conformance yet; the conformance suite arrives in 
 
 ### Fully local: PCP + Refugio
 
-PCP is the *context* refuge; [Refugio](https://github.com/Phantazein-apps/refugio) is the *compute* refuge — a local LLM that never sends data to the cloud. Together they make a fully sovereign setup:
+PCP is the *context* refuge; [Refugio](https://github.com/Phantazein-apps/refugio) is the *compute* refuge: a local LLM that never sends data to the cloud. Together they make a fully sovereign setup:
 
 - Refugio connects to your PCP endpoint as a standard MCP client, so your local model gets the same memory and profile as Claude on your phone.
 - A PCP server can run on the same machine (`localhost` deployment profile), so nothing leaves your device.
@@ -107,9 +107,10 @@ PCP is the *context* refuge; [Refugio](https://github.com/Phantazein-apps/refugi
 | [`SPEC.md`](SPEC.md) | The protocol specification |
 | [`schemas/0.3/`](schemas/0.3/) | JSON Schemas: discovery, profiles, memory page frontmatter, tools, audit entries |
 | [`examples/0.3/`](examples/0.3/) | Examples that validate against the schemas (`invalid/` ones must fail) |
-| [`scripts/validate_schemas.py`](scripts/validate_schemas.py) | Checks every schema and example (`pip install jsonschema pyyaml`) |
+| [`scripts/validate_schemas.py`](scripts/validate_schemas.py) | Checks every schema, example and example archive (`pip install jsonschema pyyaml`) |
+| [`conformance/`](conformance/) | The conformance suite, its reference server, and the archive checker |
 | [`extensions/`](extensions/) | Extension namespace registry and authoring guide |
-| [`docs/`](docs/) | Informative guides: interop with other memory formats, management API, profile bootstrap, style profiles |
+| [`docs/`](docs/) | The conformance requirements, and informative guides: interop with other memory formats, management API, networking, profile bootstrap, style profiles |
 | [`SECURITY.md`](SECURITY.md) | Threat model and best practices for self-hosters and hosts |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to propose changes |
 
