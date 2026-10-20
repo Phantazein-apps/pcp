@@ -82,7 +82,7 @@ and unwraps, and the host stores wrapped copies.
 
 | Method and path | Behavior |
 |---|---|
-| `GET /keys` | The wrapped copies the host holds, by slot (`passkey:<id>`, `recovery`, `grant:<grant id>`, `escrow:<id>`), with `created` and `last_used`, never the copies themselves. A reviewer checks SPEC §9.1.3 U1 against this list. |
+| `GET /keys` | The wrapped copies the host holds, by slot (`passkey:<id>`, `recovery`, `grant:<grant id>`, `escrow:<id>`), each with the principal, grant or escrow holder whose secret opens it, `created` and `last_used`, never the copies themselves. A reviewer checks SPEC §9.1.3 U1 against this list. |
 | `POST /keys/slots`, `DELETE /keys/slots/{slot}` | Add a wrapped copy made on the client, or delete one. Deleting the last slot a principal can open asks for confirmation (SPEC §9.1.7 item 3). |
 | `POST /keys/lock`, `POST /keys/unlock` | Lock the context (SPEC §9.1.5): grants' wrapped copies are suspended and tools return `locked` until the controller unlocks with a principal secret. |
 | `POST /keys/rotate` | Start a context-key rotation (SPEC §9.1.7 item 2). Returns its progress and the grants to re-establish. |

@@ -48,10 +48,12 @@ blocked addresses:
 Each route is its own OAuth resource with its own protected resource
 metadata, because MCP clients compare the metadata's `resource` with the
 URL they were given (SPEC §3.2). The context document of each route lists
-the others in `alternate_endpoints`, and a token issued for any route of a
-context is accepted at all of them (SPEC §9.8 item 2), so a person who
-switches a client to the fallback URL does not need a new grant, as long as
-the client lets them change the URL.
+the others in `alternate_endpoints`. A server may accept a token issued
+for any route of a context at all of them (SPEC §9.8 item 2), so a person
+who switches a client to the fallback URL may not need a new grant. Many
+MCP clients bind a token to the URL they used, though, and will simply
+authorize again at the fallback, which works as long as the authorization
+server is reachable.
 
 The authorization server needs a route too. Its issuer identifier must
 match exactly (RFC 8414), so a second hostname is a second issuer. A host
@@ -130,13 +132,18 @@ V2) the relay must not terminate TLS: it routes by the TLS server name and
 passes the encrypted bytes through, and the device runtime holds the
 certificate's private key. The certificate is issued for the relay
 hostname, and the device obtains and renews it itself (an ACME DNS
-challenge through an API the host offers works). A relay that terminates
-TLS, even to inspect only headers, can read every request, and the context
-must then declare `user` custody at best.
+challenge through an API the host offers works). Because the host runs that
+hostname's DNS, it could also obtain a certificate and intercept; SPEC
+§9.1.4 V2 therefore requires a CAA record that limits issuance to the
+device's ACME account (RFC 8657), or a hostname under a domain the person
+controls, and anyone can check the Certificate Transparency logs. A relay
+that terminates TLS, even to inspect only headers, can read every request,
+and the context must then declare `user` custody at best.
 
-The device must be online for the context to answer. When it is not, the
-relay answers with a `locked` tool result (SPEC §9.1.5), or with HTTP 503
-when it cannot speak MCP, and never with cached content.
+The device must be online for the context to answer. When it is not, a
+pass-through relay cannot answer inside the client's TLS session, so the
+client sees a failed connection (SPEC §9.1.5 item 3). It never serves
+cached content.
 
 ## 5. Checklist for a host
 

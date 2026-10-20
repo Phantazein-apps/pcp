@@ -9,7 +9,7 @@
   "properties": {
     "id": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
     "kind": {
-      "description": "subject: everything matching a subject string, with what was derived from it. pages: named pages, with what was derived from them. principal: what a former principal wrote or had written on their behalf (SPEC §9.2.4); subject_digest is then the keyed digest of the principal id. context: the whole context.",
+      "description": "subject: everything matching a subject string, with what was derived from it. pages: named pages, with what was derived from them. principal: what a former principal wrote or had written on their behalf (SPEC §9.2.4); no subject_digest. context: the whole context.",
       "enum": ["subject", "pages", "principal", "context"]
     },
     "requested_by": { "$ref": "memory.page.schema.json#/$defs/principal" },

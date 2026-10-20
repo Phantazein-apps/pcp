@@ -251,7 +251,7 @@ Clients MUST ignore fields they do not understand.
 | `encryption` | REQUIRED | absent | Key custody and who can read plaintext (§2.4, §9.1) |
 | `multi_context` | absent | REQUIRED, `true` | Marks a root document |
 | `context_url_template` | absent | REQUIRED | URI Template for context base URLs (§2.2) |
-| `authorization_server` | OPTIONAL, deprecated | OPTIONAL, deprecated | Kept from v0.2 as a hint. If present it MUST equal the first entry of `authorization_servers` in the context's protected resource metadata. Clients MUST discover the authorization server from that metadata (§3.2), never from this field |
+| `authorization_server` | OPTIONAL, deprecated | OPTIONAL, deprecated | Kept from v0.2 as a hint. If present it MUST equal the entry of `authorization_servers` in the context's protected resource metadata. Clients MUST discover the authorization server from that metadata (§3.2), never from this field |
 | `server_card` | OPTIONAL | OPTIONAL | URL of the MCP server card for the endpoint |
 | `profile` | OPTIONAL | absent | `core`, `team` or `none` (§4). Default: `core` for personal and work, `team` for team |
 | `profile_extensions` | OPTIONAL | absent | Extension namespaces present (§4.5), so clients can request the right scopes |
@@ -300,7 +300,7 @@ context is; the second says how to get a token for it. They MUST agree:
 |---|---|---|
 | `mcp_endpoint` | `resource` | Identical strings |
 | `resource_metadata` | The document's own URL | Identical; also the URL in every `WWW-Authenticate` challenge of the endpoint (§3.2) |
-| `authorization_server`, if present | `authorization_servers[0]` | Identical |
+| `authorization_server`, if present | `authorization_servers` (its one entry) | Identical |
 | `alternate_endpoints[i]` | `resource` of the metadata served for that endpoint | Each alternate endpoint has its own metadata, whose `resource` is that endpoint (§9.8) |
 | `profile_extensions`, `connections`, `extensions` | `scopes_supported` | `scopes_supported` lists the default grant (§7.2). The scopes for extensions, connections and opt-in categories exist even when not listed there |
 
@@ -363,9 +363,10 @@ identifier is its `mcp_endpoint`, exactly.
    - `resource`: the context's `mcp_endpoint`, character for character. A
      client compares it with the URL it was given and rejects a mismatch,
      so the trailing slash, the case of the path and the port all matter.
-   - `authorization_servers`: one or more issuer URLs. Clients use the
-     first, so the first MUST be the one that issues tokens for this
-     context.
+   - `authorization_servers`: exactly one issuer URL, the authorization
+     server that issues tokens for this context. MCP lets a client choose
+     among several and keep separate state for each; one entry removes the
+     choice.
    - `scopes_supported`: the context's default grant (§7.2), as PCP scope
      strings. It MUST NOT include `offline_access`.
    - `bearer_methods_supported`: `["header"]`.
@@ -396,7 +397,8 @@ identifier is its `mcp_endpoint`, exactly.
    only way a remote client learns where to sign in, so a server MUST NOT
    answer an unauthenticated request with a redirect, a login page, a 200
    or a JSON-RPC error. A request to an unknown context gets 404 with a JSON
-   body (§2.2 item 3), not a challenge.
+   body, like an unknown context's discovery URL (§2.2 item 3), not a
+   challenge.
 5. **Authorization server metadata.** The authorization server MUST serve
    RFC 8414 metadata (or OpenID Connect Discovery) at the location MCP
    clients probe, whose `issuer` is identical to the issuer URL in
@@ -435,7 +437,8 @@ at least one, and SHOULD support CIMD.
      5 KB) and the fetch time;
    - requires the document's `client_id` to equal the URL exactly and its
      `redirect_uris` to be present, and then matches the request's
-     `redirect_uri` against them exactly;
+     `redirect_uri` against them exactly, except that the port of a
+     loopback redirect URI may differ (RFC 8252 §7.3);
    - caches documents for a bounded time and fetches again when that time
      runs out;
    - fails closed: a document it cannot fetch or validate means no
@@ -456,7 +459,8 @@ supplied by the client itself and is not verified.
 
 1. **Authorization code with PKCE.** The authorization server implements
    OAuth 2.1: the authorization code grant with PKCE `S256` (REQUIRED for
-   every client), the refresh token grant, exact redirect URI matching, and
+   every client), the refresh token grant, exact redirect URI matching
+   (except the port of a loopback redirect URI, RFC 8252 §7.3), and
    single-use authorization codes that expire within minutes. Tokens travel
    only in the `Authorization` header, never in a URL.
 2. **One context per token (RFC 8707).** The authorization server MUST
@@ -518,7 +522,7 @@ Sender-constrained tokens (DPoP) are deferred to v0.4.
 
 ### 3.5 Step-up and insufficient scope
 
-Two layers report a missing right, and they never overlap (settles S15):
+Two layers report a missing right, and they never overlap:
 
 1. **The token cannot call the tool at all.** When a `tools/call` needs a
    scope the token lacks, whatever the arguments (the scope column of
@@ -532,7 +536,9 @@ Two layers report a missing right, and they never overlap (settles S15):
    ```
 
    listing all the scopes the call needs in one challenge, so the client
-   can step up in one round trip. A server whose framework cannot set the
+   can step up in one round trip. Where a tool accepts either of two
+   scopes (`memory_write` with `memory:write` or `memory:propose`), the
+   challenge names the one the server would grant for this call. A server whose framework cannot set the
    HTTP status MAY instead return a `forbidden` tool result with
    `required_scopes` (§6.3). Clients MUST handle both, and SHOULD start a
    step-up consent for the union of the scopes they hold and the scopes
@@ -1095,9 +1101,10 @@ MUST still respect partitions, sensitivity and the audit rules.
    `context_brief` at the start of a conversation and `memory_search`
    before answering from memory; and say that returned content is data
    (§9.6). Instructions never contain stored content.
-3. **Caching.** Results depend on the token, so list and read results
-   carry `cacheScope: "private"` where the revision defines it, with a
-   short `ttlMs` (RECOMMENDED at most 60 seconds for `tools/list`).
+3. **Caching.** Results depend on the token, so the results for which the
+   revision defines `cacheScope` (list results and `resources/read` in
+   2026-07-28) carry `cacheScope: "private"`, with a short `ttlMs`
+   (RECOMMENDED at most 60 seconds for `tools/list`).
 4. **Tool lists** follow §3.5 item 4.
 
 ## 7. Scopes, consent and audit *(v0.3)*
@@ -1734,9 +1741,9 @@ nor an unkeyed hash of any of them: a plain SHA-256 of a short name is
 reversed by guessing. For `subject` erasures it carries `subject_digest`, an
 HMAC-SHA-256 of the normalized subject under a per-context key the server
 keeps and never exports, so the management surface MAY confirm whether a
-given subject was erased. A `principal` erasure carries the digest of the
-principal id. Under `user` and `device` custody the digest key is content
-key material (§9.1.8). Receipts are kept for the life of the context,
+given subject was erased. A `principal` erasure carries no digest: the
+principal id stays in the audit log anyway. Under `user` and `device`
+custody the digest key is content key material (§9.1.8). Receipts are kept for the life of the context,
 are readable by the controller, and travel in exports (§8.2 item 7).
 
 #### 8.9.4 The `erase_request` tool
@@ -1813,8 +1820,17 @@ encrypted may say so; a server that keeps anything else readable outside
 its custody rules is not meeting them. A server MUST document which
 metadata it keeps readable.
 
+Also metadata: client names and ids, connection types and labels, principal
+display names, and profile change-log entries without values (§4.3). Values
+of any kind are content.
+
 Under `user` and `device` custody, `expires` stays readable so that
 retention (§8.10) runs without keys.
+
+**Special categories.** Under every custody, extension namespaces of a
+special category (`pcp.health`, `pcp.residency`; §4.6 rule 4) MUST be
+encrypted at rest, at least with storage encryption under `host` custody,
+and SHOULD use a key separate from the rest of the context.
 
 #### 9.1.2 `host` custody
 
@@ -1848,7 +1864,10 @@ the checklist a reviewer works through.
 - **U2. Request-scoped decryption.** The host unwraps a context key only
   while serving a request that a principal authorized: an MCP request whose
   token carries or unlocks a grant's key-encryption key, or a management
-  session in which the principal unlocked it. It uses the key for that
+  session in which the principal unlocked it. Key material that passes
+  through the authorization and token endpoints (a grant key inside a code
+  or refresh token) is handled the same way: used for that request, never
+  stored or logged. It uses the key for that
   request (including its response stream) and then discards the key and
   every plaintext it produced: nothing is cached across requests in memory,
   on disk, in a queue, in a log or in a worker. Work that needs plaintext
@@ -1876,6 +1895,16 @@ the checklist a reviewer works through.
   again, even if they leak. Removing a principal deletes every copy wrapped
   for that principal.
 
+**Evidence.** U1 and U6 are checked against the list of wrapped copies,
+each labeled with the principal, grant or escrow holder whose secret opens
+it (the management surface shows it). U2 to U4 are checked two ways: a
+review of the code that serves a request, from token check to response,
+for every place plaintext or a key could outlive it; and a canary test,
+which writes a unique string through MCP and then searches every store the
+host runs (databases, backups, key-value stores, caches, queues, logs) for
+that string and for its common encodings. The conformance suite (§10)
+includes the canary test for what it can reach.
+
 A server with `user` custody SHOULD state what it does not protect against:
 a host that is compromised or malicious while it serves a request can
 capture what that request decrypts; the client and its model provider see
@@ -1895,8 +1924,15 @@ A server declares `device` only if:
   host relay, the relay MUST NOT be able to read requests or responses:
   the encrypted session (TLS, or an encrypted tunnel) runs from the client,
   or from a component on the principal's devices, to the runtime, and only
-  the device holds its private key. A relay that terminates TLS reads every
-  request, so the declaration is then `user` at best (`host_in_request`).
+  the device holds its private key. Since a host that controls the relay's
+  hostname could obtain its own certificate for it, certificates for that
+  hostname MUST be issuable only to the device: the hostname is under a
+  domain the principal controls, or the host publishes a CAA record that
+  restricts issuance to the device's ACME account (RFC 8657
+  `accounturi`). A reviewer checks the CAA record and the Certificate
+  Transparency logs for the hostname. A relay that terminates TLS reads
+  every request, so the declaration is then `user` at best
+  (`host_in_request`).
 - **V3. Host-side writers cannot read back.** A host component that adds
   content (a connection that ingests mail, for example) encrypts each item
   to a public key of the context, and holds no key that decrypts it.
@@ -1918,14 +1954,18 @@ A request can be authorized and still find no key it may use:
    the grant predates the keys. The MCP endpoint answers HTTP 401 with
    `error="invalid_token"` and `resource_metadata` (§3.2), because a new
    authorization fixes it.
-2. **The key is unavailable for now.** The device runtime is offline (V2),
-   the controller has locked the context, a rotation is in progress, or the
-   call needs a key this grant does not hold (for example an extension
-   namespace encrypted under its own key). The tool returns `locked` (§6.3)
+2. **The key is unavailable for now.** The controller has locked the
+   context, a rotation is in progress, or the call needs a key this grant
+   does not hold (for example an extension namespace encrypted under its
+   own key). The tool returns `locked` (§6.3)
    with a message that says what would unlock it, and reveals no content.
    `context_brief` returns what it can and names the locked parts in
    `omitted`. Tools that need only metadata (`audit_list`, `partition_list`)
    keep working.
+3. **The device runtime is offline** (§9.1.4 V2). A relay that passes the
+   encrypted session through cannot answer inside it, so the client sees a
+   failed connection. Only a relay that terminates TLS could answer
+   `locked`, and such a relay means `user` custody at best.
 
 A controller MAY lock a context: every grant's wrapped copy is suspended
 until the controller unlocks it with a principal secret. Locking is audited
@@ -1933,8 +1973,9 @@ until the controller unlocks it with a principal secret. Locking is audited
 
 #### 9.1.6 Recovery and escrow
 
-`readable_by` lists every party that can obtain plaintext without a
-principal taking part, alone or together with others:
+For recovery arrangements, `readable_by` (§2.4) covers every party that
+can obtain plaintext without a principal taking part, alone or together
+with others:
 
 - a combination that includes the host means `host` (and so `host`
   custody);
@@ -1951,7 +1992,8 @@ in a password manager) is a principal secret, not escrow.
 Escrow and every other recovery arrangement beyond the principals' own
 secrets MUST be opt-in by the controller, never a default and never a
 condition of service for a personal context. It MUST be declared in
-`readable_by`, shown when it is set up and on the management surface, and
+`readable_by`, shown when it is set up and on the management surface with
+the name of each holder, and
 it MUST be possible to end it, which deletes the escrowed copies and
 rotates the context keys.
 
@@ -1999,7 +2041,7 @@ or `shredded` (§8.9.3).
 
 ### 9.2 Work, personal and organization control
 
-Work and personal context are separate contexts (§1.2, D3). This
+Work and personal context are separate contexts (§1.2). This
 subsection says who controls each, how identities bind to them, how they
 stay apart, and what happens when a person leaves an organization.
 
@@ -2020,7 +2062,9 @@ stay apart, and what happens when a person leaves an organization.
    their secrets may wrap the context key too; the person MUST be told, on
    the consent screen and the management surface, that the organization can
    read the context.
-3. A context's kind MUST NOT change, and its controller changes only by a
+3. A context's kind MUST NOT change once it holds data (a restore sets the
+   kind of the empty context it fills, §8.7.2), and its controller changes
+   only by a
    transfer that both the current and the new controller approve, which is
    audited. Moving content between a personal and a work context is an
    export and an import (§8), never a change of kind: consent given to one
@@ -2036,12 +2080,13 @@ stay apart, and what happens when a person leaves an organization.
    an account, or an identity provider's issuer and stable subject.
 2. An organization-controlled context SHOULD bind its human principals to
    the organization's identity provider (§3.7).
-3. A personal context's controller MUST be able to sign in with an identity
-   that no organization administers. A server MUST NOT make an
-   organization-administered identity (an account in the company's
-   directory) the only way to sign in to a personal context, because the
-   organization could then disable it, or reset it and sign in as the
-   person.
+3. A personal context's controller can always sign in without an
+   organization's help: a server MUST offer the controller a sign-in method
+   that is not delegated to an external identity provider (for example a
+   passkey registered on the server), which the controller can add at any
+   time, and SHOULD prompt for one when the only sign-in is through an
+   identity provider. An account in an employer's directory can be disabled
+   by the employer, or reset and used to sign in as the person.
 4. One account MAY hold several contexts. Signing in never grants access to
    more than one context: each grant names one (§3.4 item 2).
 
@@ -2055,9 +2100,15 @@ stay apart, and what happens when a person leaves an organization.
    bound to one context's audience (§3.4 item 2). No tool can reach the
    other context.
 3. **No cross-context disclosure.** A server that hosts several contexts of
-   one person MUST NOT reveal one context to the other context's other
-   principals: an organization's administrators learn nothing about the
-   person's personal context on the same host, not even that it exists.
+   one person MUST NOT reveal one context through another: no tool,
+   management view, audit entry, export or error of one context lists,
+   links, counts or names the person's other contexts, so an organization's
+   administrators learn nothing about the person's personal context through
+   the work context. A context's discovery URL is public by design (§2), so
+   anyone who knows or guesses it learns that the context exists. A host
+   SHOULD therefore not derive a personal context's URL from anything an
+   organization knows about the person (the handle of their work context,
+   their work email), and MAY use an unguessable context id.
 4. **Name the context to the model.** The server's instructions (§6.6)
    SHOULD name the context's kind and, for a work context, the controller,
    so a model connected to both can keep them apart. Mixing that happens
@@ -2082,7 +2133,8 @@ controls.
    copy wrapped for them and rotates context keys as §9.1.7 item 2 says,
    ends any delegation to or from them (§7.4), and sets their status to
    `removed` in the context descriptor (§8.2 item 5). The principal id is
-   never reused. A server bound to the organization's identity provider
+   never reused: a server whose ids come from reusable account names keeps
+   removed names reserved. A server bound to the organization's identity provider
    SHOULD remove or suspend the principal when the provider deprovisions
    the account (for example through SCIM).
 2. **The person's pages stay.** What the person wrote stays in the context,
@@ -2099,8 +2151,9 @@ controls.
    that were written on their behalf (`source.principal`,
    `source.on_behalf_of`), with what was derived from them when
    `include_derived` is set, and the revisions they proposed. Audit entries
-   and review records keep the principal's opaque id, which is why ids are
-   opaque (§1.3); the descriptor keeps the id and drops `display_name`.
+   and review records keep the principal's id, which is why ids SHOULD be
+   opaque (§1.3 rule 1); the descriptor keeps the id and drops
+   `display_name`.
    Retention duties and legal holds are the controller's policy; data a
    hold keeps is reported as residue in the receipt.
 5. **Audit.** Removal, the leaver export and principal erasure are audited
@@ -2125,6 +2178,12 @@ controls.
 4. **HTML surfaces** (consent, sign-in, management) send
    `frame-ancestors 'none'`, a restrictive content security policy and
    `Cache-Control: no-store`.
+5. **Stored files are not served by path.** Context data, keys and
+   archives live outside every directory a web server serves without an
+   access check. A server on a shared web host keeps them out of the web
+   root, or in a directory every request to which passes the server's own
+   access check; web-server configuration files that only some servers
+   honor are not such a check.
 
 ### 9.4 Localhost profile
 
@@ -2153,9 +2212,8 @@ server) MUST:
    archives live outside every directory the server or another local web
    server serves, readable only by the operating system user that runs the
    server (for example mode 0700), and the server never serves a file by a
-   path taken from a request. On a shared web host (a content management
-   system, for example) the same rule keeps data and archives out of the
-   web root and out of public upload directories.
+   path taken from a request (§9.3 item 5 for servers on shared web
+   hosts).
 
 ### 9.5 Per-context isolation
 
@@ -2169,8 +2227,8 @@ server) MUST:
    per-context scoping enforced in one data access layer and covered by
    tests that try to read across contexts. The conformance suite (§10)
    includes such tests.
-3. Responses never carry another context's ids or counts. Under MCP
-   2026-07-28, results carry `cacheScope: "private"` (§6.6).
+3. Responses never carry another context's ids or counts, and results
+   that MCP lets a server mark for caching are marked private (§6.6).
 4. Workers and queues carry the context id with every job and never batch
    content of two contexts into one call to a model or service.
 
@@ -2227,7 +2285,7 @@ review (§5, §7) limit what injected text can reach.
    usable outside requests says so, because it can then read the upstream
    source even though it cannot read the context.
 2. Tokens, codes and client secrets: §3.4 item 9.
-3. Logs, traces and crash reports hold no content and no secrets (§7.5).
+3. Logs, traces and crash reports hold no content (§9.1.1) and no secrets.
 
 ### 9.8 Reaching a context
 
@@ -2246,7 +2304,9 @@ parts:
 2. **One context, several routes, one grant.** A token issued for any
    endpoint of a context listed in its `alternate_endpoints` MAY be
    accepted at the others, because the audience is the context (§3.4
-   item 2). A token for any other context never is.
+   item 2). A token for any other context never is. A client still
+   configures one URL (§1.1 principle 3); the others are fallbacks, and a
+   client that binds tokens to the URL it uses may authorize again there.
 3. **An overlay is not authentication.** A server reachable on an overlay
    or private network applies §3 and §9.3 there as on the internet,
    including TLS. Membership of the network, or a source address, never
@@ -2401,4 +2461,9 @@ Checked against `wordpress/mcp-adapter` 0.6.1:
 - **Step-up.** If the adapter cannot return HTTP 403 for a `tools/call`,
   return `forbidden` with `required_scopes` (§3.5 item 1).
 - **Data outside the web root.** Export archives and other generated files
-  stay out of `wp-content/uploads` unless access-checked (§9.4 item 5).
+  stay out of `wp-content/uploads` unless every request for them passes
+  WordPress's own access check; an `.htaccess` file is ignored by nginx
+  (§9.3 item 5).
+- **Principal ids.** A deleted WordPress user's login can be taken by a new
+  user. Keep removed principals' ids reserved (§9.2.4 item 1), for example
+  by suspending rather than deleting users, or derive ids from the user ID.
