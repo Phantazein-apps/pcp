@@ -53,6 +53,16 @@ def run(args):
             if args.verbose:
                 traceback.print_exc()
         findings += rec.findings
+    # One line per id and status; a skip is dropped when another check settled the id.
+    settled = {f.id for f in findings if f.status != "skip"}
+    seen, kept = set(), []
+    for f in findings:
+        key = (f.id, f.status, f.message)
+        if (f.status == "skip" and f.id in settled) or key in seen:
+            continue
+        seen.add(key)
+        kept.append(f)
+    findings = kept
     covered = {f.id for f in findings}
     for rid, r in reqs.items():
         if rid not in covered and not r.suite:
