@@ -117,12 +117,6 @@ PCP is the *context* refuge; [Refugio](https://github.com/Phantazein-apps/refugi
 
 Specification text, schemas and examples are licensed under [Apache 2.0](LICENSE). Anyone may implement PCP, free of charge, for any purpose. Any implementation that passes the conformance requirements may say it implements PCP; no one may imply the project endorses their product.
 
-## Stewardship
+## Governance
 
-PCP was started by [Phantazein](https://phantazein.com), which stewards the specification in the open. Stewardship carries no special standing: Phantazein's own projects follow the same spec, process and conformance rules as everyone else's, and no implementation is the "official" one.
-
----
-
-<div align="center">
-<sub>An open protocol, stewarded by <a href="https://phantazein.com">Phantazein</a> · <a href="https://github.com/Phantazein-apps">more open tools →</a></sub>
-</div>
+PCP is developed in the open by its contributors, in the [`pcp-protocol`](https://github.com/pcp-protocol) organization. Decisions are made in public issues and pull requests, on technical merit. No company or implementation has special standing, and none is the "official" one.

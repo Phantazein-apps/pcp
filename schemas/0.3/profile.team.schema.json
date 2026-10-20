@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/profile.team.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/profile.team.schema.json",
   "title": "PCP Team Profile",
   "description": "Optional profile of a team context (SPEC §4.2): what the team is and who is in it. Facts about individual people belong in their own contexts, not here.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/tools.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/tools.schema.json",
   "title": "PCP standard tools: inputs and outputs",
   "description": "Input and output schemas of the standard tools (SPEC §6.2). A server uses $defs/<tool>_input as the tool's inputSchema and $defs/<tool>_output as its outputSchema. Servers MAY accept extra optional input properties and return extra output properties.",
   "$defs": {

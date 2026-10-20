@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/profile.core.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/profile.core.schema.json",
   "title": "PCP Core Profile",
   "description": "Low-sensitivity, high-utility personal context. Everything sensitive belongs in an extension namespace, never here.",
   "type": "object",

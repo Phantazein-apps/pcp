@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/pcp.health.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/pcp.health.schema.json",
   "title": "PCP Extension: pcp.health",
   "description": "Special-category health data. Requires scope profile.health:read|write. SHOULD be stored encrypted with a key separate from the rest of the context (SPEC §4.6). This schema is the reference example for extension authors.",
   "type": "object",
