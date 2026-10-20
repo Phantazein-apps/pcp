@@ -573,7 +573,7 @@ context that organization controls (§3.7). The screen MUST show:
    person signed in to the wrong account notices.
 4. **Each requested scope in plain language**, each one individually
    declinable, and what is **not** requested for the sensitive categories,
-   for example: *"Claude requests: read your core profile, search your
+   for example: *"Example Assistant requests: read your core profile, search your
    memory. It is NOT requesting: health, legal or family data, sensitive
    pages."*
 5. In a context with partitions, the partitions the principal can access.
@@ -2038,8 +2038,8 @@ stay apart, and what happens when a person leaves an organization.
    the organization's identity provider (§3.7).
 3. A personal context's controller MUST be able to sign in with an identity
    that no organization administers. A server MUST NOT make an
-   organization-administered identity (a company Google, Microsoft or Okta
-   account) the only way to sign in to a personal context, because the
+   organization-administered identity (an account in the company's
+   directory) the only way to sign in to a personal context, because the
    organization could then disable it, or reset it and sign in as the
    person.
 4. One account MAY hold several contexts. Signing in never grants access to
@@ -2153,9 +2153,9 @@ server) MUST:
    archives live outside every directory the server or another local web
    server serves, readable only by the operating system user that runs the
    server (for example mode 0700), and the server never serves a file by a
-   path taken from a request. On a shared web host (a WordPress install,
-   for example) the same rule keeps data and archives out of the web root
-   and out of public upload directories.
+   path taken from a request. On a shared web host (a content management
+   system, for example) the same rule keeps data and archives out of the
+   web root and out of public upload directories.
 
 ### 9.5 Per-context isolation
 
