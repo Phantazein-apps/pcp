@@ -30,9 +30,11 @@ def root_document(t, rec):
     r, doc = t.root_doc
     if not (doc and doc.get("multi_context")):
         base_path = urllib.parse.urlsplit(t.context_base or "").path.strip("/")
+        got = (f"HTTP {r.status} {r.content_type}" if r.status else f"no response ({r.text[:80]})") \
+            if doc is None else "a document without multi_context: true"
         if base_path:
             rec.fail("DISC-07", f"the context lives under /{base_path}, so this is a multi-context host, "
-                                "but the origin has no root document with multi_context: true")
+                                f"but the origin's /.well-known/pcp.json gave {got}")
         else:
             rec.skip("DISC-07", "single-context server at the origin root")
         rec.skip("DISC-08", "no root document")
@@ -50,7 +52,7 @@ def root_document(t, rec):
 
 @check("DISC-09", "DISC-10", "DISC-11", "AUTH-07", "AUTH-08", "AUTH-14", "AUTH-15")
 def protected_resource_metadata(t, rec):
-    doc = t.context_doc or {}
+    doc = t.context_doc
     r, prm = t.prm
     rec.expect("AUTH-14", r.status == 200 and r.is_json() and r.header("location") is None,
                f"metadata at {t.prm_url} gave HTTP {r.status} {r.content_type}")
@@ -60,12 +62,16 @@ def protected_resource_metadata(t, rec):
         return
     rec.expect("DISC-09", prm.get("resource") == t.endpoint,
                f"resource {prm.get('resource')!r} is not the MCP endpoint {t.endpoint!r}")
-    rec.expect("DISC-10", doc.get("resource_metadata") == t.prm_url,
-               f"context document resource_metadata {doc.get('resource_metadata')!r} is not {t.prm_url!r}")
     servers = prm.get("authorization_servers") or []
-    aserv = doc.get("authorization_server")
-    rec.expect("DISC-11", aserv is None or servers == [aserv],
-               f"authorization_server {aserv!r} does not match {servers}")
+    if doc is None:
+        rec.skip("DISC-10", "no context document (DISC-01)")
+        rec.skip("DISC-11", "no context document (DISC-01)")
+    else:
+        rec.expect("DISC-10", doc.get("resource_metadata") == t.prm_url,
+                   f"context document resource_metadata {doc.get('resource_metadata')!r} is not {t.prm_url!r}")
+        aserv = doc.get("authorization_server")
+        rec.expect("DISC-11", aserv is None or servers == [aserv],
+                   f"authorization_server {aserv!r} does not match {servers}")
     problems = []
     if prm.get("resource") != t.endpoint:
         problems.append("resource is not the MCP endpoint")
