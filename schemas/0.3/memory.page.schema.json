@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/memory.page.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/memory.page.schema.json",
   "title": "PCP memory page frontmatter",
   "description": "The YAML frontmatter of a memory page (SPEC §5.2), validated as the JSON data model of YAML 1.2's core schema (timestamps are strings). Keys marked server-stamped are set by the server on write and kept as they are on import (SPEC §5.2.3).",
   "allOf": [

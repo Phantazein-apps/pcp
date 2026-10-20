@@ -9,7 +9,7 @@ Status: DRAFT, in progress · License: Apache 2.0 · Last updated: 2026-10-19
 > Sections marked *(v0.3)* are updated. Sections marked *(pending, v0.2 text)*
 > have not been rewritten yet; where they disagree with an updated section,
 > the updated section wins. If you need a stable text, pin the git tag
-> [`v0.2-draft`](https://github.com/Phantazein-apps/pcp/tree/v0.2-draft).
+> [`v0.2-draft`](https://github.com/pcp-protocol/pcp/tree/v0.2-draft).
 > A server implementing this draft emits `"pcp_version": "0.3"`.
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
@@ -17,10 +17,10 @@ interpreted as in RFC 2119 and RFC 8174 when they appear in capitals.
 
 **Versioning.** A server emits the `pcp_version` it implements. Schemas are
 versioned by path: every schema for this version has the `$id`
-`https://phantazein-apps.github.io/pcp/schemas/0.3/<file>` and lives in
+`https://pcp-protocol.github.io/pcp/schemas/0.3/<file>` and lives in
 [`schemas/0.3/`](schemas/0.3/). Examples that validate against them are in
 [`examples/0.3/`](examples/0.3/); run `python3 scripts/validate_schemas.py`
-to check both. The MCP extension id of PCP is `io.github.phantazein-apps/pcp`.
+to check both. The MCP extension id of PCP is `io.github.pcp-protocol/pcp`.
 
 ### Changes from v0.2 (so far)
 

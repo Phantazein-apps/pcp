@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/audit.entry.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/audit.entry.schema.json",
   "title": "PCP audit entry",
   "description": "One access-log entry (SPEC §7.5). Entries record who touched which categories of a context, never the content: no page text, titles, paths, queries, profile values, or unkeyed hashes of any of them.",
   "type": "object",

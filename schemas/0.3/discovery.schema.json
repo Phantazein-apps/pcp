@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phantazein-apps.github.io/pcp/schemas/0.3/discovery.schema.json",
+  "$id": "https://pcp-protocol.github.io/pcp/schemas/0.3/discovery.schema.json",
   "title": "PCP discovery document",
   "description": "The JSON served at /.well-known/pcp.json (SPEC §2). A context document describes one context and carries its MCP endpoint. A root document describes a multi-context host and carries a context URL template instead. Authorization fields are specified in SPEC §3.",
   "type": "object",
